@@ -58,6 +58,7 @@
             this.btnSaveToTxt.TabIndex = 2;
             this.btnSaveToTxt.Text = "Simpan ke .Txt";
             this.btnSaveToTxt.UseVisualStyleBackColor = false;
+            this.btnSaveToTxt.Click += new System.EventHandler(this.btnSaveToTxt_Click);
             // 
             // btnGrayScale
             // 

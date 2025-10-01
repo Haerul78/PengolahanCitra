@@ -59,6 +59,67 @@ namespace PengolahanCitra
             labelImageInfo.Text = "Grayscale diterapkan";
         }
 
+        private void btnSaveToTxt_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Please load an image first.");
+                return;
+            }
+
+            // Dialog untuk memilih lokasi save
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.Title = "Save Image as RGB Matrix";
+            saveFileDialog.FileName = "image_matrix.txt";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(saveFileDialog.FileName))
+                    {
+                        // Tulis informasi dimensi gambar
+                        file.WriteLine($"Width: {currentImage.Width}");
+                        file.WriteLine($"Height: {currentImage.Height}");
+                        file.WriteLine("Format: R,G,B per pixel");
+                        file.WriteLine("---START MATRIX---");
+                        file.WriteLine();
+
+                        // Loop untuk setiap baris (y)
+                        for (int y = 0; y < currentImage.Height; y++)
+                        {
+                            // Loop untuk setiap kolom (x) dalam baris
+                            for (int x = 0; x < currentImage.Width; x++)
+                            {
+                                Color pixelColor = currentImage.GetPixel(x, y);
+
+                                // Tulis dalam format (R,G,B)
+                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})");
+
+                                // Tambah tab kecuali pixel terakhir di baris
+                                if (x < currentImage.Width - 1)
+                                {
+                                    file.Write("\t");
+                                }
+                            }
+                            // Baris baru setelah selesai 1 row
+                            file.WriteLine();
+                        }
+
+                        file.WriteLine();
+                        file.WriteLine("---END MATRIX---");
+                    }
+
+                    MessageBox.Show($"Image saved successfully as RGB matrix!\nFile: {saveFileDialog.FileName}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving file: {ex.Message}");
+                }
+            }
+        }
+
         // Hover effect untuk button
         private void Button_MouseEnter(object sender, EventArgs e)
         {
@@ -81,9 +142,6 @@ namespace PengolahanCitra
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
