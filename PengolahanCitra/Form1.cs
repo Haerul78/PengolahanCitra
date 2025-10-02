@@ -26,8 +26,6 @@ namespace PengolahanCitra
                 originalImage = new Bitmap(openFileDialog.FileName);
                 currentImage = new Bitmap(originalImage);
                 pictureBoxMain.Image = currentImage;
-
-                labelImageInfo.Text = $"Gambar: {openFileDialog.SafeFileName} | Ukuran: {currentImage.Width}x{currentImage.Height}px";
             }
         }
 
@@ -56,7 +54,6 @@ namespace PengolahanCitra
 
             currentImage = grayImage;
             pictureBoxMain.Image = currentImage;
-            labelImageInfo.Text = "Grayscale diterapkan";
         }
 
         private void btnSaveToTxt_Click(object sender, EventArgs e)

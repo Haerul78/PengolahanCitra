@@ -26,7 +26,6 @@
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
-            this.labelImageInfo = new System.Windows.Forms.Label();
             this.panelSidebar.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
@@ -153,25 +152,10 @@
             this.pictureBoxMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxMain.Location = new System.Drawing.Point(260, 60);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(940, 610);
+            this.pictureBoxMain.Size = new System.Drawing.Size(940, 640);
             this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
-            // 
-            // labelImageInfo
-            // 
-            this.labelImageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.labelImageInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelImageInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelImageInfo.ForeColor = System.Drawing.Color.White;
-            this.labelImageInfo.Location = new System.Drawing.Point(260, 670);
-            this.labelImageInfo.Name = "labelImageInfo";
-            this.labelImageInfo.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.labelImageInfo.Size = new System.Drawing.Size(940, 30);
-            this.labelImageInfo.TabIndex = 3;
-            this.labelImageInfo.Text = "Ready";
-            this.labelImageInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelImageInfo.Click += new System.EventHandler(this.labelImageInfo_Click);
             // 
             // Form1
             // 
@@ -180,7 +164,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.ClientSize = new System.Drawing.Size(1200, 700);
             this.Controls.Add(this.pictureBoxMain);
-            this.Controls.Add(this.labelImageInfo);
             this.Controls.Add(this.panelSidebar);
             this.Controls.Add(this.panelToolbar);
             this.Name = "Form1";
@@ -202,7 +185,6 @@
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.Label labelImageInfo;
         private System.Windows.Forms.Button btnSaveToTxt;
     }
 }
