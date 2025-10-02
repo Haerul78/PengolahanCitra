@@ -80,7 +80,6 @@ namespace PengolahanCitra
                         file.WriteLine($"Width: {currentImage.Width}");
                         file.WriteLine($"Height: {currentImage.Height}");
                         file.WriteLine("Format: R,G,B per pixel");
-                        file.WriteLine("---START MATRIX---");
                         file.WriteLine();
 
                         // Loop untuk setiap baris (y)
@@ -92,20 +91,13 @@ namespace PengolahanCitra
                                 Color pixelColor = currentImage.GetPixel(x, y);
 
                                 // Tulis dalam format (R,G,B)
-                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})");
-
-                                // Tambah tab kecuali pixel terakhir di baris
-                                if (x < currentImage.Width - 1)
-                                {
-                                    file.Write("\t");
-                                }
+                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})".PadRight(15);
                             }
                             // Baris baru setelah selesai 1 row
                             file.WriteLine();
                         }
 
                         file.WriteLine();
-                        file.WriteLine("---END MATRIX---");
                     }
 
                     MessageBox.Show($"Image saved successfully as RGB matrix!\nFile: {saveFileDialog.FileName}");
@@ -139,6 +131,9 @@ namespace PengolahanCitra
 
         }
 
-        
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
