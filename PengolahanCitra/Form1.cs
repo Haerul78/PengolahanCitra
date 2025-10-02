@@ -80,7 +80,6 @@ namespace PengolahanCitra
                         file.WriteLine($"Width: {currentImage.Width}");
                         file.WriteLine($"Height: {currentImage.Height}");
                         file.WriteLine("Format: R,G,B per pixel");
-                        file.WriteLine("---START MATRIX---");
                         file.WriteLine();
 
                         // Loop untuk setiap baris (y)
@@ -105,7 +104,6 @@ namespace PengolahanCitra
                         }
 
                         file.WriteLine();
-                        file.WriteLine("---END MATRIX---");
                     }
 
                     MessageBox.Show($"Image saved successfully as RGB matrix!\nFile: {saveFileDialog.FileName}");
