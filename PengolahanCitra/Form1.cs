@@ -131,6 +131,9 @@ namespace PengolahanCitra
 
         }
 
-        
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
