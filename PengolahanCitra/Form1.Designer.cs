@@ -22,10 +22,10 @@
             this.btnGrayScale = new System.Windows.Forms.Button();
             this.btnBukaGambar = new System.Windows.Forms.Button();
             this.panelToolbar = new System.Windows.Forms.Panel();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.panelSidebar.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
@@ -185,6 +185,7 @@
         private System.Windows.Forms.Button btnGrayScale;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnEdit;
+        private System.Windows.Forms.Button btnSaveToTxt;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnSaveToTxt;
     }
