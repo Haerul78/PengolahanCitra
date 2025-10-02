@@ -26,7 +26,6 @@
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.panelSidebar.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
@@ -96,7 +95,6 @@
             // panelToolbar
             // 
             this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.panelToolbar.Controls.Add(this.button1);
             this.panelToolbar.Controls.Add(this.btnSettings);
             this.panelToolbar.Controls.Add(this.btnEdit);
             this.panelToolbar.Controls.Add(this.btnHome);
@@ -159,20 +157,6 @@
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
             // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(195, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(50, 40);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "⚙️";
-            this.button1.UseVisualStyleBackColor = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -202,6 +186,5 @@
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnSaveToTxt;
-        private System.Windows.Forms.Button button1;
     }
 }

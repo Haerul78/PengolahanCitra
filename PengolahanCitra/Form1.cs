@@ -91,13 +91,7 @@ namespace PengolahanCitra
                                 Color pixelColor = currentImage.GetPixel(x, y);
 
                                 // Tulis dalam format (R,G,B)
-                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})");
-
-                                // Tambah tab kecuali pixel terakhir di baris
-                                if (x < currentImage.Width - 1)
-                                {
-                                    file.Write("\t");
-                                }
+                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})".PadRight(15);
                             }
                             // Baris baru setelah selesai 1 row
                             file.WriteLine();
