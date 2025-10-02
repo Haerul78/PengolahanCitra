@@ -19,13 +19,12 @@
         {
             this.panelSidebar = new System.Windows.Forms.Panel();
             this.btnSaveToTxt = new System.Windows.Forms.Button();
-            this.btnGrayScale = new System.Windows.Forms.Button();
             this.btnBukaGambar = new System.Windows.Forms.Button();
             this.panelToolbar = new System.Windows.Forms.Panel();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.panelSidebar.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
@@ -35,7 +34,6 @@
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.panelSidebar.Controls.Add(this.btnSaveToTxt);
-            this.panelSidebar.Controls.Add(this.btnGrayScale);
             this.panelSidebar.Controls.Add(this.btnBukaGambar);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSidebar.Location = new System.Drawing.Point(0, 60);
@@ -50,7 +48,7 @@
             this.btnSaveToTxt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSaveToTxt.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnSaveToTxt.ForeColor = System.Drawing.Color.White;
-            this.btnSaveToTxt.Location = new System.Drawing.Point(15, 128);
+            this.btnSaveToTxt.Location = new System.Drawing.Point(15, 71);
             this.btnSaveToTxt.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
             this.btnSaveToTxt.Name = "btnSaveToTxt";
             this.btnSaveToTxt.Size = new System.Drawing.Size(230, 45);
@@ -58,22 +56,6 @@
             this.btnSaveToTxt.Text = "Simpan ke .Txt";
             this.btnSaveToTxt.UseVisualStyleBackColor = false;
             this.btnSaveToTxt.Click += new System.EventHandler(this.btnSaveToTxt_Click);
-            // 
-            // btnGrayScale
-            // 
-            this.btnGrayScale.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.btnGrayScale.FlatAppearance.BorderSize = 0;
-            this.btnGrayScale.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGrayScale.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnGrayScale.ForeColor = System.Drawing.Color.White;
-            this.btnGrayScale.Location = new System.Drawing.Point(15, 75);
-            this.btnGrayScale.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
-            this.btnGrayScale.Name = "btnGrayScale";
-            this.btnGrayScale.Size = new System.Drawing.Size(230, 45);
-            this.btnGrayScale.TabIndex = 1;
-            this.btnGrayScale.Text = "GrayScale";
-            this.btnGrayScale.UseVisualStyleBackColor = false;
-            this.btnGrayScale.Click += new System.EventHandler(this.btnGrayscale_Click);
             // 
             // btnBukaGambar
             // 
@@ -182,11 +164,9 @@
         private System.Windows.Forms.Panel panelToolbar;
         private System.Windows.Forms.PictureBox pictureBoxMain;
         private System.Windows.Forms.Button btnBukaGambar;
-        private System.Windows.Forms.Button btnGrayScale;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnSaveToTxt;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.Button btnSaveToTxt;
     }
 }
