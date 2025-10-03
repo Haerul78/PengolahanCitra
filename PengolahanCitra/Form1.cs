@@ -29,33 +29,6 @@ namespace PengolahanCitra
             }
         }
 
-
-        // Event Handler untuk Grayscale
-        private void btnGrayscale_Click(object sender, EventArgs e)
-        {
-            if (currentImage == null)
-            {
-                MessageBox.Show("Silakan buka gambar terlebih dahulu!", "Peringatan");
-                return;
-            }
-
-            Bitmap grayImage = new Bitmap(currentImage.Width, currentImage.Height);
-
-            for (int x = 0; x < currentImage.Width; x++)
-            {
-                for (int y = 0; y < currentImage.Height; y++)
-                {
-                    Color originalColor = currentImage.GetPixel(x, y);
-                    int grayScale = (int)((originalColor.R * 0.3) + (originalColor.G * 0.59) + (originalColor.B * 0.11));
-                    Color grayColor = Color.FromArgb(grayScale, grayScale, grayScale);
-                    grayImage.SetPixel(x, y, grayColor);
-                }
-            }
-
-            currentImage = grayImage;
-            pictureBoxMain.Image = currentImage;
-        }
-
         private void btnSaveToTxt_Click(object sender, EventArgs e)
         {
             if (currentImage == null)
@@ -131,6 +104,9 @@ namespace PengolahanCitra
 
         }
 
-        
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
