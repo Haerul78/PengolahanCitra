@@ -29,33 +29,6 @@ namespace PengolahanCitra
             }
         }
 
-
-        // Event Handler untuk Grayscale
-        private void btnGrayscale_Click(object sender, EventArgs e)
-        {
-            if (currentImage == null)
-            {
-                MessageBox.Show("Silakan buka gambar terlebih dahulu!", "Peringatan");
-                return;
-            }
-
-            Bitmap grayImage = new Bitmap(currentImage.Width, currentImage.Height);
-
-            for (int x = 0; x < currentImage.Width; x++)
-            {
-                for (int y = 0; y < currentImage.Height; y++)
-                {
-                    Color originalColor = currentImage.GetPixel(x, y);
-                    int grayScale = (int)((originalColor.R * 0.3) + (originalColor.G * 0.59) + (originalColor.B * 0.11));
-                    Color grayColor = Color.FromArgb(grayScale, grayScale, grayScale);
-                    grayImage.SetPixel(x, y, grayColor);
-                }
-            }
-
-            currentImage = grayImage;
-            pictureBoxMain.Image = currentImage;
-        }
-
         private void btnSaveToTxt_Click(object sender, EventArgs e)
         {
             if (currentImage == null)
@@ -91,7 +64,7 @@ namespace PengolahanCitra
                                 Color pixelColor = currentImage.GetPixel(x, y);
 
                                 // Tulis dalam format (R,G,B)
-                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})".PadRight(15);
+                                file.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})".PadRight(15));
                             }
                             // Baris baru setelah selesai 1 row
                             file.WriteLine();
@@ -132,6 +105,91 @@ namespace PengolahanCitra
         }
 
         private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk disimpan. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "JPEG Image|*.jpg|PNG Image|*.png|BMP Image|*.bmp|GIF Image|*.gif";
+            saveFileDialog.Title = "Simpan Gambar";
+            saveFileDialog.FileName = "edited_image";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    System.Drawing.Imaging.ImageFormat format;
+                    string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
+
+                    switch (extension)
+                    {
+                        case ".jpg":
+                        case ".jpeg":
+                            format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                            break;
+                        case ".png":
+                            format = System.Drawing.Imaging.ImageFormat.Png;
+                            break;
+                        case ".bmp":
+                            format = System.Drawing.Imaging.ImageFormat.Bmp;
+                            break;
+                        case ".gif":
+                            format = System.Drawing.Imaging.ImageFormat.Gif;
+                            break;
+                        default:
+                            MessageBox.Show("Unsupported file format. Please select a valid image format.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                    }
+
+                    currentImage.Save(saveFileDialog.FileName, format);
+                    MessageBox.Show($"Gambar berhasil disimpan! \nLokasi: {saveFileDialog.FileName}", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Gagal menyimpan gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void pictureBoxMain_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnFilter_Click(object sender, EventArgs e)
+        {
+            TampilkanFilterBtns();
+        }
+
+        private void TampilkanFilterBtns()
+        {
+            panelSidebarRight.Controls.Clear();
+
+            Label labelFilters = new Label
+            {
+                Text = "Filters",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                ForeColor = Color.White,
+                Dock = DockStyle.Top,
+                Height = 40,
+                TextAlign = ContentAlignment.TopLeft
+            };
+            panelSidebarRight.Controls.Add(labelFilters);
+            //panelSidebarLeft.Controls.Add(btnRedFilter);
+            //panelSidebarLeft.Controls.Add(btnGreenFilter);
+            //panelSidebarLeft.Controls.Add(btnBlueFilter);
+            //panelSidebarLeft.Controls.Add(btnGrayScale);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
