@@ -9,6 +9,11 @@ namespace PengolahanCitra
         private Bitmap originalImage;
         private Bitmap currentImage;
 
+        // Tambahkan di Form1 class
+        private Bitmap previewRed, previewGreen, previewBlue, previewGray;
+        private Bitmap selectedPreview;
+        private Bitmap previewOriginal;
+
         public Form1()
         {
             InitializeComponent();
@@ -131,6 +136,191 @@ namespace PengolahanCitra
 
         }
 
-        
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Helper untuk membuat thumbnail filter
+        private Bitmap CreateFilterPreview(Bitmap src, string filterType, int thumbWidth = 50, int thumbHeight = 50)
+        {
+            Bitmap thumb = new Bitmap(thumbWidth, thumbHeight);
+            using (Graphics g = Graphics.FromImage(thumb))
+            {
+                g.DrawImage(src, 0, 0, thumbWidth, thumbHeight);
+            }
+            for (int x = 0; x < thumb.Width; x++)
+            {
+                for (int y = 0; y < thumb.Height; y++)
+                {
+                    Color c = thumb.GetPixel(x, y);
+                    switch (filterType)
+                    {
+                        case "Red": thumb.SetPixel(x, y, Color.FromArgb(c.R, 0, 0)); break;
+                        case "Green": thumb.SetPixel(x, y, Color.FromArgb(0, c.G, 0)); break;
+                        case "Blue": thumb.SetPixel(x, y, Color.FromArgb(0, 0, c.B)); break;
+                        case "Gray":
+                            int gray = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
+                            thumb.SetPixel(x, y, Color.FromArgb(gray, gray, gray));
+                            break;
+                    }
+                }
+            }
+            return thumb;
+        }
+
+        // Helper untuk filter full-size
+        private Bitmap ApplyFilter(Bitmap src, string filterType)
+        {
+            Bitmap result = new Bitmap(src.Width, src.Height);
+            for (int x = 0; x < src.Width; x++)
+            {
+                for (int y = 0; y < src.Height; y++)
+                {
+                    Color c = src.GetPixel(x, y);
+                    switch (filterType)
+                    {
+                        case "Red": result.SetPixel(x, y, Color.FromArgb(c.R, 0, 0)); break;
+                        case "Green": result.SetPixel(x, y, Color.FromArgb(0, c.G, 0)); break;
+                        case "Blue": result.SetPixel(x, y, Color.FromArgb(0, 0, c.B)); break;
+                        case "Gray":
+                            int gray = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
+                            result.SetPixel(x, y, Color.FromArgb(gray, gray, gray));
+                            break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        // Helper untuk membuat thumbnail original
+        private Bitmap CreateOriginalPreview(Bitmap src, int thumbWidth = 60, int thumbHeight = 60)
+        {
+            Bitmap thumb = new Bitmap(thumbWidth, thumbHeight);
+            using (Graphics g = Graphics.FromImage(thumb))
+            {
+                g.DrawImage(src, 0, 0, thumbWidth, thumbHeight);
+            }
+            return thumb;
+        }
+
+        // Event handler BtnFilter_Click
+        private void BtnFilter_Click(object sender, EventArgs e)
+        {
+            if (originalImage == null)
+            {
+                MessageBox.Show("Silakan buka gambar terlebih dahulu!");
+                return;
+            }
+
+            // Buat thumbnail preview
+            previewOriginal = CreateOriginalPreview(originalImage);
+            previewRed = CreateFilterPreview(originalImage, "Red", 60, 60);
+            previewGreen = CreateFilterPreview(originalImage, "Green", 60, 60);
+            previewBlue = CreateFilterPreview(originalImage, "Blue", 60, 60);
+            previewGray = CreateFilterPreview(originalImage, "Gray", 60, 60);
+
+            // Tampilkan preview di sidebar kanan
+            labelFilterTitle.Visible = true;
+            pictureBoxOriginal.Image = previewOriginal;
+            pictureBoxOriginal.Visible = true;
+            labelOriginal.Visible = true;
+            pictureBoxRed.Image = previewRed;
+            pictureBoxRed.Visible = true;
+            labelRed.Visible = true;
+            pictureBoxGreen.Image = previewGreen;
+            pictureBoxGreen.Visible = true;
+            labelGreen.Visible = true;
+            pictureBoxBlue.Image = previewBlue;
+            pictureBoxBlue.Visible = true;
+            labelBlue.Visible = true;
+            pictureBoxGray.Image = previewGray;
+            pictureBoxGray.Visible = true;
+            labelGray.Visible = true;
+            btnApplyFilter.Visible = true;
+
+            selectedPreview = null;
+        }
+
+        // Event handler thumbnail click
+        private void pictureBoxOriginal_Click(object sender, EventArgs e)
+        {
+            selectedPreview = new Bitmap(originalImage);
+            pictureBoxMain.Image = selectedPreview;
+        }
+        private void pictureBoxRed_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Red");
+            pictureBoxMain.Image = selectedPreview;
+        }
+        private void pictureBoxGreen_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Green");
+            pictureBoxMain.Image = selectedPreview;
+        }
+        private void pictureBoxBlue_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Blue");
+            pictureBoxMain.Image = selectedPreview;
+        }
+        private void pictureBoxGray_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Gray");
+            pictureBoxMain.Image = selectedPreview;
+        }
+
+        // Event handler Apply Filter
+        private void btnApplyFilter_Click(object sender, EventArgs e)
+        {
+            if (selectedPreview != null)
+            {
+                currentImage = new Bitmap(selectedPreview);
+                pictureBoxMain.Image = currentImage;
+                MessageBox.Show("Filter applied!");
+            }
+            else
+            {
+                MessageBox.Show("Pilih filter terlebih dahulu!");
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            // TODO: Implement save logic here
+            if (currentImage == null)
+            {
+                MessageBox.Show("Please load an image first.");
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg|Bitmap Image|*.bmp";
+                saveFileDialog.Title = "Save Image";
+                saveFileDialog.FileName = "image.png";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string path = saveFileDialog.FileName;
+                        string ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
+
+                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                        if (ext == ".jpg" || ext == ".jpeg") format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        else if (ext == ".bmp") format = System.Drawing.Imaging.ImageFormat.Bmp;
+
+                        // Save to chosen path/format
+                        currentImage.Save(path, format);
+
+                        MessageBox.Show($"Image saved successfully:\n{path}");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving image: {ex.Message}");
+                    }
+                }
+            }
+        }
     }
 }
