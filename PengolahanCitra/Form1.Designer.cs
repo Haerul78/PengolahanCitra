@@ -27,14 +27,35 @@
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
+
+            // Filter preview controls (right sidebar)
+            this.labelFilterTitle = new System.Windows.Forms.Label();
+            this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
+            this.labelOriginal = new System.Windows.Forms.Label();
+            this.pictureBoxRed = new System.Windows.Forms.PictureBox();
+            this.labelRed = new System.Windows.Forms.Label();
+            this.pictureBoxGreen = new System.Windows.Forms.PictureBox();
+            this.labelGreen = new System.Windows.Forms.Label();
+            this.pictureBoxBlue = new System.Windows.Forms.PictureBox();
+            this.labelBlue = new System.Windows.Forms.Label();
+            this.pictureBoxGray = new System.Windows.Forms.PictureBox();
+            this.labelGray = new System.Windows.Forms.Label();
+            this.btnApplyFilter = new System.Windows.Forms.Button();
+
             this.panelSidebarLeft.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
+            this.panelSidebarRight.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
             // 
-            this.panelSidebarLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.panelSidebarLeft.BackColor = System.Drawing.Color.FromArgb(37, 37, 38);
             this.panelSidebarLeft.Controls.Add(this.BtnSetColor);
             this.panelSidebarLeft.Controls.Add(this.btnSaveToTxt);
             this.panelSidebarLeft.Controls.Add(this.btnBukaGambar);
@@ -46,7 +67,7 @@
             // 
             // BtnSetColor
             // 
-            this.BtnSetColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.BtnSetColor.BackColor = System.Drawing.Color.FromArgb(63, 63, 70);
             this.BtnSetColor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BtnSetColor.FlatAppearance.BorderSize = 0;
             this.BtnSetColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -65,7 +86,7 @@
             // 
             // btnSaveToTxt
             // 
-            this.btnSaveToTxt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnSaveToTxt.BackColor = System.Drawing.Color.FromArgb(63, 63, 70);
             this.btnSaveToTxt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSaveToTxt.FlatAppearance.BorderSize = 0;
             this.btnSaveToTxt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -84,7 +105,7 @@
             // 
             // btnBukaGambar
             // 
-            this.btnBukaGambar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.btnBukaGambar.BackColor = System.Drawing.Color.FromArgb(0, 122, 204);
             this.btnBukaGambar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBukaGambar.FlatAppearance.BorderSize = 0;
             this.btnBukaGambar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -103,7 +124,7 @@
             // 
             // panelToolbar
             // 
-            this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(30, 30, 30);
             this.panelToolbar.Controls.Add(this.btnSave);
             this.panelToolbar.Controls.Add(this.btnEdit);
             this.panelToolbar.Controls.Add(this.btnHome);
@@ -115,7 +136,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -130,7 +151,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
             this.btnEdit.FlatAppearance.BorderSize = 0;
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -144,7 +165,7 @@
             // 
             // btnHome
             // 
-            this.btnHome.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.btnHome.BackColor = System.Drawing.Color.FromArgb(45, 45, 48);
             this.btnHome.FlatAppearance.BorderSize = 0;
             this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHome.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -159,7 +180,7 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
+            this.pictureBoxMain.BackColor = System.Drawing.Color.FromArgb(28, 28, 28);
             this.pictureBoxMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBoxMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -174,7 +195,7 @@
             // panelSidebarRight
             // 
             this.panelSidebarRight.AutoScroll = true;
-            this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(37, 37, 38);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1058, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -182,12 +203,143 @@
             this.panelSidebarRight.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.panelSidebarRight.Size = new System.Drawing.Size(226, 701);
             this.panelSidebarRight.TabIndex = 2;
+
+            // Add filter preview controls to panelSidebarRight
+            this.panelSidebarRight.Controls.Add(this.labelFilterTitle);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxOriginal);
+            this.panelSidebarRight.Controls.Add(this.labelOriginal);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxRed);
+            this.panelSidebarRight.Controls.Add(this.labelRed);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxGreen);
+            this.panelSidebarRight.Controls.Add(this.labelGreen);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxBlue);
+            this.panelSidebarRight.Controls.Add(this.labelBlue);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxGray);
+            this.panelSidebarRight.Controls.Add(this.labelGray);
+            this.panelSidebarRight.Controls.Add(this.btnApplyFilter);
+
+            // 
+            // labelFilterTitle
+            // 
+            this.labelFilterTitle.Text = "Filter Preview";
+            this.labelFilterTitle.ForeColor = System.Drawing.Color.White;
+            this.labelFilterTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelFilterTitle.Location = new System.Drawing.Point(15, 20);
+            this.labelFilterTitle.Size = new System.Drawing.Size(180, 25);
+            this.labelFilterTitle.Visible = false;
+            // 
+            // pictureBoxOriginal
+            // 
+            this.pictureBoxOriginal.Location = new System.Drawing.Point(15, 50);
+            this.pictureBoxOriginal.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxOriginal.Visible = false;
+            this.pictureBoxOriginal.Click += new System.EventHandler(this.pictureBoxOriginal_Click);
+            // 
+            // labelOriginal
+            // 
+            this.labelOriginal.Text = "Original";
+            this.labelOriginal.ForeColor = System.Drawing.Color.White;
+            this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelOriginal.Location = new System.Drawing.Point(15, 110);
+            this.labelOriginal.Size = new System.Drawing.Size(60, 20);
+            this.labelOriginal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelOriginal.Visible = false;
+            // 
+            // pictureBoxRed
+            // 
+            this.pictureBoxRed.Location = new System.Drawing.Point(15, 140);
+            this.pictureBoxRed.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxRed.Visible = false;
+            this.pictureBoxRed.Click += new System.EventHandler(this.pictureBoxRed_Click);
+            // 
+            // labelRed
+            // 
+            this.labelRed.Text = "Red";
+            this.labelRed.ForeColor = System.Drawing.Color.White;
+            this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelRed.Location = new System.Drawing.Point(15, 200);
+            this.labelRed.Size = new System.Drawing.Size(60, 20);
+            this.labelRed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelRed.Visible = false;
+            // 
+            // pictureBoxGreen
+            // 
+            this.pictureBoxGreen.Location = new System.Drawing.Point(15, 230);
+            this.pictureBoxGreen.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxGreen.Visible = false;
+            this.pictureBoxGreen.Click += new System.EventHandler(this.pictureBoxGreen_Click);
+            // 
+            // labelGreen
+            // 
+            this.labelGreen.Text = "Green";
+            this.labelGreen.ForeColor = System.Drawing.Color.White;
+            this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGreen.Location = new System.Drawing.Point(15, 290);
+            this.labelGreen.Size = new System.Drawing.Size(60, 20);
+            this.labelGreen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelGreen.Visible = false;
+            // 
+            // pictureBoxBlue
+            // 
+            this.pictureBoxBlue.Location = new System.Drawing.Point(15, 320);
+            this.pictureBoxBlue.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxBlue.Visible = false;
+            this.pictureBoxBlue.Click += new System.EventHandler(this.pictureBoxBlue_Click);
+            // 
+            // labelBlue
+            // 
+            this.labelBlue.Text = "Blue";
+            this.labelBlue.ForeColor = System.Drawing.Color.White;
+            this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelBlue.Location = new System.Drawing.Point(15, 380);
+            this.labelBlue.Size = new System.Drawing.Size(60, 20);
+            this.labelBlue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelBlue.Visible = false;
+            // 
+            // pictureBoxGray
+            // 
+            this.pictureBoxGray.Location = new System.Drawing.Point(15, 410);
+            this.pictureBoxGray.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxGray.Visible = false;
+            this.pictureBoxGray.Click += new System.EventHandler(this.pictureBoxGray_Click);
+            // 
+            // labelGray
+            // 
+            this.labelGray.Text = "Grayscale";
+            this.labelGray.ForeColor = System.Drawing.Color.White;
+            this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGray.Location = new System.Drawing.Point(15, 470);
+            this.labelGray.Size = new System.Drawing.Size(60, 20);
+            this.labelGray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelGray.Visible = false;
+            // 
+            // btnApplyFilter
+            // 
+            this.btnApplyFilter.Text = "Apply Filter";
+            this.btnApplyFilter.Location = new System.Drawing.Point(15, 500);
+            this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
+            this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(63, 63, 70);
+            this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
+            this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyFilter.Visible = false;
+            this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
+
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.BackColor = System.Drawing.Color.FromArgb(30, 30, 30);
             this.ClientSize = new System.Drawing.Size(1284, 761);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.panelSidebarRight);
@@ -200,6 +352,12 @@
             this.panelSidebarLeft.ResumeLayout(false);
             this.panelToolbar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
+            this.panelSidebarRight.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -216,5 +374,19 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Panel panelSidebarRight;
         private System.Windows.Forms.Button BtnSetColor;
+
+        // Filter preview controls (right sidebar)
+        private System.Windows.Forms.Label labelFilterTitle;
+        private System.Windows.Forms.PictureBox pictureBoxOriginal;
+        private System.Windows.Forms.Label labelOriginal;
+        private System.Windows.Forms.PictureBox pictureBoxRed;
+        private System.Windows.Forms.Label labelRed;
+        private System.Windows.Forms.PictureBox pictureBoxGreen;
+        private System.Windows.Forms.Label labelGreen;
+        private System.Windows.Forms.PictureBox pictureBoxBlue;
+        private System.Windows.Forms.Label labelBlue;
+        private System.Windows.Forms.PictureBox pictureBoxGray;
+        private System.Windows.Forms.Label labelGray;
+        private System.Windows.Forms.Button btnApplyFilter;
     }
 }
