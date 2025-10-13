@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace PengolahanCitra
 {
@@ -166,12 +167,35 @@ namespace PengolahanCitra
 
         private void BtnFilter_Click(object sender, EventArgs e)
         {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk diterapkan filter. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             TampilkanFilterBtns();
         }
 
         private void TampilkanFilterBtns()
         {
             panelSidebarRight.Controls.Clear();
+
+            Button btnRedFilter = new Button
+            {
+                Text = "Red Filter",
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.FromArgb(63, 63, 70),
+                ForeColor = Color.White
+            };
+            btnRedFilter.Click += btnRedFilter_Click;
+            btnRedFilter.MouseEnter += Button_MouseEnter;
+            btnRedFilter.MouseLeave += Button_MouseLeave;
+            panelSidebarRight.Controls.Add(btnRedFilter);
+            //panelSidebarLeft.Controls.Add(btnRedFilter);
+            //panelSidebarLeft.Controls.Add(btnGreenFilter);
+            //panelSidebarLeft.Controls.Add(btnBlueFilter);
+            //panelSidebarLeft.Controls.Add(btnGrayScale);
 
             Label labelFilters = new Label
             {
@@ -183,15 +207,99 @@ namespace PengolahanCitra
                 TextAlign = ContentAlignment.TopLeft
             };
             panelSidebarRight.Controls.Add(labelFilters);
-            //panelSidebarLeft.Controls.Add(btnRedFilter);
-            //panelSidebarLeft.Controls.Add(btnGreenFilter);
-            //panelSidebarLeft.Controls.Add(btnBlueFilter);
-            //panelSidebarLeft.Controls.Add(btnGrayScale);
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void btnRedFilter_Click(object sender, EventArgs e)
         {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk diterapkan filter. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            // Terapkan filter merah
+            for (int y = 0; y < currentImage.Height; y++)
+            {
+                for (int x = 0; x < currentImage.Width; x++)
+                {
+                    Color pixelColor = currentImage.GetPixel(x, y);
+                    Color newColor = Color.FromArgb(pixelColor.R, 0, 0); // Set green and blue to 0
+                    currentImage.SetPixel(x, y, newColor);
+                }
+            }
+            pictureBoxMain.Image = currentImage;
+        }
 
+        private void btnGreenFilter_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk diterapkan filter. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            // Terapkan filter hijau
+            for (int y = 0; y < currentImage.Height; y++)
+            {
+                for (int x = 0; x < currentImage.Width; x++)
+                {
+                    Color pixelColor = currentImage.GetPixel(x, y);
+                    Color newColor = Color.FromArgb(0, pixelColor.G, 0); // Set red and blue to 0
+                    currentImage.SetPixel(x, y, newColor);
+                }
+            }
+            pictureBoxMain.Image = currentImage;
+        }
+
+        private void btnBlueFilter_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk diterapkan filter. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            // Terapkan filter biru
+            for (int y = 0; y < currentImage.Height; y++)
+            {
+                for (int x = 0; x < currentImage.Width; x++)
+                {
+                    Color pixelColor = currentImage.GetPixel(x, y);
+                    Color newColor = Color.FromArgb(0, 0, pixelColor.B); // Set red and green to 0
+                    currentImage.SetPixel(x, y, newColor);
+                }
+            }
+            pictureBoxMain.Image = currentImage;
+        }
+
+        private void btnGrayScale_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk diterapkan filter. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            // Terapkan filter grayscale
+            for (int y = 0; y < currentImage.Height; y++)
+            {
+                for (int x = 0; x < currentImage.Width; x++)
+                {
+                    Color pixelColor = currentImage.GetPixel(x, y);
+                    int grayValue = (int)(pixelColor.R * 0.3 + pixelColor.G * 0.59 + pixelColor.B * 0.11);
+                    Color newColor = Color.FromArgb(grayValue, grayValue, grayValue);
+                    currentImage.SetPixel(x, y, newColor);
+                }
+            }
+            pictureBoxMain.Image = currentImage;
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            if (originalImage == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk direset. Silakan buka gambar terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            // Reset ke gambar asli
+            currentImage = new Bitmap(originalImage);
+            pictureBoxMain.Image = currentImage;
         }
     }
 }
