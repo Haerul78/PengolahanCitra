@@ -515,23 +515,35 @@ namespace PengolahanCitra
             {
                 g.Clear(Color.FromArgb(28, 28, 28));
 
-                int maxValue = 0;
+                double[] logHistogram = new double[256];
                 for (int i = 0; i < histogram.Length; i++)
                 {
-                    if (histogram[i] > maxValue)
-                        maxValue = histogram[i];
+                    // Menambahkan 1 untuk menghindari log(0) yang hasilnya tak terhingga
+                    logHistogram[i] = Math.Log10(1 + histogram[i]);
                 }
 
-                if (maxValue == 0)
+                double maxLogValue = 0;
+                for (int i = 0; i < logHistogram.Length; i++)
+                {
+                    if (logHistogram[i] > maxLogValue)
+                        maxLogValue = logHistogram[i];
+                }
+
+                if (maxLogValue == 0)
                     return bmp;
 
+                // 3. Gambar batang berdasarkan nilai logaritmik
                 using (Pen pen = new Pen(color, 1))
                 {
                     for (int i = 0; i < 256; i++)
                     {
                         float x = (float)i * width / 256f;
-                        float barHeight = (float)histogram[i] * (height - 10) / maxValue;
-                        g.DrawLine(pen, x, height, x, height - barHeight);
+                        // Skalakan tinggi batang dengan maxLogValue
+                        float barHeight = (float)(logHistogram[i] / maxLogValue) * (height - 10);
+                        if (barHeight > 0)
+                        {
+                            g.DrawLine(pen, x, height, x, height - barHeight);
+                        }
                     }
                 }
 
