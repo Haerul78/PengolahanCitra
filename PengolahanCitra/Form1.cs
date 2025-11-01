@@ -12,6 +12,7 @@ namespace PengolahanCitra
 
         // Preview images
         private Bitmap previewRed, previewGreen, previewBlue, previewGray, previewThreshold;
+        private Bitmap previewNegative;
         private Bitmap selectedPreview;
         private Bitmap previewOriginal;
 
@@ -50,6 +51,8 @@ namespace PengolahanCitra
             labelGray.Visible = true;
             pictureBoxThreshold.Visible = true;
             labelThreshold.Visible = true;
+            pictureBoxNegative.Visible = true;
+            labelNegative.Visible = true;
             btnApplyFilter.Visible = true;
             isFilterPanelVisible = true;
         }
@@ -69,6 +72,8 @@ namespace PengolahanCitra
             labelGray.Visible = false;
             pictureBoxThreshold.Visible = false;
             labelThreshold.Visible = false;
+            pictureBoxNegative.Visible = false;
+            labelNegative.Visible = false;
             btnApplyFilter.Visible = false;
             isFilterPanelVisible = false;
         }
@@ -198,6 +203,7 @@ namespace PengolahanCitra
                 previewBlue = CreateFilterPreview(originalImage, "Blue", 60, 60);
                 previewGray = CreateFilterPreview(originalImage, "Gray", 60, 60);
                 previewThreshold = CreateFilterPreview(originalImage, "Threshold", 60, 60);
+                previewNegative = CreateFilterPreview(originalImage, "Negative", 60, 60);
 
                 // Set preview images
                 pictureBoxOriginal.Image = previewOriginal;
@@ -206,6 +212,7 @@ namespace PengolahanCitra
                 pictureBoxBlue.Image = previewBlue;
                 pictureBoxGray.Image = previewGray;
                 pictureBoxThreshold.Image = previewThreshold;
+                pictureBoxNegative.Image = previewNegative;
 
                 // Tampilkan filter panel
                 ShowFilterPanel();
@@ -219,13 +226,13 @@ namespace PengolahanCitra
         {
             Button btn = (Button)sender;
             if (btn == btnBukaGambar)
-                btn.BackColor = Color.FromArgb(0, 140, 220);
+                btn.BackColor = Color.FromArgb(75, 0, 130);
             else if (btn == BtnSetColor && !isFilterPanelVisible)
-                btn.BackColor = Color.FromArgb(100, 100, 107);
+                btn.BackColor = Color.FromArgb(75, 0, 130);
             else if (btn == BtnSetColor && isFilterPanelVisible)
-                btn.BackColor = Color.FromArgb(200, 100, 100); // Warna berbeda saat aktif
+                btn.BackColor = Color.FromArgb(138, 43, 226); // Warna berbeda saat aktif
             else
-                btn.BackColor = Color.FromArgb(100, 100, 107);
+                btn.BackColor = Color.FromArgb(138, 43, 226);
         }
 
         private void Button_MouseLeave(object sender, EventArgs e)
@@ -233,11 +240,11 @@ namespace PengolahanCitra
             Button btn = (Button)sender;
 
             if (btn == btnBukaGambar)
-                btn.BackColor = Color.FromArgb(0, 122, 204);
+                btn.BackColor = Color.FromArgb(75, 0, 130);
             else if (btn == BtnSetColor && isFilterPanelVisible)
-                btn.BackColor = Color.FromArgb(150, 80, 80); // Warna aktif
+                btn.BackColor = Color.FromArgb(75, 0, 130); // Warna aktif
             else
-                btn.BackColor = Color.FromArgb(63, 63, 70);
+                btn.BackColor = Color.FromArgb(75, 0, 130);
         }
 
         /* Navbar */
@@ -331,6 +338,12 @@ namespace PengolahanCitra
                             else
                                 thumb.SetPixel(x, y, Color.FromArgb(0, 0, 0));
                             break;
+                        case "Negative":
+                            // Convert to grayscale first, then invert
+                            int gval = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
+                            int inv = 255 - gval;
+                            thumb.SetPixel(x, y, Color.FromArgb(inv, inv, inv));
+                            break;
                     }
                 }
             }
@@ -366,6 +379,12 @@ namespace PengolahanCitra
                                 result.SetPixel(x, y, Color.FromArgb(255, 255, 255));
                             else
                                 result.SetPixel(x, y, Color.FromArgb(0, 0, 0));
+                            break;
+                        case "Negative":
+                            // Grayscale then invert
+                            int gval2 = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
+                            int inv2 = 255 - gval2;
+                            result.SetPixel(x, y, Color.FromArgb(inv2, inv2, inv2));
                             break;
                     }
                 }
@@ -427,6 +446,13 @@ namespace PengolahanCitra
             HighlightSelectedThumbnail(pictureBoxThreshold);
         }
 
+        private void pictureBoxNegative_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Negative");
+            pictureBoxMain.Image = selectedPreview;
+            HighlightSelectedThumbnail(pictureBoxNegative);
+        }
+
         // Highlight selected thumbnail
         private void HighlightSelectedThumbnail(PictureBox selected)
         {
@@ -437,6 +463,7 @@ namespace PengolahanCitra
             pictureBoxBlue.BorderStyle = BorderStyle.None;
             pictureBoxGray.BorderStyle = BorderStyle.None;
             pictureBoxThreshold.BorderStyle = BorderStyle.None;
+            pictureBoxNegative.BorderStyle = BorderStyle.None;
 
             // Highlight selected
             selected.BorderStyle = BorderStyle.Fixed3D;
