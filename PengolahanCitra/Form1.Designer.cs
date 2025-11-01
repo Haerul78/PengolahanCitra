@@ -45,6 +45,8 @@
             this.pictureBoxGray = new System.Windows.Forms.PictureBox();
             this.labelGray = new System.Windows.Forms.Label();
             this.btnApplyFilter = new System.Windows.Forms.Button();
+            this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
+            this.labelThreshold = new System.Windows.Forms.Label();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -59,6 +61,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -295,6 +298,8 @@
             this.panelSidebarRight.Controls.Add(this.pictureBoxGray);
             this.panelSidebarRight.Controls.Add(this.labelGray);
             this.panelSidebarRight.Controls.Add(this.btnApplyFilter);
+            this.panelSidebarRight.Controls.Add(this.pictureBoxThreshold);
+            this.panelSidebarRight.Controls.Add(this.labelThreshold);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -449,6 +454,30 @@
             this.btnApplyFilter.Visible = false;
             this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
             // 
+            // pictureBoxThreshold
+            // 
+            this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(110, 230);
+            this.pictureBoxThreshold.Name = "pictureBoxThreshold";
+            this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxThreshold.TabIndex = 17;
+            this.pictureBoxThreshold.TabStop = false;
+            this.pictureBoxThreshold.Visible = false;
+            this.pictureBoxThreshold.Click += new System.EventHandler(this.pictureBoxThreshold_Click);
+            // 
+            // labelThreshold
+            // 
+            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelThreshold.ForeColor = System.Drawing.Color.White;
+            this.labelThreshold.Location = new System.Drawing.Point(110, 293);
+            this.labelThreshold.Name = "labelThreshold";
+            this.labelThreshold.Size = new System.Drawing.Size(60, 20);
+            this.labelThreshold.TabIndex = 18;
+            this.labelThreshold.Text = "Threshold";
+            this.labelThreshold.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelThreshold.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -479,6 +508,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -509,6 +539,8 @@
         private System.Windows.Forms.PictureBox pictureBoxGray;
         private System.Windows.Forms.Label labelGray;
         private System.Windows.Forms.Button btnApplyFilter;
+        private System.Windows.Forms.PictureBox pictureBoxThreshold;
+        private System.Windows.Forms.Label labelThreshold;
 
         // Tambahkan di bagian deklarasi variabel (di bagian bawah)
         private System.Windows.Forms.PictureBox pictureBoxHistogramR;

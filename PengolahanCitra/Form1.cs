@@ -11,7 +11,7 @@ namespace PengolahanCitra
         private Bitmap currentImage;
 
         // Preview images
-        private Bitmap previewRed, previewGreen, previewBlue, previewGray;
+        private Bitmap previewRed, previewGreen, previewBlue, previewGray, previewThreshold;
         private Bitmap selectedPreview;
         private Bitmap previewOriginal;
 
@@ -48,10 +48,9 @@ namespace PengolahanCitra
             labelBlue.Visible = true;
             pictureBoxGray.Visible = true;
             labelGray.Visible = true;
+            pictureBoxThreshold.Visible = true;
+            labelThreshold.Visible = true;
             btnApplyFilter.Visible = true;
-
-            // Hide histogram saat filter panel muncul
-            //HideHistogram();
             isFilterPanelVisible = true;
         }
 
@@ -68,8 +67,9 @@ namespace PengolahanCitra
             labelBlue.Visible = false;
             pictureBoxGray.Visible = false;
             labelGray.Visible = false;
+            pictureBoxThreshold.Visible = false;
+            labelThreshold.Visible = false;
             btnApplyFilter.Visible = false;
-
             isFilterPanelVisible = false;
         }
 
@@ -197,6 +197,7 @@ namespace PengolahanCitra
                 previewGreen = CreateFilterPreview(originalImage, "Green", 60, 60);
                 previewBlue = CreateFilterPreview(originalImage, "Blue", 60, 60);
                 previewGray = CreateFilterPreview(originalImage, "Gray", 60, 60);
+                previewThreshold = CreateFilterPreview(originalImage, "Threshold", 60, 60);
 
                 // Set preview images
                 pictureBoxOriginal.Image = previewOriginal;
@@ -204,6 +205,7 @@ namespace PengolahanCitra
                 pictureBoxGreen.Image = previewGreen;
                 pictureBoxBlue.Image = previewBlue;
                 pictureBoxGray.Image = previewGray;
+                pictureBoxThreshold.Image = previewThreshold;
 
                 // Tampilkan filter panel
                 ShowFilterPanel();
@@ -322,6 +324,13 @@ namespace PengolahanCitra
                             int gray = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
                             thumb.SetPixel(x, y, Color.FromArgb(gray, gray, gray));
                             break;
+                        case "Threshold":
+                            int grayVal = (c.R + c.G + c.B) / 3;
+                            if (grayVal > 128)
+                                thumb.SetPixel(x, y, Color.FromArgb(255, 255, 255));
+                            else
+                                thumb.SetPixel(x, y, Color.FromArgb(0, 0, 0));
+                            break;
                     }
                 }
             }
@@ -350,6 +359,13 @@ namespace PengolahanCitra
                         case "Gray":
                             int gray = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
                             result.SetPixel(x, y, Color.FromArgb(gray, gray, gray));
+                            break;
+                        case "Threshold":
+                            int grayVal = (c.R + c.G + c.B) / 3;
+                            if (grayVal > 128)
+                                result.SetPixel(x, y, Color.FromArgb(255, 255, 255));
+                            else
+                                result.SetPixel(x, y, Color.FromArgb(0, 0, 0));
                             break;
                     }
                 }
@@ -404,6 +420,13 @@ namespace PengolahanCitra
             HighlightSelectedThumbnail(pictureBoxGray);
         }
 
+        private void pictureBoxThreshold_Click(object sender, EventArgs e)
+        {
+            selectedPreview = ApplyFilter(originalImage, "Threshold");
+            pictureBoxMain.Image = selectedPreview;
+            HighlightSelectedThumbnail(pictureBoxThreshold);
+        }
+
         // Highlight selected thumbnail
         private void HighlightSelectedThumbnail(PictureBox selected)
         {
@@ -413,6 +436,7 @@ namespace PengolahanCitra
             pictureBoxGreen.BorderStyle = BorderStyle.None;
             pictureBoxBlue.BorderStyle = BorderStyle.None;
             pictureBoxGray.BorderStyle = BorderStyle.None;
+            pictureBoxThreshold.BorderStyle = BorderStyle.None;
 
             // Highlight selected
             selected.BorderStyle = BorderStyle.Fixed3D;
