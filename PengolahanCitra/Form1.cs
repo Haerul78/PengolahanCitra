@@ -472,6 +472,11 @@ namespace PengolahanCitra
 
         }
 
+        private void pictureBoxMain_Click(object sender, EventArgs e)
+        {
+            
+        }
+
         // Method untuk menghitung histogram
         private int[] CalculateHistogram(Bitmap image, string channel)
         {
@@ -508,7 +513,7 @@ namespace PengolahanCitra
         }
 
         // Method untuk menggambar histogram
-        private Bitmap DrawHistogram(int[] histogram, Color color, int width = 190, int height = 80)
+        private Bitmap DrawHistogram(int[] histogram, Color color, int width = 220, int height = 60)
         {
             Bitmap bmp = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(bmp))
