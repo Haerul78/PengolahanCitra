@@ -7,32 +7,43 @@ namespace PengolahanCitra
 {
     public partial class Form1 : Form
     {
+        #region Fiellds & Contstants
+
+        // Images
         private Bitmap originalImage;
         private Bitmap currentImage;
-
-        // Preview images
-        private Bitmap previewRed, previewGreen, previewBlue, previewGray, previewThreshold;
-        private Bitmap previewNegative;
         private Bitmap selectedPreview;
+
+        // Preview thumbnails
         private Bitmap previewOriginal;
+        private Bitmap previewRed, previewGreen, previewBlue;
+        private Bitmap previewGray, previewNegative, previewThreshold;
 
-        // State untuk toggle panel
-        private bool isFilterPanelVisible = false;
-        private bool isHistogramVisible = true;
+        // State
+        private bool isFilterPanelVisible;
+        private int currentBrightnessValue = 0;
 
+        #endregion
+
+        #region Constructor
         public Form1()
         {
             InitializeComponent();
-            //InitializeUIState();
         }
 
-        // Initialize UI state saat startup
-        private void InitializeUIState()
+        #endregion
+
+        #region Event Handlers - Image Operations
+
+        // Event handler untuk tombol Buka Gambar
+        private void btnBukaGambar_Click(object sender, EventArgs e)
         {
-            // Sembunyikan filter panel di awal
-            HideFilterPanel();
-            // Sembunyikan histogram di awal (sampai ada gambar)
-            //HideHistogram();
+            LoadImageFromDialog();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveCurrentImageToFile();
         }
 
         // Method untuk show/hide Filter Panel
@@ -54,9 +65,11 @@ namespace PengolahanCitra
             pictureBoxNegative.Visible = true;
             labelNegative.Visible = true;
             btnApplyFilter.Visible = true;
+            ShowBrightnessPanel();
             isFilterPanelVisible = true;
         }
 
+        #endregion
         private void HideFilterPanel()
         {
             labelFilterTitle.Visible = false;
@@ -75,6 +88,7 @@ namespace PengolahanCitra
             pictureBoxNegative.Visible = false;
             labelNegative.Visible = false;
             btnApplyFilter.Visible = false;
+            HideBrightnessPanel();
             isFilterPanelVisible = false;
         }
 
@@ -88,48 +102,10 @@ namespace PengolahanCitra
                 pictureBoxHistogramG.Visible = true;
                 pictureBoxHistogramB.Visible = true;
                 pictureBoxHistogramGray.Visible = true;
-                isHistogramVisible = true;
             }
         }
 
-        //private void HideHistogram()
-        //{
-        //    labelHistogram.Visible = false;
-        //    pictureBoxHistogramR.Visible = false;
-        //    pictureBoxHistogramG.Visible = false;
-        //    pictureBoxHistogramB.Visible = false;
-        //    pictureBoxHistogramGray.Visible = false;
-        //    isHistogramVisible = false;
-        //}
-
-        // Event Handler untuk Buka Gambar
-        private void btnBukaGambar_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-            openFileDialog.Title = "Pilih Gambar";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                originalImage = new Bitmap(openFileDialog.FileName);
-                currentImage = new Bitmap(originalImage);
-                pictureBoxMain.Image = currentImage;
-
-                // Generate histogram dan tampilkan
-                GenerateHistograms(currentImage);
-
-                // Jika filter panel sedang terbuka, sembunyikan dan tampilkan histogram
-                if (isFilterPanelVisible)
-                {
-                    HideFilterPanel();
-                    ShowHistogram();
-                }
-                else
-                {
-                    ShowHistogram();
-                }
-            }
-        }
+        
 
         // Event Handler untuk Save to TXT
         private void btnSaveToTxt_Click(object sender, EventArgs e)
@@ -261,42 +237,6 @@ namespace PengolahanCitra
                 if (currentImage != null)
                 {
                     ShowHistogram();
-                }
-            }
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            if (currentImage == null)
-            {
-                MessageBox.Show("Please load an image first.");
-                return;
-            }
-
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg|Bitmap Image|*.bmp";
-                saveFileDialog.Title = "Save Image";
-                saveFileDialog.FileName = "image.png";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        string path = saveFileDialog.FileName;
-                        string ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
-
-                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
-                        if (ext == ".jpg" || ext == ".jpeg") format = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        else if (ext == ".bmp") format = System.Drawing.Imaging.ImageFormat.Bmp;
-
-                        currentImage.Save(path, format);
-                        MessageBox.Show($"Image saved successfully:\n{path}");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error saving image: {ex.Message}");
-                    }
                 }
             }
         }
@@ -523,11 +463,6 @@ namespace PengolahanCitra
 
         }
 
-        private void pictureBoxMain_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         // Method untuk menghitung histogram
         private int[] CalculateHistogram(Bitmap image, string channel)
         {
@@ -564,7 +499,7 @@ namespace PengolahanCitra
         }
 
         // Method untuk menggambar histogram
-        private Bitmap DrawHistogram(int[] histogram, Color color, int width = 220, int height = 60)
+        private Bitmap DrawHistogram(int[] histogram, Color color, int width = 220, int height = 90)
         {
             Bitmap bmp = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(bmp))
@@ -647,5 +582,179 @@ namespace PengolahanCitra
             pictureBoxHistogramB.Image = DrawHistogram(histB, Color.Blue);
             pictureBoxHistogramGray.Image = DrawHistogram(histGray, Color.White);
         }
+
+        // Variabel untuk menyimpan brightness value
+        
+
+        // Method untuk apply brightness
+        private Bitmap ApplyBrightness(Bitmap src, int brightnessValue)
+        {
+            Bitmap result = new Bitmap(src.Width, src.Height);
+
+            for (int x = 0; x < src.Width; x++)
+            {
+                for (int y = 0; y < src.Height; y++)
+                {
+                    Color originalColor = src.GetPixel(x, y);
+
+                    // Apply brightness dengan clamp ke range 0-255
+                    int newR = Clamp(originalColor.R + brightnessValue, 0, 255);
+                    int newG = Clamp(originalColor.G + brightnessValue, 0, 255);
+                    int newB = Clamp(originalColor.B + brightnessValue, 0, 255);
+
+                    result.SetPixel(x, y, Color.FromArgb(newR, newG, newB));
+                }
+            }
+
+            return result;
+        }
+
+        // Helper method untuk clamp nilai
+        private int Clamp(int value, int min, int max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+
+        // Event handler untuk trackbar scroll
+        private void trackBarBrightness_Scroll(object sender, EventArgs e)
+        {
+            if (originalImage == null) return;
+
+            currentBrightnessValue = trackBarBrightness.Value;
+            labelBrightnessValue.Text = currentBrightnessValue.ToString();
+
+            // Apply brightness secara real-time
+            currentImage = ApplyBrightness(originalImage, currentBrightnessValue);
+            pictureBoxMain.Image = currentImage;
+
+            // Update histogram
+            GenerateHistograms(currentImage);
+        }
+
+        // Event handler untuk reset button
+        private void btnResetBrightness_Click(object sender, EventArgs e)
+        {
+            trackBarBrightness.Value = 0;
+            currentBrightnessValue = 0;
+            labelBrightnessValue.Text = "0";
+
+            if (originalImage != null)
+            {
+                currentImage = new Bitmap(originalImage);
+                pictureBoxMain.Image = currentImage;
+                GenerateHistograms(currentImage);
+            }
+        }
+
+        // Tampilkan brightness panel
+        private void ShowBrightnessPanel()
+        {
+            panelBrightnessContainer.Visible = true;
+            trackBarBrightness.Value = 0;
+            labelBrightnessValue.Text = "0";
+        }
+
+        // Sembunyikan brightness panel
+        private void HideBrightnessPanel()
+        {
+            panelBrightnessContainer.Visible = false;
+        }
+
+        // Tambahkan button brightness di toolbar atau sidebar
+        private void btnBrightness_Click(object sender, EventArgs e)
+        {
+            if (originalImage == null)
+            {
+                MessageBox.Show("Silakan buka gambar terlebih dahulu!");
+                return;
+            }
+
+            // Hide filter panel jika sedang tampil
+            if (isFilterPanelVisible)
+            {
+                HideFilterPanel();
+            }
+
+            // Toggle brightness panel
+            if (panelBrightnessContainer.Visible)
+            {
+                HideBrightnessPanel();
+            }
+            else
+            {
+                ShowBrightnessPanel();
+            }
+        }
+
+        #region Core Logic - Image Operations
+
+        /// <summary>
+        /// Method untuk load image dari dialog
+        /// </summary>
+        private void LoadImageFromDialog()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                openFileDialog.Title = "Pilih Gambar";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    originalImage = new Bitmap(openFileDialog.FileName);
+                    currentImage = new Bitmap(originalImage);
+                    pictureBoxMain.Image = currentImage;
+                    // Generate histogram dan tampilkan
+                    GenerateHistograms(currentImage);
+                    // Jika filter panel sedang terbuka, sembunyikan dan tampilkan histogram
+                    if (isFilterPanelVisible)
+                    {
+                        HideFilterPanel();
+                        ShowHistogram();
+                    }
+                    else
+                    {
+                        ShowHistogram();
+                    }
+                }
+            }
+        }
+
+        private void SaveCurrentImageToFile()
+        {
+            if (currentImage == null)
+            {
+                MessageBox.Show("Please load an image first.");
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg|Bitmap Image|*.bmp";
+                saveFileDialog.Title = "Save Image";
+                saveFileDialog.FileName = "image.png";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string path = saveFileDialog.FileName;
+                        string ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
+
+                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                        if (ext == ".jpg" || ext == ".jpeg") format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        else if (ext == ".bmp") format = System.Drawing.Imaging.ImageFormat.Bmp;
+
+                        currentImage.Save(path, format);
+                        MessageBox.Show($"Image saved successfully:\n{path}");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error saving image: {ex.Message}");
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

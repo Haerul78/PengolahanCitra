@@ -18,14 +18,15 @@
         private void InitializeComponent()
         {
             this.panelSidebarLeft = new System.Windows.Forms.Panel();
+            this.panelHistogramContainer = new System.Windows.Forms.Panel();
+            this.pictureBoxHistogramG = new System.Windows.Forms.PictureBox();
+            this.pictureBoxHistogramB = new System.Windows.Forms.PictureBox();
+            this.pictureBoxHistogramGray = new System.Windows.Forms.PictureBox();
+            this.pictureBoxHistogramR = new System.Windows.Forms.PictureBox();
+            this.labelHistogram = new System.Windows.Forms.Label();
+            this.btnBukaGambar = new System.Windows.Forms.Button();
             this.BtnSetColor = new System.Windows.Forms.Button();
             this.btnSaveToTxt = new System.Windows.Forms.Button();
-            this.btnBukaGambar = new System.Windows.Forms.Button();
-            this.labelHistogram = new System.Windows.Forms.Label();
-            this.pictureBoxHistogramR = new System.Windows.Forms.PictureBox();
-            this.pictureBoxHistogramGray = new System.Windows.Forms.PictureBox();
-            this.pictureBoxHistogramB = new System.Windows.Forms.PictureBox();
-            this.pictureBoxHistogramG = new System.Windows.Forms.PictureBox();
             this.panelToolbar = new System.Windows.Forms.Panel();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
@@ -46,7 +47,13 @@
             this.pictureBoxNegative = new System.Windows.Forms.PictureBox();
             this.labelNegative = new System.Windows.Forms.Label();
             this.btnApplyFilter = new System.Windows.Forms.Button();
-            this.panelHistogramContainer = new System.Windows.Forms.Panel();
+            this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
+            this.labelThreshold = new System.Windows.Forms.Label();
+            this.panelBrightnessContainer = new System.Windows.Forms.Panel();
+            this.labelBrightness = new System.Windows.Forms.Label();
+            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
+            this.labelBrightnessValue = new System.Windows.Forms.Label();
+            this.btnResetBrightness = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -61,7 +68,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
-            this.panelHistogramContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
+            this.panelBrightnessContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -209,90 +219,6 @@
             this.btnSaveToTxt.MouseEnter += new System.EventHandler(this.Button_MouseEnter);
             this.btnSaveToTxt.MouseLeave += new System.EventHandler(this.Button_MouseLeave);
             // 
-            // btnBukaGambar
-            // 
-            this.btnBukaGambar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            this.btnBukaGambar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBukaGambar.FlatAppearance.BorderSize = 0;
-            this.btnBukaGambar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBukaGambar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnBukaGambar.ForeColor = System.Drawing.Color.White;
-            this.btnBukaGambar.Location = new System.Drawing.Point(15, 21);
-            this.btnBukaGambar.Name = "btnBukaGambar";
-            this.btnBukaGambar.Size = new System.Drawing.Size(220, 45);
-            this.btnBukaGambar.TabIndex = 0;
-            this.btnBukaGambar.Text = "📂 Buka Gambar";
-            this.btnBukaGambar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBukaGambar.UseVisualStyleBackColor = false;
-            this.btnBukaGambar.Click += new System.EventHandler(this.btnBukaGambar_Click);
-            this.btnBukaGambar.MouseEnter += new System.EventHandler(this.Button_MouseEnter);
-            this.btnBukaGambar.MouseLeave += new System.EventHandler(this.Button_MouseLeave);
-            // 
-            // labelHistogram
-            // 
-            this.labelHistogram.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelHistogram.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelHistogram.ForeColor = System.Drawing.Color.White;
-            this.labelHistogram.Location = new System.Drawing.Point(15, 5);
-            this.labelHistogram.Name = "labelHistogram";
-            this.labelHistogram.Size = new System.Drawing.Size(220, 25);
-            this.labelHistogram.TabIndex = 12;
-            this.labelHistogram.Text = "Histogram";
-            this.labelHistogram.Visible = false;
-            this.labelHistogram.Click += new System.EventHandler(this.labelHistogram_Click);
-            // 
-            // pictureBoxHistogramR
-            // 
-            this.pictureBoxHistogramR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.pictureBoxHistogramR.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxHistogramR.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBoxHistogramR.Location = new System.Drawing.Point(15, 30);
-            this.pictureBoxHistogramR.Name = "pictureBoxHistogramR";
-            this.pictureBoxHistogramR.Size = new System.Drawing.Size(220, 60);
-            this.pictureBoxHistogramR.TabIndex = 13;
-            this.pictureBoxHistogramR.TabStop = false;
-            this.pictureBoxHistogramR.Visible = false;
-            this.pictureBoxHistogramR.Click += new System.EventHandler(this.pictureBoxHistogramR_Click);
-            // 
-            // pictureBoxHistogramGray
-            // 
-            this.pictureBoxHistogramGray.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.pictureBoxHistogramGray.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxHistogramGray.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBoxHistogramGray.Location = new System.Drawing.Point(15, 90);
-            this.pictureBoxHistogramGray.Name = "pictureBoxHistogramGray";
-            this.pictureBoxHistogramGray.Size = new System.Drawing.Size(220, 60);
-            this.pictureBoxHistogramGray.TabIndex = 16;
-            this.pictureBoxHistogramGray.TabStop = false;
-            this.pictureBoxHistogramGray.Visible = false;
-            this.pictureBoxHistogramGray.Click += new System.EventHandler(this.pictureBoxHistogramGray_Click);
-            // 
-            // pictureBoxHistogramB
-            // 
-            this.pictureBoxHistogramB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.pictureBoxHistogramB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxHistogramB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBoxHistogramB.Location = new System.Drawing.Point(15, 150);
-            this.pictureBoxHistogramB.Name = "pictureBoxHistogramB";
-            this.pictureBoxHistogramB.Size = new System.Drawing.Size(220, 60);
-            this.pictureBoxHistogramB.TabIndex = 15;
-            this.pictureBoxHistogramB.TabStop = false;
-            this.pictureBoxHistogramB.Visible = false;
-            this.pictureBoxHistogramB.Click += new System.EventHandler(this.pictureBoxHistogramB_Click);
-            // 
-            // pictureBoxHistogramG
-            // 
-            this.pictureBoxHistogramG.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
-            this.pictureBoxHistogramG.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxHistogramG.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBoxHistogramG.Location = new System.Drawing.Point(15, 210);
-            this.pictureBoxHistogramG.Name = "pictureBoxHistogramG";
-            this.pictureBoxHistogramG.Size = new System.Drawing.Size(220, 60);
-            this.pictureBoxHistogramG.TabIndex = 14;
-            this.pictureBoxHistogramG.TabStop = false;
-            this.pictureBoxHistogramG.Visible = false;
-            this.pictureBoxHistogramG.Click += new System.EventHandler(this.pictureBoxHistogramG_Click);
-            // 
             // panelToolbar
             // 
             this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
@@ -364,7 +290,6 @@
             this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
-            this.pictureBoxMain.Click += new System.EventHandler(this.pictureBoxMain_Click);
             // 
             // panelSidebarRight
             // 
@@ -386,6 +311,7 @@
             this.panelSidebarRight.Controls.Add(this.btnApplyFilter);
             this.panelSidebarRight.Controls.Add(this.pictureBoxThreshold);
             this.panelSidebarRight.Controls.Add(this.labelThreshold);
+            this.panelSidebarRight.Controls.Add(this.panelBrightnessContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -565,18 +491,86 @@
             this.btnApplyFilter.Visible = false;
             this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
             // 
-            // panelHistogramContainer
+            // pictureBoxThreshold
             // 
-            this.panelHistogramContainer.Controls.Add(this.pictureBoxHistogramG);
-            this.panelHistogramContainer.Controls.Add(this.pictureBoxHistogramB);
-            this.panelHistogramContainer.Controls.Add(this.pictureBoxHistogramGray);
-            this.panelHistogramContainer.Controls.Add(this.pictureBoxHistogramR);
-            this.panelHistogramContainer.Controls.Add(this.labelHistogram);
-            this.panelHistogramContainer.Location = new System.Drawing.Point(0, 418);
-            this.panelHistogramContainer.Name = "panelHistogramContainer";
-            this.panelHistogramContainer.Padding = new System.Windows.Forms.Padding(15, 5, 15, 5);
-            this.panelHistogramContainer.Size = new System.Drawing.Size(250, 271);
-            this.panelHistogramContainer.TabIndex = 3;
+            this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(141, 247);
+            this.pictureBoxThreshold.Name = "pictureBoxThreshold";
+            this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxThreshold.TabIndex = 17;
+            this.pictureBoxThreshold.TabStop = false;
+            this.pictureBoxThreshold.Visible = false;
+            this.pictureBoxThreshold.Click += new System.EventHandler(this.pictureBoxThreshold_Click);
+            // 
+            // labelThreshold
+            // 
+            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelThreshold.ForeColor = System.Drawing.Color.White;
+            this.labelThreshold.Location = new System.Drawing.Point(141, 310);
+            this.labelThreshold.Name = "labelThreshold";
+            this.labelThreshold.Size = new System.Drawing.Size(60, 20);
+            this.labelThreshold.TabIndex = 18;
+            this.labelThreshold.Text = "Threshold";
+            this.labelThreshold.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelThreshold.Visible = false;
+            // 
+            // panelBrightnessContainer
+            // 
+            this.panelBrightnessContainer.Controls.Add(this.labelBrightness);
+            this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
+            this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
+            this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(15, 440);
+            this.panelBrightnessContainer.Name = "panelBrightnessContainer";
+            this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
+            this.panelBrightnessContainer.TabIndex = 0;
+            this.panelBrightnessContainer.Visible = false;
+            // 
+            // labelBrightness
+            // 
+            this.labelBrightness.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.labelBrightness.ForeColor = System.Drawing.Color.White;
+            this.labelBrightness.Location = new System.Drawing.Point(5, 5);
+            this.labelBrightness.Name = "labelBrightness";
+            this.labelBrightness.Size = new System.Drawing.Size(100, 20);
+            this.labelBrightness.TabIndex = 0;
+            this.labelBrightness.Text = "Brightness";
+            // 
+            // trackBarBrightness
+            // 
+            this.trackBarBrightness.Location = new System.Drawing.Point(5, 30);
+            this.trackBarBrightness.Maximum = 100;
+            this.trackBarBrightness.Minimum = -100;
+            this.trackBarBrightness.Name = "trackBarBrightness";
+            this.trackBarBrightness.Size = new System.Drawing.Size(210, 45);
+            this.trackBarBrightness.TabIndex = 1;
+            this.trackBarBrightness.TickFrequency = 10;
+            this.trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
+            // 
+            // labelBrightnessValue
+            // 
+            this.labelBrightnessValue.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelBrightnessValue.ForeColor = System.Drawing.Color.LightGray;
+            this.labelBrightnessValue.Location = new System.Drawing.Point(110, 5);
+            this.labelBrightnessValue.Name = "labelBrightnessValue";
+            this.labelBrightnessValue.Size = new System.Drawing.Size(50, 20);
+            this.labelBrightnessValue.TabIndex = 2;
+            this.labelBrightnessValue.Text = "0";
+            this.labelBrightnessValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnResetBrightness
+            // 
+            this.btnResetBrightness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnResetBrightness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetBrightness.ForeColor = System.Drawing.Color.White;
+            this.btnResetBrightness.Location = new System.Drawing.Point(5, 75);
+            this.btnResetBrightness.Name = "btnResetBrightness";
+            this.btnResetBrightness.Size = new System.Drawing.Size(210, 30);
+            this.btnResetBrightness.TabIndex = 3;
+            this.btnResetBrightness.Text = "Reset";
+            this.btnResetBrightness.UseVisualStyleBackColor = false;
+            this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
             // 
             // Form1
             // 
@@ -608,7 +602,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
-            this.panelHistogramContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).EndInit();
+            this.panelBrightnessContainer.ResumeLayout(false);
+            this.panelBrightnessContainer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -644,12 +642,19 @@
         private System.Windows.Forms.PictureBox pictureBoxThreshold;
         private System.Windows.Forms.Label labelThreshold;
 
-        // Histogram controls
+        // Tambahkan di bagian deklarasi variabel (di bagian bawah)
         private System.Windows.Forms.PictureBox pictureBoxHistogramR;
         private System.Windows.Forms.PictureBox pictureBoxHistogramG;
         private System.Windows.Forms.PictureBox pictureBoxHistogramB;
         private System.Windows.Forms.PictureBox pictureBoxHistogramGray;
         private System.Windows.Forms.Label labelHistogram;
         private System.Windows.Forms.Panel panelHistogramContainer;
+
+        // Brightness controls
+        private System.Windows.Forms.Label labelBrightness;
+        private System.Windows.Forms.TrackBar trackBarBrightness;
+        private System.Windows.Forms.Label labelBrightnessValue;
+        private System.Windows.Forms.Button btnResetBrightness;
+        private System.Windows.Forms.Panel panelBrightnessContainer;
     }
 }
