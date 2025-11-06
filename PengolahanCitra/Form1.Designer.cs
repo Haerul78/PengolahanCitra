@@ -482,7 +482,7 @@
             this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.btnApplyFilter.Location = new System.Drawing.Point(41, 593);
+            this.btnApplyFilter.Location = new System.Drawing.Point(41, 647);
             this.btnApplyFilter.Name = "btnApplyFilter";
             this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
             this.btnApplyFilter.TabIndex = 11;
@@ -521,7 +521,7 @@
             this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
             this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
             this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(15, 440);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(21, 428);
             this.panelBrightnessContainer.Name = "panelBrightnessContainer";
             this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
             this.panelBrightnessContainer.TabIndex = 0;
@@ -552,7 +552,7 @@
             // 
             this.labelBrightnessValue.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelBrightnessValue.ForeColor = System.Drawing.Color.LightGray;
-            this.labelBrightnessValue.Location = new System.Drawing.Point(110, 5);
+            this.labelBrightnessValue.Location = new System.Drawing.Point(165, 7);
             this.labelBrightnessValue.Name = "labelBrightnessValue";
             this.labelBrightnessValue.Size = new System.Drawing.Size(50, 20);
             this.labelBrightnessValue.TabIndex = 2;
