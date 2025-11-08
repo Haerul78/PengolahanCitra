@@ -60,6 +60,8 @@
             this.labelAritmatikTitle = new System.Windows.Forms.Label();
             this.btnAddImage = new System.Windows.Forms.Button();
             this.btnSubtractImage = new System.Windows.Forms.Button();
+            this.btnMultiplyImage = new System.Windows.Forms.Button();
+            this.btnDivideImage = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -483,7 +485,7 @@
             this.pictureBoxNegative.Name = "pictureBoxNegative";
             this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxNegative.TabIndex = 19;
+            this.pictureBoxNegative.TabIndex = 11;
             this.pictureBoxNegative.TabStop = false;
             this.pictureBoxNegative.Click += new System.EventHandler(this.pictureBoxNegative_Click);
             // 
@@ -594,6 +596,8 @@
             this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
             this.panelAritmatikContainer.Controls.Add(this.btnAddImage);
             this.panelAritmatikContainer.Controls.Add(this.btnSubtractImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnMultiplyImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnDivideImage);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
             this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
@@ -638,6 +642,34 @@
             this.btnSubtractImage.Text = "Kurangi Citra";
             this.btnSubtractImage.UseVisualStyleBackColor = false;
             this.btnSubtractImage.Click += new System.EventHandler(this.btnSubtractImage_Click);
+            // 
+            // btnMultiplyImage
+            // 
+            this.btnMultiplyImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnMultiplyImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMultiplyImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnMultiplyImage.ForeColor = System.Drawing.Color.White;
+            this.btnMultiplyImage.Location = new System.Drawing.Point(36, 170);
+            this.btnMultiplyImage.Name = "btnMultiplyImage";
+            this.btnMultiplyImage.Size = new System.Drawing.Size(180, 40);
+            this.btnMultiplyImage.TabIndex = 2;
+            this.btnMultiplyImage.Text = "Kalikan Citra";
+            this.btnMultiplyImage.UseVisualStyleBackColor = false;
+            this.btnMultiplyImage.Click += new System.EventHandler(this.btnMultiplyImage_Click);
+            // 
+            // btnDivideImage
+            // 
+            this.btnDivideImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnDivideImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDivideImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDivideImage.ForeColor = System.Drawing.Color.White;
+            this.btnDivideImage.Location = new System.Drawing.Point(36, 227);
+            this.btnDivideImage.Name = "btnDivideImage";
+            this.btnDivideImage.Size = new System.Drawing.Size(180, 40);
+            this.btnDivideImage.TabIndex = 3;
+            this.btnDivideImage.Text = "Bagi Citra";
+            this.btnDivideImage.UseVisualStyleBackColor = false;
+            this.btnDivideImage.Click += new System.EventHandler(this.btnDivideImage_Click);
             // 
             // Form1
             // 
@@ -730,6 +762,8 @@
         private System.Windows.Forms.Label labelAritmatikTitle;
         private System.Windows.Forms.Button btnAddImage;
         private System.Windows.Forms.Button btnSubtractImage;
+        private System.Windows.Forms.Button btnMultiplyImage;
+        private System.Windows.Forms.Button btnDivideImage;
         private System.Windows.Forms.Panel panelFilterContainer;
     }
 }

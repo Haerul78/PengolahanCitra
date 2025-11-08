@@ -906,6 +906,48 @@ namespace PengolahanCitra
             }
         }
 
+        // New: Fungsi perkalian citra (sama pola dengan tambah/kurang)
+        private void btnMultiplyImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Perkalian";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap mulImage = new Bitmap(dialog.FileName);
+                    Bitmap result = MultiplyImages(currentImage, mulImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Perkalian citra berhasil!");
+                }
+            }
+        }
+
+        // New: Fungsi pembagian citra (sama pola dengan tambah/kurang)
+        private void btnDivideImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Pembagian";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap divImage = new Bitmap(dialog.FileName);
+                    Bitmap result = DivideImages(currentImage, divImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Pembagian citra berhasil!");
+                }
+            }
+        }
+
         // Fungsi penjumlahan citra
         private Bitmap AddImages(Bitmap img1, Bitmap img2)
         {
@@ -942,6 +984,51 @@ namespace PengolahanCitra
                     int r = Clamp(c1.R - c2.R, 0, 255);
                     int g = Clamp(c1.G - c2.G, 0, 255);
                     int b = Clamp(c1.B - c2.B, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi perkalian citra (pixel-wise, dinormalisasi)
+        private Bitmap MultiplyImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp((c1.R * c2.R) / 255, 0, 255);
+                    int g = Clamp((c1.G * c2.G) / 255, 0, 255);
+                    int b = Clamp((c1.B * c2.B) / 255, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi pembagian citra (pixel-wise, scaling dan penanganan pembagi 0)
+        private Bitmap DivideImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int rDen = Math.Max(1, (int)c2.R);
+                    int gDen = Math.Max(1, (int)c2.G);
+                    int bDen = Math.Max(1, (int)c2.B);
+                    int r = Clamp((c1.R * 255) / rDen, 0, 255);
+                    int g = Clamp((c1.G * 255) / gDen, 0, 255);
+                    int b = Clamp((c1.B * 255) / bDen, 0, 255);
                     result.SetPixel(x, y, Color.FromArgb(r, g, b));
                 }
             }
