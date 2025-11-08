@@ -30,6 +30,7 @@ namespace PengolahanCitra
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
         private int currentRotationAngle = 0; // Track current rotation angle
+        private int currentZoomPercent = 100; // Track zoom level
 
         // Constants
         private const int THUMBNAIL_SIZE = 60;
@@ -302,6 +303,13 @@ namespace PengolahanCitra
         private void pictureBoxHistogramGray_Click(object sender, EventArgs e) { }
         private void pictureBoxHistogramB_Click(object sender, EventArgs e) { }
         private void pictureBoxHistogramG_Click(object sender, EventArgs e) { }
+
+        private void trackBarZoom_Scroll(object sender, EventArgs e)
+        {
+            currentZoomPercent = trackBarZoom.Value;
+            labelZoomValue.Text = currentZoomPercent + "%";
+            ApplyZoomToMainImage();
+        }
 
         #endregion
 
@@ -1107,8 +1115,7 @@ namespace PengolahanCitra
 
         private void UpdateMainImage(Bitmap image)
         {
-            pictureBoxMain.Image = image;
-            GenerateHistograms(image);
+            ApplyZoomToMainImage();
         }
 
         private void ShowFilterPanel()
@@ -1206,6 +1213,22 @@ namespace PengolahanCitra
                     ? Color.FromArgb(138, 43, 226)
                     : Color.FromArgb(75, 0, 130);
             }
+        }
+
+        private void ApplyZoomToMainImage()
+        {
+            if (currentImage == null) return;
+            int zoom = currentZoomPercent;
+            int newWidth = currentImage.Width * zoom / 100;
+            int newHeight = currentImage.Height * zoom / 100;
+            Bitmap zoomed = new Bitmap(newWidth, newHeight);
+            using (Graphics g = Graphics.FromImage(zoomed))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(currentImage, 0, 0, newWidth, newHeight);
+            }
+            pictureBoxMain.Image = zoomed;
+            GenerateHistograms(currentImage); // Histogram tetap dari gambar asli
         }
 
         #endregion
@@ -1453,6 +1476,11 @@ namespace PengolahanCitra
         }
 
         private void panelAritmatikContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void labelZoomMin_Click(object sender, EventArgs e)
         {
 
         }

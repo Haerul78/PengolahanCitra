@@ -56,6 +56,11 @@
             this.btnSubtractImage = new System.Windows.Forms.Button();
             this.btnMultiplyImage = new System.Windows.Forms.Button();
             this.btnDivideImage = new System.Windows.Forms.Button();
+            this.labelZoomTitle = new System.Windows.Forms.Label();
+            this.trackBarZoom = new System.Windows.Forms.TrackBar();
+            this.labelZoomValue = new System.Windows.Forms.Label();
+            this.labelZoomMin = new System.Windows.Forms.Label();
+            this.labelZoomMax = new System.Windows.Forms.Label();
             this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
@@ -91,6 +96,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).BeginInit();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -338,6 +344,7 @@
             // 
             // panelSidebarRight
             // 
+            this.panelSidebarRight.AutoScroll = true;
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
@@ -353,9 +360,6 @@
             // panelAritmatikContainer
             // 
             this.panelAritmatikContainer.AutoScroll = true;
-            this.panelAritmatikContainer.HorizontalScroll.Enabled = false;
-            this.panelAritmatikContainer.HorizontalScroll.Visible = false;
-            this.panelAritmatikContainer.HorizontalScroll.Maximum = 0;
             this.panelAritmatikContainer.Controls.Add(this.btnFlipVertical);
             this.panelAritmatikContainer.Controls.Add(this.btnFlipHorizontal);
             this.panelAritmatikContainer.Controls.Add(this.labelFlipTitle);
@@ -377,10 +381,16 @@
             this.panelAritmatikContainer.Controls.Add(this.btnSubtractImage);
             this.panelAritmatikContainer.Controls.Add(this.btnMultiplyImage);
             this.panelAritmatikContainer.Controls.Add(this.btnDivideImage);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomTitle);
+            this.panelAritmatikContainer.Controls.Add(this.trackBarZoom);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomValue);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomMin);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomMax);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
-            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 700);
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 800);
             this.panelAritmatikContainer.TabIndex = 1;
+            this.panelAritmatikContainer.Visible = false;
             this.panelAritmatikContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelAritmatikContainer_Paint);
             // 
             // btnFlipVertical
@@ -669,6 +679,62 @@
             this.btnDivideImage.UseVisualStyleBackColor = false;
             this.btnDivideImage.Click += new System.EventHandler(this.btnDivideImage_Click);
             // 
+            // labelZoomTitle
+            // 
+            this.labelZoomTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelZoomTitle.ForeColor = System.Drawing.Color.White;
+            this.labelZoomTitle.Location = new System.Drawing.Point(36, 700);
+            this.labelZoomTitle.Name = "labelZoomTitle";
+            this.labelZoomTitle.Size = new System.Drawing.Size(180, 20);
+            this.labelZoomTitle.TabIndex = 19;
+            this.labelZoomTitle.Text = "Zoom Gambar";
+            this.labelZoomTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // trackBarZoom
+            // 
+            this.trackBarZoom.Location = new System.Drawing.Point(36, 717);
+            this.trackBarZoom.Maximum = 200;
+            this.trackBarZoom.Minimum = 10;
+            this.trackBarZoom.Name = "trackBarZoom";
+            this.trackBarZoom.Size = new System.Drawing.Size(180, 45);
+            this.trackBarZoom.TabIndex = 20;
+            this.trackBarZoom.TickFrequency = 10;
+            this.trackBarZoom.Value = 100;
+            this.trackBarZoom.Scroll += new System.EventHandler(this.trackBarZoom_Scroll);
+            // 
+            // labelZoomValue
+            // 
+            this.labelZoomValue.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomValue.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomValue.Location = new System.Drawing.Point(150, 700);
+            this.labelZoomValue.Name = "labelZoomValue";
+            this.labelZoomValue.Size = new System.Drawing.Size(66, 20);
+            this.labelZoomValue.TabIndex = 21;
+            this.labelZoomValue.Text = "100%";
+            this.labelZoomValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // labelZoomMin
+            // 
+            this.labelZoomMin.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomMin.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomMin.Location = new System.Drawing.Point(37, 765);
+            this.labelZoomMin.Name = "labelZoomMin";
+            this.labelZoomMin.Size = new System.Drawing.Size(40, 20);
+            this.labelZoomMin.TabIndex = 22;
+            this.labelZoomMin.Text = "10%";
+            this.labelZoomMin.Click += new System.EventHandler(this.labelZoomMin_Click);
+            // 
+            // labelZoomMax
+            // 
+            this.labelZoomMax.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomMax.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomMax.Location = new System.Drawing.Point(176, 765);
+            this.labelZoomMax.Name = "labelZoomMax";
+            this.labelZoomMax.Size = new System.Drawing.Size(40, 20);
+            this.labelZoomMax.TabIndex = 23;
+            this.labelZoomMax.Text = "200%";
+            this.labelZoomMax.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // panelFilterContainer
             // 
             this.panelFilterContainer.Controls.Add(this.labelFilterTitle);
@@ -954,9 +1020,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
             this.panelAritmatikContainer.ResumeLayout(false);
+            this.panelAritmatikContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -1046,5 +1114,10 @@
         private System.Windows.Forms.Button btnFlipVertical;
         
         private System.Windows.Forms.Panel panelFilterContainer;
+        private System.Windows.Forms.Label labelZoomTitle;
+        private System.Windows.Forms.TrackBar trackBarZoom;
+        private System.Windows.Forms.Label labelZoomValue;
+        private System.Windows.Forms.Label labelZoomMin;
+        private System.Windows.Forms.Label labelZoomMax;
     }
 }
