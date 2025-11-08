@@ -29,6 +29,7 @@ namespace PengolahanCitra
         private bool isAritmatikPanelVisible;
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
+        private int currentRotationAngle = 0; // Track current rotation angle
 
         // Constants
         private const int THUMBNAIL_SIZE = 60;
@@ -135,6 +136,85 @@ namespace PengolahanCitra
             currentBrightnessValue = 0;
             labelBrightnessValue.Text = "0";
             UpdateMainPreview(); // Panggil fungsi preview gabungan
+        }
+
+        #endregion
+
+        #region Event Handlers - Aritmatika Operations
+
+        private void BtnAritmathic_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+
+            if (isAritmatikPanelVisible)
+            {
+                HideAritmatikPanel();
+                ShowHistogram();
+            }
+            else
+            {
+                ShowAritmatikPanel();
+            }
+        }
+
+        private void btnRotate45_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                currentRotationAngle = 45; // Set to absolute angle
+                Bitmap rotated = RotateImageToAngle(currentRotationAngle);
+                currentImage?.Dispose();
+                currentImage = rotated;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error rotating image: {ex.Message}");
+            }
+        }
+
+        private void btnRotate90_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                currentRotationAngle = 90; // Set to absolute angle
+                Bitmap rotated = RotateImageToAngle(currentRotationAngle);
+                currentImage?.Dispose();
+                currentImage = rotated;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error rotating image: {ex.Message}");
+            }
+        }
+
+        private void btnRotate180_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                currentRotationAngle = 180; // Set to absolute angle
+                Bitmap rotated = RotateImageToAngle(currentRotationAngle);
+                currentImage?.Dispose();
+                currentImage = rotated;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error rotating image: {ex.Message}");
+            }
         }
 
         #endregion
@@ -453,7 +533,6 @@ namespace PengolahanCitra
         
         #region Image Processing - Brightness (Fast & Separated)
 
-        
         private Bitmap ApplyBrightness(byte[,,] sourceMatrix, int brightnessValue)
         {
             Bitmap result = new Bitmap(imageWidth, imageHeight);
@@ -684,6 +763,131 @@ namespace PengolahanCitra
 
         #endregion
 
+        #region Image Processing - Rotation
+
+        /// <summary>
+        /// Rotates the original image to the specified absolute angle
+        /// </summary>
+        /// <param name="angle">Target rotation angle in degrees (45, 90, 180, 270, etc.)</param>
+        /// <returns>Rotated bitmap from original image</returns>
+        private Bitmap RotateImageToAngle(int angle)
+        {
+            if (originalImage == null) return null;
+
+            // Use originalImage as the base, not currentImage
+            Bitmap source = originalImage;
+
+            // Normalize angle to 0-360 range
+            angle = angle % 360;
+            if (angle < 0) angle += 360;
+
+            switch (angle)
+            {
+                case 0:
+                    // No rotation, return a copy of original
+                    return new Bitmap(source);
+                
+                case 45:
+                    return RotateImage45Degrees(source);
+                
+                case 90:
+                    return RotateImage90Degrees(source);
+                
+                case 180:
+                    return RotateImage180Degrees(source);
+                
+                case 270:
+                    return RotateImage270Degrees(source);
+                
+                default:
+                    // For other angles, use Graphics rotation
+                    return RotateImageByAngle(source, angle);
+            }
+        }
+
+        private Bitmap RotateImage45Degrees(Bitmap src)
+        {
+            int newSize = Math.Max(src.Width, src.Height);
+            Bitmap rotated = new Bitmap(newSize, newSize);
+
+            using (Graphics g = Graphics.FromImage(rotated))
+            {
+                g.Clear(Color.FromArgb(28, 28, 28)); // Background sesuai tema
+                g.TranslateTransform(newSize / 2f, newSize / 2f);
+                g.RotateTransform(45);
+                g.TranslateTransform(-src.Width / 3f, -src.Height / 3f);
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(src, 0, 0);
+            }
+            return rotated;
+        }
+        
+
+        private Bitmap RotateImage90Degrees(Bitmap src)
+        {
+            Bitmap rotated = new Bitmap(src.Height, src.Width);
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    rotated.SetPixel(src.Height - y - 1, x, src.GetPixel(x, y));
+                }
+            }
+            return rotated;
+        }
+
+        private Bitmap RotateImage180Degrees(Bitmap src)
+        {
+            Bitmap rotated = new Bitmap(src.Width, src.Height);
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    rotated.SetPixel(src.Width - x - 1, src.Height - y - 1, src.GetPixel(x, y));
+                }
+            }
+            return rotated;
+        }
+
+        private Bitmap RotateImage270Degrees(Bitmap src)
+        {
+            Bitmap rotated = new Bitmap(src.Height, src.Width);
+            for (int y = 0; y < src.Height; y++)
+            {
+                for (int x = 0; x < src.Width; x++)
+                {
+                    rotated.SetPixel(y, src.Width - x - 1, src.GetPixel(x, y));
+                }
+            }
+            return rotated;
+        }
+
+        private Bitmap RotateImageByAngle(Bitmap src, int angle)
+        {
+            // For arbitrary angles, use Graphics transformation
+            double radians = angle * Math.PI / 180;
+            double cos = Math.Abs(Math.Cos(radians));
+            double sin = Math.Abs(Math.Sin(radians));
+            
+            int newWidth = (int)(src.Width * cos + src.Height * sin);
+            int newHeight = (int)(src.Width * sin + src.Height * cos);
+            
+            Bitmap rotated = new Bitmap(newWidth, newHeight);
+            
+            using (Graphics g = Graphics.FromImage(rotated))
+            {
+                g.Clear(Color.White);
+                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+                g.RotateTransform(angle);
+                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(src, 0, 0);
+            }
+            return rotated;
+        }
+
+        #endregion
+
         #region Matrix Operations
 
         private void BitmapToMatrix(Bitmap image)
@@ -849,22 +1053,13 @@ namespace PengolahanCitra
 
         #endregion
 
-        #region Event Handlers - Aritmatika Operations
+        
 
-        private void BtnAritmathic_Click(object sender, EventArgs e)
-        {
-            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+        
 
-            if (isAritmatikPanelVisible)
-            {
-                HideAritmatikPanel();
-                ShowHistogram();
-            }
-            else
-            {
-                ShowAritmatikPanel();
-            }
-        }
+        #region Event Handlers - Rotation Operations
+
+
 
         #endregion
 
@@ -896,5 +1091,7 @@ namespace PengolahanCitra
         }
 
         #endregion
+
+
     }
 }

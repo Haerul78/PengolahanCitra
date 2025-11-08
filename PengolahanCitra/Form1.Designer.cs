@@ -34,6 +34,12 @@
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
+            this.panelAritmatikContainer = new System.Windows.Forms.Panel();
+            this.labelAritmatikTitle = new System.Windows.Forms.Label();
+            this.btnRotate45 = new System.Windows.Forms.Button();
+            this.btnRotate90 = new System.Windows.Forms.Button();
+            this.btnRotate180 = new System.Windows.Forms.Button();
+            this.labelRotateTitle = new System.Windows.Forms.Label();
             this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
@@ -56,8 +62,6 @@
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.labelBrightnessValue = new System.Windows.Forms.Label();
             this.btnResetBrightness = new System.Windows.Forms.Button();
-            this.panelAritmatikContainer = new System.Windows.Forms.Panel();
-            this.labelAritmatikTitle = new System.Windows.Forms.Label();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -67,6 +71,7 @@
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.panelSidebarRight.SuspendLayout();
+            this.panelAritmatikContainer.SuspendLayout();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -77,7 +82,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             this.panelBrightnessContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
-            this.panelAritmatikContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -309,7 +313,7 @@
             this.pictureBoxMain.Name = "pictureBoxMain";
             this.pictureBoxMain.Padding = new System.Windows.Forms.Padding(15, 10, 15, 20);
             this.pictureBoxMain.Size = new System.Drawing.Size(785, 701);
-            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
             // 
@@ -317,8 +321,8 @@
             // 
             this.panelSidebarRight.AutoScroll = true;
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
             this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
+            this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -327,6 +331,80 @@
             this.panelSidebarRight.Size = new System.Drawing.Size(249, 701);
             this.panelSidebarRight.TabIndex = 2;
             this.panelSidebarRight.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSidebarRight_Paint);
+            // 
+            // panelAritmatikContainer
+            // 
+            this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
+            this.panelAritmatikContainer.Controls.Add(this.btnRotate45);
+            this.panelAritmatikContainer.Controls.Add(this.btnRotate90);
+            this.panelAritmatikContainer.Controls.Add(this.btnRotate180);
+            this.panelAritmatikContainer.Controls.Add(this.labelRotateTitle);
+            this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
+            this.panelAritmatikContainer.Name = "panelAritmatikContainer";
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
+            this.panelAritmatikContainer.TabIndex = 1;
+            this.panelAritmatikContainer.Visible = false;
+            // 
+            // labelAritmatikTitle
+            // 
+            this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
+            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
+            this.labelAritmatikTitle.Name = "labelAritmatikTitle";
+            this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
+            this.labelAritmatikTitle.TabIndex = 0;
+            this.labelAritmatikTitle.Text = "Aritmatika";
+            this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnRotate45
+            // 
+            this.btnRotate45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnRotate45.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRotate45.ForeColor = System.Drawing.Color.White;
+            this.btnRotate45.Location = new System.Drawing.Point(36, 80);
+            this.btnRotate45.Name = "btnRotate45";
+            this.btnRotate45.Size = new System.Drawing.Size(180, 35);
+            this.btnRotate45.TabIndex = 2;
+            this.btnRotate45.Text = "Rotate 45°";
+            this.btnRotate45.UseVisualStyleBackColor = false;
+            this.btnRotate45.Click += new System.EventHandler(this.btnRotate45_Click);
+            // 
+            // btnRotate90
+            // 
+            this.btnRotate90.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnRotate90.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRotate90.ForeColor = System.Drawing.Color.White;
+            this.btnRotate90.Location = new System.Drawing.Point(36, 125);
+            this.btnRotate90.Name = "btnRotate90";
+            this.btnRotate90.Size = new System.Drawing.Size(180, 35);
+            this.btnRotate90.TabIndex = 3;
+            this.btnRotate90.Text = "Rotate 90°";
+            this.btnRotate90.UseVisualStyleBackColor = false;
+            this.btnRotate90.Click += new System.EventHandler(this.btnRotate90_Click);
+            // 
+            // btnRotate180
+            // 
+            this.btnRotate180.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnRotate180.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRotate180.ForeColor = System.Drawing.Color.White;
+            this.btnRotate180.Location = new System.Drawing.Point(36, 170);
+            this.btnRotate180.Name = "btnRotate180";
+            this.btnRotate180.Size = new System.Drawing.Size(180, 35);
+            this.btnRotate180.TabIndex = 4;
+            this.btnRotate180.Text = "Rotate 180°";
+            this.btnRotate180.UseVisualStyleBackColor = false;
+            this.btnRotate180.Click += new System.EventHandler(this.btnRotate180_Click);
+            // 
+            // labelRotateTitle
+            // 
+            this.labelRotateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelRotateTitle.ForeColor = System.Drawing.Color.White;
+            this.labelRotateTitle.Location = new System.Drawing.Point(36, 50);
+            this.labelRotateTitle.Name = "labelRotateTitle";
+            this.labelRotateTitle.Size = new System.Drawing.Size(180, 20);
+            this.labelRotateTitle.TabIndex = 1;
+            this.labelRotateTitle.Text = "Rotate Image";
+            this.labelRotateTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panelFilterContainer
             // 
@@ -587,26 +665,6 @@
             this.btnResetBrightness.UseVisualStyleBackColor = false;
             this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
             // 
-            // panelAritmatikContainer
-            // 
-            this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
-            this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
-            this.panelAritmatikContainer.Name = "panelAritmatikContainer";
-            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
-            this.panelAritmatikContainer.TabIndex = 1;
-            this.panelAritmatikContainer.Visible = false;
-            // 
-            // labelAritmatikTitle
-            // 
-            this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
-            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
-            this.labelAritmatikTitle.Name = "labelAritmatikTitle";
-            this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
-            this.labelAritmatikTitle.TabIndex = 0;
-            this.labelAritmatikTitle.Text = "Aritmatika";
-            this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -632,6 +690,7 @@
             this.panelToolbar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
+            this.panelAritmatikContainer.ResumeLayout(false);
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -643,7 +702,6 @@
             this.panelBrightnessContainer.ResumeLayout(false);
             this.panelBrightnessContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
-            this.panelAritmatikContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -696,6 +754,10 @@
         private System.Windows.Forms.Button Aritmathic;
         private System.Windows.Forms.Panel panelAritmatikContainer;
         private System.Windows.Forms.Label labelAritmatikTitle;
+        private System.Windows.Forms.Label labelRotateTitle;
+        private System.Windows.Forms.Button btnRotate45;
+        private System.Windows.Forms.Button btnRotate90;
+        private System.Windows.Forms.Button btnRotate180;
         protected internal System.Windows.Forms.Panel panelFilterContainer;
     }
 }
