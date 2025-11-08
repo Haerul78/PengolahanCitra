@@ -28,11 +28,13 @@
             this.BtnSetColor = new System.Windows.Forms.Button();
             this.btnSaveToTxt = new System.Windows.Forms.Button();
             this.panelToolbar = new System.Windows.Forms.Panel();
+            this.Aritmathic = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
+            this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
             this.labelOriginal = new System.Windows.Forms.Label();
@@ -54,6 +56,8 @@
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.labelBrightnessValue = new System.Windows.Forms.Label();
             this.btnResetBrightness = new System.Windows.Forms.Button();
+            this.panelAritmatikContainer = new System.Windows.Forms.Panel();
+            this.labelAritmatikTitle = new System.Windows.Forms.Label();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -63,6 +67,7 @@
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.panelSidebarRight.SuspendLayout();
+            this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
@@ -72,6 +77,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             this.panelBrightnessContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
+            this.panelAritmatikContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -222,6 +228,7 @@
             // panelToolbar
             // 
             this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.panelToolbar.Controls.Add(this.Aritmathic);
             this.panelToolbar.Controls.Add(this.btnSave);
             this.panelToolbar.Controls.Add(this.btnSaveToTxt);
             this.panelToolbar.Controls.Add(this.BtnSetColor);
@@ -232,6 +239,21 @@
             this.panelToolbar.Name = "panelToolbar";
             this.panelToolbar.Size = new System.Drawing.Size(1284, 60);
             this.panelToolbar.TabIndex = 1;
+            // 
+            // Aritmathic
+            // 
+            this.Aritmathic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.Aritmathic.FlatAppearance.BorderSize = 0;
+            this.Aritmathic.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Aritmathic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Aritmathic.ForeColor = System.Drawing.Color.White;
+            this.Aritmathic.Location = new System.Drawing.Point(275, 10);
+            this.Aritmathic.Name = "Aritmathic";
+            this.Aritmathic.Size = new System.Drawing.Size(80, 40);
+            this.Aritmathic.TabIndex = 4;
+            this.Aritmathic.Text = "Artimatika";
+            this.Aritmathic.UseVisualStyleBackColor = false;
+            this.Aritmathic.Click += new System.EventHandler(this.BtnAritmathic_Click);
             // 
             // btnSave
             // 
@@ -295,23 +317,8 @@
             // 
             this.panelSidebarRight.AutoScroll = true;
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.labelFilterTitle);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxOriginal);
-            this.panelSidebarRight.Controls.Add(this.labelOriginal);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxRed);
-            this.panelSidebarRight.Controls.Add(this.labelRed);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxGreen);
-            this.panelSidebarRight.Controls.Add(this.labelGreen);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxBlue);
-            this.panelSidebarRight.Controls.Add(this.labelBlue);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxGray);
-            this.panelSidebarRight.Controls.Add(this.labelGray);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxNegative);
-            this.panelSidebarRight.Controls.Add(this.labelNegative);
-            this.panelSidebarRight.Controls.Add(this.btnApplyFilter);
-            this.panelSidebarRight.Controls.Add(this.pictureBoxThreshold);
-            this.panelSidebarRight.Controls.Add(this.labelThreshold);
-            this.panelSidebarRight.Controls.Add(this.panelBrightnessContainer);
+            this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
+            this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -321,199 +328,208 @@
             this.panelSidebarRight.TabIndex = 2;
             this.panelSidebarRight.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSidebarRight_Paint);
             // 
+            // panelFilterContainer
+            // 
+            this.panelFilterContainer.Controls.Add(this.labelFilterTitle);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxOriginal);
+            this.panelFilterContainer.Controls.Add(this.labelOriginal);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxRed);
+            this.panelFilterContainer.Controls.Add(this.labelRed);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxGreen);
+            this.panelFilterContainer.Controls.Add(this.labelGreen);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxBlue);
+            this.panelFilterContainer.Controls.Add(this.labelBlue);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxGray);
+            this.panelFilterContainer.Controls.Add(this.labelGray);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxNegative);
+            this.panelFilterContainer.Controls.Add(this.labelNegative);
+            this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxThreshold);
+            this.panelFilterContainer.Controls.Add(this.labelThreshold);
+            this.panelFilterContainer.Controls.Add(this.panelBrightnessContainer);
+            this.panelFilterContainer.Location = new System.Drawing.Point(5, 5);
+            this.panelFilterContainer.Name = "panelFilterContainer";
+            this.panelFilterContainer.Size = new System.Drawing.Size(239, 690);
+            this.panelFilterContainer.TabIndex = 0;
+            this.panelFilterContainer.Visible = false;
+            // 
             // labelFilterTitle
             // 
             this.labelFilterTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.labelFilterTitle.ForeColor = System.Drawing.Color.White;
-            this.labelFilterTitle.Location = new System.Drawing.Point(41, 21);
+            this.labelFilterTitle.Location = new System.Drawing.Point(36, 16);
             this.labelFilterTitle.Name = "labelFilterTitle";
             this.labelFilterTitle.Size = new System.Drawing.Size(180, 25);
             this.labelFilterTitle.TabIndex = 0;
             this.labelFilterTitle.Text = "Filter Preview";
             this.labelFilterTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelFilterTitle.Visible = false;
             // 
             // pictureBoxOriginal
             // 
             this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxOriginal.Location = new System.Drawing.Point(55, 71);
+            this.pictureBoxOriginal.Location = new System.Drawing.Point(50, 66);
             this.pictureBoxOriginal.Name = "pictureBoxOriginal";
             this.pictureBoxOriginal.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxOriginal.TabIndex = 1;
             this.pictureBoxOriginal.TabStop = false;
-            this.pictureBoxOriginal.Visible = false;
             this.pictureBoxOriginal.Click += new System.EventHandler(this.pictureBoxOriginal_Click);
             // 
             // labelOriginal
             // 
             this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelOriginal.ForeColor = System.Drawing.Color.White;
-            this.labelOriginal.Location = new System.Drawing.Point(55, 131);
+            this.labelOriginal.Location = new System.Drawing.Point(50, 126);
             this.labelOriginal.Name = "labelOriginal";
             this.labelOriginal.Size = new System.Drawing.Size(60, 20);
             this.labelOriginal.TabIndex = 2;
             this.labelOriginal.Text = "Original";
             this.labelOriginal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelOriginal.Visible = false;
             // 
             // pictureBoxRed
             // 
             this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxRed.Location = new System.Drawing.Point(141, 71);
+            this.pictureBoxRed.Location = new System.Drawing.Point(136, 66);
             this.pictureBoxRed.Name = "pictureBoxRed";
             this.pictureBoxRed.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxRed.TabIndex = 3;
             this.pictureBoxRed.TabStop = false;
-            this.pictureBoxRed.Visible = false;
             this.pictureBoxRed.Click += new System.EventHandler(this.pictureBoxRed_Click);
             // 
             // labelRed
             // 
             this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelRed.ForeColor = System.Drawing.Color.White;
-            this.labelRed.Location = new System.Drawing.Point(141, 131);
+            this.labelRed.Location = new System.Drawing.Point(136, 126);
             this.labelRed.Name = "labelRed";
             this.labelRed.Size = new System.Drawing.Size(60, 20);
             this.labelRed.TabIndex = 4;
             this.labelRed.Text = "Red";
             this.labelRed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelRed.Visible = false;
             // 
             // pictureBoxGreen
             // 
             this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGreen.Location = new System.Drawing.Point(55, 161);
+            this.pictureBoxGreen.Location = new System.Drawing.Point(50, 156);
             this.pictureBoxGreen.Name = "pictureBoxGreen";
             this.pictureBoxGreen.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxGreen.TabIndex = 5;
             this.pictureBoxGreen.TabStop = false;
-            this.pictureBoxGreen.Visible = false;
             this.pictureBoxGreen.Click += new System.EventHandler(this.pictureBoxGreen_Click);
             // 
             // labelGreen
             // 
             this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelGreen.ForeColor = System.Drawing.Color.White;
-            this.labelGreen.Location = new System.Drawing.Point(55, 224);
+            this.labelGreen.Location = new System.Drawing.Point(50, 219);
             this.labelGreen.Name = "labelGreen";
             this.labelGreen.Size = new System.Drawing.Size(60, 20);
             this.labelGreen.TabIndex = 6;
             this.labelGreen.Text = "Green";
             this.labelGreen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelGreen.Visible = false;
             // 
             // pictureBoxBlue
             // 
             this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxBlue.Location = new System.Drawing.Point(141, 161);
+            this.pictureBoxBlue.Location = new System.Drawing.Point(136, 156);
             this.pictureBoxBlue.Name = "pictureBoxBlue";
             this.pictureBoxBlue.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxBlue.TabIndex = 7;
             this.pictureBoxBlue.TabStop = false;
-            this.pictureBoxBlue.Visible = false;
             this.pictureBoxBlue.Click += new System.EventHandler(this.pictureBoxBlue_Click);
             // 
             // labelBlue
             // 
             this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelBlue.ForeColor = System.Drawing.Color.White;
-            this.labelBlue.Location = new System.Drawing.Point(141, 224);
+            this.labelBlue.Location = new System.Drawing.Point(136, 219);
             this.labelBlue.Name = "labelBlue";
             this.labelBlue.Size = new System.Drawing.Size(60, 20);
             this.labelBlue.TabIndex = 8;
             this.labelBlue.Text = "Blue";
             this.labelBlue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelBlue.Visible = false;
             // 
             // pictureBoxGray
             // 
             this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGray.Location = new System.Drawing.Point(55, 247);
+            this.pictureBoxGray.Location = new System.Drawing.Point(50, 242);
             this.pictureBoxGray.Name = "pictureBoxGray";
             this.pictureBoxGray.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxGray.TabIndex = 9;
             this.pictureBoxGray.TabStop = false;
-            this.pictureBoxGray.Visible = false;
             this.pictureBoxGray.Click += new System.EventHandler(this.pictureBoxGray_Click);
             // 
             // labelGray
             // 
             this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelGray.ForeColor = System.Drawing.Color.White;
-            this.labelGray.Location = new System.Drawing.Point(54, 310);
+            this.labelGray.Location = new System.Drawing.Point(49, 305);
             this.labelGray.Name = "labelGray";
             this.labelGray.Size = new System.Drawing.Size(60, 20);
             this.labelGray.TabIndex = 10;
             this.labelGray.Text = "Grayscale";
             this.labelGray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelGray.Visible = false;
             // 
             // pictureBoxNegative
             // 
             this.pictureBoxNegative.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNegative.Location = new System.Drawing.Point(54, 333);
+            this.pictureBoxNegative.Location = new System.Drawing.Point(49, 328);
             this.pictureBoxNegative.Name = "pictureBoxNegative";
             this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxNegative.TabIndex = 19;
             this.pictureBoxNegative.TabStop = false;
-            this.pictureBoxNegative.Visible = false;
             this.pictureBoxNegative.Click += new System.EventHandler(this.pictureBoxNegative_Click);
             // 
             // labelNegative
             // 
             this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelNegative.ForeColor = System.Drawing.Color.White;
-            this.labelNegative.Location = new System.Drawing.Point(54, 396);
+            this.labelNegative.Location = new System.Drawing.Point(49, 391);
             this.labelNegative.Name = "labelNegative";
             this.labelNegative.Size = new System.Drawing.Size(60, 20);
             this.labelNegative.TabIndex = 20;
             this.labelNegative.Text = "Negative";
             this.labelNegative.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelNegative.Visible = false;
             // 
             // btnApplyFilter
             // 
             this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.btnApplyFilter.Location = new System.Drawing.Point(41, 647);
+            this.btnApplyFilter.Location = new System.Drawing.Point(36, 642);
             this.btnApplyFilter.Name = "btnApplyFilter";
             this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
             this.btnApplyFilter.TabIndex = 11;
             this.btnApplyFilter.Text = "Apply Filter";
             this.btnApplyFilter.UseVisualStyleBackColor = false;
-            this.btnApplyFilter.Visible = false;
             this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
             // 
             // pictureBoxThreshold
             // 
             this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxThreshold.Location = new System.Drawing.Point(141, 247);
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(136, 242);
             this.pictureBoxThreshold.Name = "pictureBoxThreshold";
             this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxThreshold.TabIndex = 17;
             this.pictureBoxThreshold.TabStop = false;
-            this.pictureBoxThreshold.Visible = false;
             this.pictureBoxThreshold.Click += new System.EventHandler(this.pictureBoxThreshold_Click);
             // 
             // labelThreshold
             // 
             this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelThreshold.Location = new System.Drawing.Point(141, 310);
+            this.labelThreshold.Location = new System.Drawing.Point(136, 305);
             this.labelThreshold.Name = "labelThreshold";
             this.labelThreshold.Size = new System.Drawing.Size(60, 20);
             this.labelThreshold.TabIndex = 18;
             this.labelThreshold.Text = "Threshold";
             this.labelThreshold.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.labelThreshold.Visible = false;
             // 
             // panelBrightnessContainer
             // 
@@ -521,11 +537,10 @@
             this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
             this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
             this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(21, 428);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(16, 423);
             this.panelBrightnessContainer.Name = "panelBrightnessContainer";
             this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
             this.panelBrightnessContainer.TabIndex = 0;
-            this.panelBrightnessContainer.Visible = false;
             // 
             // labelBrightness
             // 
@@ -572,6 +587,26 @@
             this.btnResetBrightness.UseVisualStyleBackColor = false;
             this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
             // 
+            // panelAritmatikContainer
+            // 
+            this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
+            this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
+            this.panelAritmatikContainer.Name = "panelAritmatikContainer";
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
+            this.panelAritmatikContainer.TabIndex = 1;
+            this.panelAritmatikContainer.Visible = false;
+            // 
+            // labelAritmatikTitle
+            // 
+            this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
+            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
+            this.labelAritmatikTitle.Name = "labelAritmatikTitle";
+            this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
+            this.labelAritmatikTitle.TabIndex = 0;
+            this.labelAritmatikTitle.Text = "Aritmatika";
+            this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -597,6 +632,7 @@
             this.panelToolbar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
+            this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
@@ -607,6 +643,7 @@
             this.panelBrightnessContainer.ResumeLayout(false);
             this.panelBrightnessContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
+            this.panelAritmatikContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -623,8 +660,6 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Panel panelSidebarRight;
         private System.Windows.Forms.Button BtnSetColor;
-
-        // Filter preview controls (right sidebar)
         private System.Windows.Forms.Label labelFilterTitle;
         private System.Windows.Forms.PictureBox pictureBoxOriginal;
         private System.Windows.Forms.Label labelOriginal;
@@ -642,7 +677,7 @@
         private System.Windows.Forms.PictureBox pictureBoxThreshold;
         private System.Windows.Forms.Label labelThreshold;
 
-        // Tambahkan di bagian deklarasi variabel (di bagian bawah)
+        // Histogram controls
         private System.Windows.Forms.PictureBox pictureBoxHistogramR;
         private System.Windows.Forms.PictureBox pictureBoxHistogramG;
         private System.Windows.Forms.PictureBox pictureBoxHistogramB;
@@ -656,5 +691,11 @@
         private System.Windows.Forms.Label labelBrightnessValue;
         private System.Windows.Forms.Button btnResetBrightness;
         private System.Windows.Forms.Panel panelBrightnessContainer;
+        
+        // Arithmetic controls
+        private System.Windows.Forms.Button Aritmathic;
+        private System.Windows.Forms.Panel panelAritmatikContainer;
+        private System.Windows.Forms.Label labelAritmatikTitle;
+        protected internal System.Windows.Forms.Panel panelFilterContainer;
     }
 }

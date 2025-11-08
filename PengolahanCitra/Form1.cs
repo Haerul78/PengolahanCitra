@@ -26,6 +26,7 @@ namespace PengolahanCitra
 
         // State
         private bool isFilterPanelVisible;
+        private bool isAritmatikPanelVisible;
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
 
@@ -277,6 +278,8 @@ namespace PengolahanCitra
         private void ToggleFilterPanel()
         {
             if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+
+            HideAritmatikPanel();
 
             if (isFilterPanelVisible)
             {
@@ -723,39 +726,17 @@ namespace PengolahanCitra
 
         private void ShowFilterPanel()
         {
-            SetFilterPanelVisibility(true);
-            ShowBrightnessPanel();
+            panelFilterContainer.Visible = true;
             isFilterPanelVisible = true;
         }
 
         private void HideFilterPanel()
         {
-            SetFilterPanelVisibility(false);
-            HideBrightnessPanel();
+            panelFilterContainer.Visible = false;
             isFilterPanelVisible = false;
             UpdateMainImage(currentImage);
             selectedPreview?.Dispose();
             selectedPreview = null;
-        }
-
-        private void SetFilterPanelVisibility(bool visible)
-        {
-            labelFilterTitle.Visible = visible;
-            pictureBoxOriginal.Visible = visible;
-            labelOriginal.Visible = visible;
-            pictureBoxRed.Visible = visible;
-            labelRed.Visible = visible;
-            pictureBoxGreen.Visible = visible;
-            labelGreen.Visible = visible;
-            pictureBoxBlue.Visible = visible;
-            labelBlue.Visible = visible;
-            pictureBoxGray.Visible = visible;
-            labelGray.Visible = visible;
-            pictureBoxThreshold.Visible = visible;
-            labelThreshold.Visible = visible;
-            pictureBoxNegative.Visible = visible;
-            labelNegative.Visible = visible;
-            btnApplyFilter.Visible = visible;
         }
 
         private void ShowHistogram()
@@ -768,16 +749,20 @@ namespace PengolahanCitra
             pictureBoxHistogramGray.Visible = true;
         }
 
-        private void ShowBrightnessPanel()
+        private void ShowAritmatikPanel()
         {
-            panelBrightnessContainer.Visible = true;
-            trackBarBrightness.Value = 0;
-            labelBrightnessValue.Text = "0";
+            // Sembunyikan panel filter
+            HideFilterPanel();
+            
+            // Tampilkan panel aritmatika
+            panelAritmatikContainer.Visible = true;
+            isAritmatikPanelVisible = true;
         }
 
-        private void HideBrightnessPanel()
+        private void HideAritmatikPanel()
         {
-            panelBrightnessContainer.Visible = false;
+            panelAritmatikContainer.Visible = false;
+            isAritmatikPanelVisible = false;
         }
 
         private void ResetToHome()
@@ -785,10 +770,14 @@ namespace PengolahanCitra
             if (isFilterPanelVisible)
             {
                 HideFilterPanel();
-                if (currentImage != null)
-                {
-                    ShowHistogram();
-                }
+            }
+            if (isAritmatikPanelVisible)
+            {
+                HideAritmatikPanel();
+            }
+            if (currentImage != null)
+            {
+                ShowHistogram();
             }
         }
 
@@ -811,6 +800,19 @@ namespace PengolahanCitra
                     btn.BackColor = Color.FromArgb(75, 0, 130);
                 }
             }
+            else if (btn == Aritmathic)
+            {
+                if (isEnter)
+                {
+                    btn.BackColor = isAritmatikPanelVisible
+                        ? Color.FromArgb(138, 43, 226)
+                        : Color.FromArgb(75, 0, 130);
+                }
+                else
+                {
+                    btn.BackColor = Color.FromArgb(75, 0, 130);
+                }
+            }
             else
             {
                 btn.BackColor = isEnter
@@ -822,6 +824,7 @@ namespace PengolahanCitra
         #endregion
 
         #region Utility Methods
+        
         private int CalculateGrayscale(Color pixel)
         {
             return (int)((pixel.R + pixel.G + pixel.B) / 3);
@@ -842,6 +845,25 @@ namespace PengolahanCitra
             if (ext == ".bmp")
                 return System.Drawing.Imaging.ImageFormat.Bmp;
             return System.Drawing.Imaging.ImageFormat.Png;
+        }
+
+        #endregion
+
+        #region Event Handlers - Aritmatika Operations
+
+        private void BtnAritmathic_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+
+            if (isAritmatikPanelVisible)
+            {
+                HideAritmatikPanel();
+                ShowHistogram();
+            }
+            else
+            {
+                ShowAritmatikPanel();
+            }
         }
 
         #endregion
