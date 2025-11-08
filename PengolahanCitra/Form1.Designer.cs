@@ -35,6 +35,9 @@
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
             this.panelAritmatikContainer = new System.Windows.Forms.Panel();
+            this.btnFlipVertical = new System.Windows.Forms.Button();
+            this.btnFlipHorizontal = new System.Windows.Forms.Button();
+            this.labelFlipTitle = new System.Windows.Forms.Label();
             this.btnTranslate = new System.Windows.Forms.Button();
             this.numericUpDownTranslateY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTranslateX = new System.Windows.Forms.NumericUpDown();
@@ -335,7 +338,6 @@
             // 
             // panelSidebarRight
             // 
-            this.panelSidebarRight.AutoScroll = true;
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
@@ -350,6 +352,13 @@
             // 
             // panelAritmatikContainer
             // 
+            this.panelAritmatikContainer.AutoScroll = true;
+            this.panelAritmatikContainer.HorizontalScroll.Enabled = false;
+            this.panelAritmatikContainer.HorizontalScroll.Visible = false;
+            this.panelAritmatikContainer.HorizontalScroll.Maximum = 0;
+            this.panelAritmatikContainer.Controls.Add(this.btnFlipVertical);
+            this.panelAritmatikContainer.Controls.Add(this.btnFlipHorizontal);
+            this.panelAritmatikContainer.Controls.Add(this.labelFlipTitle);
             this.panelAritmatikContainer.Controls.Add(this.btnTranslate);
             this.panelAritmatikContainer.Controls.Add(this.numericUpDownTranslateY);
             this.panelAritmatikContainer.Controls.Add(this.numericUpDownTranslateX);
@@ -370,16 +379,55 @@
             this.panelAritmatikContainer.Controls.Add(this.btnDivideImage);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
-            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 700);
             this.panelAritmatikContainer.TabIndex = 1;
-            this.panelAritmatikContainer.Visible = false;
+            this.panelAritmatikContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelAritmatikContainer_Paint);
+            // 
+            // btnFlipVertical
+            // 
+            this.btnFlipVertical.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
+            this.btnFlipVertical.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFlipVertical.ForeColor = System.Drawing.Color.White;
+            this.btnFlipVertical.Location = new System.Drawing.Point(126, 656);
+            this.btnFlipVertical.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.btnFlipVertical.Name = "btnFlipVertical";
+            this.btnFlipVertical.Size = new System.Drawing.Size(90, 35);
+            this.btnFlipVertical.TabIndex = 15;
+            this.btnFlipVertical.Text = "🔄 Vertikal";
+            this.btnFlipVertical.UseVisualStyleBackColor = false;
+            this.btnFlipVertical.Click += new System.EventHandler(this.btnFlipVertical_Click);
+            // 
+            // btnFlipHorizontal
+            // 
+            this.btnFlipHorizontal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
+            this.btnFlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFlipHorizontal.ForeColor = System.Drawing.Color.White;
+            this.btnFlipHorizontal.Location = new System.Drawing.Point(36, 656);
+            this.btnFlipHorizontal.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.btnFlipHorizontal.Name = "btnFlipHorizontal";
+            this.btnFlipHorizontal.Size = new System.Drawing.Size(84, 35);
+            this.btnFlipHorizontal.TabIndex = 14;
+            this.btnFlipHorizontal.Text = "🔄 Horizontal";
+            this.btnFlipHorizontal.UseVisualStyleBackColor = false;
+            this.btnFlipHorizontal.Click += new System.EventHandler(this.btnFlipHorizontal_Click);
+            // 
+            // labelFlipTitle
+            // 
+            this.labelFlipTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelFlipTitle.ForeColor = System.Drawing.Color.White;
+            this.labelFlipTitle.Location = new System.Drawing.Point(36, 630);
+            this.labelFlipTitle.Name = "labelFlipTitle";
+            this.labelFlipTitle.Size = new System.Drawing.Size(180, 20);
+            this.labelFlipTitle.TabIndex = 13;
+            this.labelFlipTitle.Text = "Flip Gambar";
+            this.labelFlipTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnTranslate
             // 
             this.btnTranslate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnTranslate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTranslate.ForeColor = System.Drawing.Color.White;
-            this.btnTranslate.Location = new System.Drawing.Point(36, 650);
+            this.btnTranslate.Location = new System.Drawing.Point(36, 589);
             this.btnTranslate.Name = "btnTranslate";
             this.btnTranslate.Size = new System.Drawing.Size(180, 35);
             this.btnTranslate.TabIndex = 13;
@@ -391,33 +439,47 @@
             // 
             this.numericUpDownTranslateY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateY.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateY.Location = new System.Drawing.Point(126, 615);
-            this.numericUpDownTranslateY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
-            this.numericUpDownTranslateY.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
+            this.numericUpDownTranslateY.Location = new System.Drawing.Point(126, 544);
+            this.numericUpDownTranslateY.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownTranslateY.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownTranslateY.Name = "numericUpDownTranslateY";
-            this.numericUpDownTranslateY.Size = new System.Drawing.Size(90, 23);
+            this.numericUpDownTranslateY.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateY.TabIndex = 12;
             this.numericUpDownTranslateY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDownTranslateY.Value = new decimal(new int[] { 0, 0, 0, 0 });
             // 
             // numericUpDownTranslateX
             // 
             this.numericUpDownTranslateX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateX.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateX.Location = new System.Drawing.Point(36, 615);
-            this.numericUpDownTranslateX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
-            this.numericUpDownTranslateX.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
+            this.numericUpDownTranslateX.Location = new System.Drawing.Point(36, 544);
+            this.numericUpDownTranslateX.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownTranslateX.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownTranslateX.Name = "numericUpDownTranslateX";
-            this.numericUpDownTranslateX.Size = new System.Drawing.Size(90, 23);
+            this.numericUpDownTranslateX.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateX.TabIndex = 11;
             this.numericUpDownTranslateX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDownTranslateX.Value = new decimal(new int[] { 0, 0, 0, 0 });
             // 
             // labelTranslateY
             // 
             this.labelTranslateY.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateY.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateY.Location = new System.Drawing.Point(126, 595);
+            this.labelTranslateY.Location = new System.Drawing.Point(126, 524);
             this.labelTranslateY.Name = "labelTranslateY";
             this.labelTranslateY.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateY.TabIndex = 10;
@@ -428,7 +490,7 @@
             // 
             this.labelTranslateX.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateX.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateX.Location = new System.Drawing.Point(36, 595);
+            this.labelTranslateX.Location = new System.Drawing.Point(36, 524);
             this.labelTranslateX.Name = "labelTranslateX";
             this.labelTranslateX.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateX.TabIndex = 9;
@@ -446,42 +508,49 @@
             this.labelTranslateTitle.Text = "Translasi / Pergeseran";
             this.labelTranslateTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // labelCustomRotate
-            // 
-            this.labelCustomRotate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.labelCustomRotate.ForeColor = System.Drawing.Color.White;
-            this.labelCustomRotate.Location = new System.Drawing.Point(36, 445);
-            this.labelCustomRotate.Name = "labelCustomRotate";
-            this.labelCustomRotate.Size = new System.Drawing.Size(180, 20);
-            this.labelCustomRotate.TabIndex = 5;
-            this.labelCustomRotate.Text = "Custom Rotation";
-            this.labelCustomRotate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // numericUpDownDegree
-            // 
-            this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownDegree.Location = new System.Drawing.Point(36, 470);
-            this.numericUpDownDegree.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
-            this.numericUpDownDegree.Minimum = new decimal(new int[] { 360, 0, 0, -2147483648 });
-            this.numericUpDownDegree.Name = "numericUpDownDegree";
-            this.numericUpDownDegree.Size = new System.Drawing.Size(180, 23);
-            this.numericUpDownDegree.TabIndex = 6;
-            this.numericUpDownDegree.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDownDegree.Value = new decimal(new int[] { 0, 0, 0, 0 });
-            // 
             // btnRotateCustom
             // 
             this.btnRotateCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnRotateCustom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotateCustom.ForeColor = System.Drawing.Color.White;
-            this.btnRotateCustom.Location = new System.Drawing.Point(36, 505);
+            this.btnRotateCustom.Location = new System.Drawing.Point(36, 486);
             this.btnRotateCustom.Name = "btnRotateCustom";
             this.btnRotateCustom.Size = new System.Drawing.Size(180, 35);
             this.btnRotateCustom.TabIndex = 7;
             this.btnRotateCustom.Text = "🔄 Rotate Custom";
             this.btnRotateCustom.UseVisualStyleBackColor = false;
             this.btnRotateCustom.Click += new System.EventHandler(this.btnRotateCustom_Click);
+            // 
+            // numericUpDownDegree
+            // 
+            this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
+            this.numericUpDownDegree.Location = new System.Drawing.Point(36, 459);
+            this.numericUpDownDegree.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownDegree.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDegree.Name = "numericUpDownDegree";
+            this.numericUpDownDegree.Size = new System.Drawing.Size(180, 20);
+            this.numericUpDownDegree.TabIndex = 6;
+            this.numericUpDownDegree.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // labelCustomRotate
+            // 
+            this.labelCustomRotate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelCustomRotate.ForeColor = System.Drawing.Color.White;
+            this.labelCustomRotate.Location = new System.Drawing.Point(36, 436);
+            this.labelCustomRotate.Name = "labelCustomRotate";
+            this.labelCustomRotate.Size = new System.Drawing.Size(180, 20);
+            this.labelCustomRotate.TabIndex = 5;
+            this.labelCustomRotate.Text = "Custom Rotation";
+            this.labelCustomRotate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnRotate45
             // 
@@ -970,6 +1039,11 @@
         private System.Windows.Forms.NumericUpDown numericUpDownTranslateX;
         private System.Windows.Forms.NumericUpDown numericUpDownTranslateY;
         private System.Windows.Forms.Button btnTranslate;
+        
+        // Flip controls
+        private System.Windows.Forms.Label labelFlipTitle;
+        private System.Windows.Forms.Button btnFlipHorizontal;
+        private System.Windows.Forms.Button btnFlipVertical;
         
         private System.Windows.Forms.Panel panelFilterContainer;
     }

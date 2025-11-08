@@ -44,6 +44,13 @@ namespace PengolahanCitra
         public Form1()
         {
             InitializeComponent();
+            
+            // Disable horizontal scroll on arithmetic panel, only allow vertical scroll
+            //panelAritmatikContainer.AutoScroll = true;
+            panelAritmatikContainer.HorizontalScroll.Enabled = false;
+            panelAritmatikContainer.HorizontalScroll.Visible = false;
+            panelAritmatikContainer.HorizontalScroll.Maximum = 0;
+            panelAritmatikContainer.AutoScrollMinSize = new System.Drawing.Size(0, 720);
         }
 
         #endregion
@@ -1008,6 +1015,62 @@ namespace PengolahanCitra
 
         #endregion
 
+        #region Image Processing - Flip
+
+        /// <summary>
+        /// Flips an image horizontally (mirror left-right)
+        /// </summary>
+        /// <param name="src">Source bitmap to flip</param>
+        /// <returns>Horizontally flipped bitmap</returns>
+        private Bitmap FlipImageHorizontal(Bitmap src)
+        {
+            if (src == null) return null;
+
+            int width = src.Width;
+            int height = src.Height;
+            Bitmap flipped = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // Mirror horizontally: swap left with right
+                    Color pixel = src.GetPixel(x, y);
+                    flipped.SetPixel(width - x - 1, y, pixel);
+                }
+            }
+
+            return flipped;
+        }
+
+        /// <summary>
+        /// Flips an image vertically (mirror top-bottom)
+        /// </summary>
+        /// <param name="src">Source bitmap to flip</param>
+        /// <returns>Vertically flipped bitmap</returns>
+        private Bitmap FlipImageVertical(Bitmap src)
+        {
+            if (src == null) return null;
+
+            int width = src.Width;
+            int height = src.Height;
+            Bitmap flipped = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // Mirror vertically: swap top with bottom
+                    Color pixel = src.GetPixel(x, y);
+                    flipped.SetPixel(x, height - y - 1, pixel);
+                }
+            }
+
+            return flipped;
+        }
+
+        #endregion
+
         #region Matrix Operations
 
         private void BitmapToMatrix(Bitmap image)
@@ -1173,6 +1236,7 @@ namespace PengolahanCitra
 
         #endregion
 
+
         
 
         
@@ -1180,6 +1244,44 @@ namespace PengolahanCitra
         #region Event Handlers - Rotation Operations
 
 
+
+        private void btnFlipHorizontal_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                Bitmap flipped = FlipImageHorizontal(currentImage);
+                currentImage?.Dispose();
+                currentImage = flipped;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess("Gambar berhasil di-flip horizontal!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error flip horizontal: {ex.Message}");
+            }
+        }
+
+        private void btnFlipVertical_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                Bitmap flipped = FlipImageVertical(currentImage);
+                currentImage?.Dispose();
+                currentImage = flipped;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess("Gambar berhasil di-flip vertical!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error flip vertical: {ex.Message}");
+            }
+        }
 
         private void btnAddImage_Click(object sender, EventArgs e)
         {
@@ -1348,6 +1450,11 @@ namespace PengolahanCitra
                 }
             }
             return result;
+        }
+
+        private void panelAritmatikContainer_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         #endregion
