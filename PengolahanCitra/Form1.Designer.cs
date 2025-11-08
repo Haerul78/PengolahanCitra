@@ -35,11 +35,24 @@
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
             this.panelAritmatikContainer = new System.Windows.Forms.Panel();
-            this.labelAritmatikTitle = new System.Windows.Forms.Label();
+            this.btnTranslate = new System.Windows.Forms.Button();
+            this.numericUpDownTranslateY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTranslateX = new System.Windows.Forms.NumericUpDown();
+            this.labelTranslateY = new System.Windows.Forms.Label();
+            this.labelTranslateX = new System.Windows.Forms.Label();
+            this.labelTranslateTitle = new System.Windows.Forms.Label();
+            this.btnRotateCustom = new System.Windows.Forms.Button();
+            this.numericUpDownDegree = new System.Windows.Forms.NumericUpDown();
+            this.labelCustomRotate = new System.Windows.Forms.Label();
             this.btnRotate45 = new System.Windows.Forms.Button();
             this.btnRotate90 = new System.Windows.Forms.Button();
             this.btnRotate180 = new System.Windows.Forms.Button();
             this.labelRotateTitle = new System.Windows.Forms.Label();
+            this.labelAritmatikTitle = new System.Windows.Forms.Label();
+            this.btnAddImage = new System.Windows.Forms.Button();
+            this.btnSubtractImage = new System.Windows.Forms.Button();
+            this.btnMultiplyImage = new System.Windows.Forms.Button();
+            this.btnDivideImage = new System.Windows.Forms.Button();
             this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
@@ -72,6 +85,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.panelSidebarRight.SuspendLayout();
             this.panelAritmatikContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -334,34 +350,145 @@
             // 
             // panelAritmatikContainer
             // 
-            this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
+            this.panelAritmatikContainer.Controls.Add(this.btnTranslate);
+            this.panelAritmatikContainer.Controls.Add(this.numericUpDownTranslateY);
+            this.panelAritmatikContainer.Controls.Add(this.numericUpDownTranslateX);
+            this.panelAritmatikContainer.Controls.Add(this.labelTranslateY);
+            this.panelAritmatikContainer.Controls.Add(this.labelTranslateX);
+            this.panelAritmatikContainer.Controls.Add(this.labelTranslateTitle);
+            this.panelAritmatikContainer.Controls.Add(this.btnRotateCustom);
+            this.panelAritmatikContainer.Controls.Add(this.numericUpDownDegree);
+            this.panelAritmatikContainer.Controls.Add(this.labelCustomRotate);
             this.panelAritmatikContainer.Controls.Add(this.btnRotate45);
             this.panelAritmatikContainer.Controls.Add(this.btnRotate90);
             this.panelAritmatikContainer.Controls.Add(this.btnRotate180);
             this.panelAritmatikContainer.Controls.Add(this.labelRotateTitle);
+            this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
+            this.panelAritmatikContainer.Controls.Add(this.btnAddImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnSubtractImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnMultiplyImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnDivideImage);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
             this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
             this.panelAritmatikContainer.TabIndex = 1;
             this.panelAritmatikContainer.Visible = false;
             // 
-            // labelAritmatikTitle
+            // btnTranslate
             // 
-            this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
-            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
-            this.labelAritmatikTitle.Name = "labelAritmatikTitle";
-            this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
-            this.labelAritmatikTitle.TabIndex = 0;
-            this.labelAritmatikTitle.Text = "Aritmatika";
-            this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnTranslate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
+            this.btnTranslate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTranslate.ForeColor = System.Drawing.Color.White;
+            this.btnTranslate.Location = new System.Drawing.Point(36, 650);
+            this.btnTranslate.Name = "btnTranslate";
+            this.btnTranslate.Size = new System.Drawing.Size(180, 35);
+            this.btnTranslate.TabIndex = 13;
+            this.btnTranslate.Text = "📍 Translasi";
+            this.btnTranslate.UseVisualStyleBackColor = false;
+            this.btnTranslate.Click += new System.EventHandler(this.btnTranslate_Click);
+            // 
+            // numericUpDownTranslateY
+            // 
+            this.numericUpDownTranslateY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericUpDownTranslateY.ForeColor = System.Drawing.Color.White;
+            this.numericUpDownTranslateY.Location = new System.Drawing.Point(126, 615);
+            this.numericUpDownTranslateY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.numericUpDownTranslateY.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
+            this.numericUpDownTranslateY.Name = "numericUpDownTranslateY";
+            this.numericUpDownTranslateY.Size = new System.Drawing.Size(90, 23);
+            this.numericUpDownTranslateY.TabIndex = 12;
+            this.numericUpDownTranslateY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownTranslateY.Value = new decimal(new int[] { 0, 0, 0, 0 });
+            // 
+            // numericUpDownTranslateX
+            // 
+            this.numericUpDownTranslateX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericUpDownTranslateX.ForeColor = System.Drawing.Color.White;
+            this.numericUpDownTranslateX.Location = new System.Drawing.Point(36, 615);
+            this.numericUpDownTranslateX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.numericUpDownTranslateX.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
+            this.numericUpDownTranslateX.Name = "numericUpDownTranslateX";
+            this.numericUpDownTranslateX.Size = new System.Drawing.Size(90, 23);
+            this.numericUpDownTranslateX.TabIndex = 11;
+            this.numericUpDownTranslateX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownTranslateX.Value = new decimal(new int[] { 0, 0, 0, 0 });
+            // 
+            // labelTranslateY
+            // 
+            this.labelTranslateY.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.labelTranslateY.ForeColor = System.Drawing.Color.White;
+            this.labelTranslateY.Location = new System.Drawing.Point(126, 595);
+            this.labelTranslateY.Name = "labelTranslateY";
+            this.labelTranslateY.Size = new System.Drawing.Size(90, 17);
+            this.labelTranslateY.TabIndex = 10;
+            this.labelTranslateY.Text = "Y Offset";
+            this.labelTranslateY.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // labelTranslateX
+            // 
+            this.labelTranslateX.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.labelTranslateX.ForeColor = System.Drawing.Color.White;
+            this.labelTranslateX.Location = new System.Drawing.Point(36, 595);
+            this.labelTranslateX.Name = "labelTranslateX";
+            this.labelTranslateX.Size = new System.Drawing.Size(90, 17);
+            this.labelTranslateX.TabIndex = 9;
+            this.labelTranslateX.Text = "X Offset";
+            this.labelTranslateX.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // labelTranslateTitle
+            // 
+            this.labelTranslateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelTranslateTitle.ForeColor = System.Drawing.Color.White;
+            this.labelTranslateTitle.Location = new System.Drawing.Point(36, 570);
+            this.labelTranslateTitle.Name = "labelTranslateTitle";
+            this.labelTranslateTitle.Size = new System.Drawing.Size(180, 20);
+            this.labelTranslateTitle.TabIndex = 8;
+            this.labelTranslateTitle.Text = "Translasi / Pergeseran";
+            this.labelTranslateTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // labelCustomRotate
+            // 
+            this.labelCustomRotate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelCustomRotate.ForeColor = System.Drawing.Color.White;
+            this.labelCustomRotate.Location = new System.Drawing.Point(36, 445);
+            this.labelCustomRotate.Name = "labelCustomRotate";
+            this.labelCustomRotate.Size = new System.Drawing.Size(180, 20);
+            this.labelCustomRotate.TabIndex = 5;
+            this.labelCustomRotate.Text = "Custom Rotation";
+            this.labelCustomRotate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // numericUpDownDegree
+            // 
+            this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
+            this.numericUpDownDegree.Location = new System.Drawing.Point(36, 470);
+            this.numericUpDownDegree.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            this.numericUpDownDegree.Minimum = new decimal(new int[] { 360, 0, 0, -2147483648 });
+            this.numericUpDownDegree.Name = "numericUpDownDegree";
+            this.numericUpDownDegree.Size = new System.Drawing.Size(180, 23);
+            this.numericUpDownDegree.TabIndex = 6;
+            this.numericUpDownDegree.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownDegree.Value = new decimal(new int[] { 0, 0, 0, 0 });
+            // 
+            // btnRotateCustom
+            // 
+            this.btnRotateCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
+            this.btnRotateCustom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRotateCustom.ForeColor = System.Drawing.Color.White;
+            this.btnRotateCustom.Location = new System.Drawing.Point(36, 505);
+            this.btnRotateCustom.Name = "btnRotateCustom";
+            this.btnRotateCustom.Size = new System.Drawing.Size(180, 35);
+            this.btnRotateCustom.TabIndex = 7;
+            this.btnRotateCustom.Text = "🔄 Rotate Custom";
+            this.btnRotateCustom.UseVisualStyleBackColor = false;
+            this.btnRotateCustom.Click += new System.EventHandler(this.btnRotateCustom_Click);
             // 
             // btnRotate45
             // 
             this.btnRotate45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate45.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate45.ForeColor = System.Drawing.Color.White;
-            this.btnRotate45.Location = new System.Drawing.Point(36, 80);
+            this.btnRotate45.Location = new System.Drawing.Point(36, 308);
             this.btnRotate45.Name = "btnRotate45";
             this.btnRotate45.Size = new System.Drawing.Size(180, 35);
             this.btnRotate45.TabIndex = 2;
@@ -374,7 +501,7 @@
             this.btnRotate90.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate90.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate90.ForeColor = System.Drawing.Color.White;
-            this.btnRotate90.Location = new System.Drawing.Point(36, 125);
+            this.btnRotate90.Location = new System.Drawing.Point(36, 353);
             this.btnRotate90.Name = "btnRotate90";
             this.btnRotate90.Size = new System.Drawing.Size(180, 35);
             this.btnRotate90.TabIndex = 3;
@@ -387,7 +514,7 @@
             this.btnRotate180.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate180.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate180.ForeColor = System.Drawing.Color.White;
-            this.btnRotate180.Location = new System.Drawing.Point(36, 170);
+            this.btnRotate180.Location = new System.Drawing.Point(36, 398);
             this.btnRotate180.Name = "btnRotate180";
             this.btnRotate180.Size = new System.Drawing.Size(180, 35);
             this.btnRotate180.TabIndex = 4;
@@ -399,12 +526,79 @@
             // 
             this.labelRotateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelRotateTitle.ForeColor = System.Drawing.Color.White;
-            this.labelRotateTitle.Location = new System.Drawing.Point(36, 50);
+            this.labelRotateTitle.Location = new System.Drawing.Point(36, 285);
             this.labelRotateTitle.Name = "labelRotateTitle";
             this.labelRotateTitle.Size = new System.Drawing.Size(180, 20);
             this.labelRotateTitle.TabIndex = 1;
             this.labelRotateTitle.Text = "Rotate Image";
             this.labelRotateTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // labelAritmatikTitle
+            // 
+            this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
+            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
+            this.labelAritmatikTitle.Name = "labelAritmatikTitle";
+            this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
+            this.labelAritmatikTitle.TabIndex = 0;
+            this.labelAritmatikTitle.Text = "Aritmatika";
+            this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnAddImage
+            // 
+            this.btnAddImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnAddImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAddImage.ForeColor = System.Drawing.Color.White;
+            this.btnAddImage.Location = new System.Drawing.Point(36, 56);
+            this.btnAddImage.Name = "btnAddImage";
+            this.btnAddImage.Size = new System.Drawing.Size(180, 40);
+            this.btnAddImage.TabIndex = 0;
+            this.btnAddImage.Text = "Tambah Citra";
+            this.btnAddImage.UseVisualStyleBackColor = false;
+            this.btnAddImage.Click += new System.EventHandler(this.btnAddImage_Click);
+            // 
+            // btnSubtractImage
+            // 
+            this.btnSubtractImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnSubtractImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSubtractImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSubtractImage.ForeColor = System.Drawing.Color.White;
+            this.btnSubtractImage.Location = new System.Drawing.Point(36, 113);
+            this.btnSubtractImage.Name = "btnSubtractImage";
+            this.btnSubtractImage.Size = new System.Drawing.Size(180, 40);
+            this.btnSubtractImage.TabIndex = 1;
+            this.btnSubtractImage.Text = "Kurangi Citra";
+            this.btnSubtractImage.UseVisualStyleBackColor = false;
+            this.btnSubtractImage.Click += new System.EventHandler(this.btnSubtractImage_Click);
+            // 
+            // btnMultiplyImage
+            // 
+            this.btnMultiplyImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnMultiplyImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMultiplyImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnMultiplyImage.ForeColor = System.Drawing.Color.White;
+            this.btnMultiplyImage.Location = new System.Drawing.Point(36, 170);
+            this.btnMultiplyImage.Name = "btnMultiplyImage";
+            this.btnMultiplyImage.Size = new System.Drawing.Size(180, 40);
+            this.btnMultiplyImage.TabIndex = 2;
+            this.btnMultiplyImage.Text = "Kalikan Citra";
+            this.btnMultiplyImage.UseVisualStyleBackColor = false;
+            this.btnMultiplyImage.Click += new System.EventHandler(this.btnMultiplyImage_Click);
+            // 
+            // btnDivideImage
+            // 
+            this.btnDivideImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnDivideImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDivideImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnDivideImage.ForeColor = System.Drawing.Color.White;
+            this.btnDivideImage.Location = new System.Drawing.Point(36, 227);
+            this.btnDivideImage.Name = "btnDivideImage";
+            this.btnDivideImage.Size = new System.Drawing.Size(180, 40);
+            this.btnDivideImage.TabIndex = 3;
+            this.btnDivideImage.Text = "Bagi Citra";
+            this.btnDivideImage.UseVisualStyleBackColor = false;
+            this.btnDivideImage.Click += new System.EventHandler(this.btnDivideImage_Click);
             // 
             // panelFilterContainer
             // 
@@ -559,7 +753,7 @@
             this.pictureBoxNegative.Name = "pictureBoxNegative";
             this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxNegative.TabIndex = 19;
+            this.pictureBoxNegative.TabIndex = 11;
             this.pictureBoxNegative.TabStop = false;
             this.pictureBoxNegative.Click += new System.EventHandler(this.pictureBoxNegative_Click);
             // 
@@ -691,6 +885,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
             this.panelAritmatikContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -758,6 +955,22 @@
         private System.Windows.Forms.Button btnRotate45;
         private System.Windows.Forms.Button btnRotate90;
         private System.Windows.Forms.Button btnRotate180;
-        protected internal System.Windows.Forms.Panel panelFilterContainer;
+        private System.Windows.Forms.Button btnAddImage;
+        private System.Windows.Forms.Button btnSubtractImage;
+        private System.Windows.Forms.Button btnMultiplyImage;
+        private System.Windows.Forms.Button btnDivideImage;
+        private System.Windows.Forms.Label labelCustomRotate;
+        private System.Windows.Forms.NumericUpDown numericUpDownDegree;
+        private System.Windows.Forms.Button btnRotateCustom;
+        
+        // Translation controls
+        private System.Windows.Forms.Label labelTranslateTitle;
+        private System.Windows.Forms.Label labelTranslateX;
+        private System.Windows.Forms.Label labelTranslateY;
+        private System.Windows.Forms.NumericUpDown numericUpDownTranslateX;
+        private System.Windows.Forms.NumericUpDown numericUpDownTranslateY;
+        private System.Windows.Forms.Button btnTranslate;
+        
+        private System.Windows.Forms.Panel panelFilterContainer;
     }
 }

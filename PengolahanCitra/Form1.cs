@@ -163,7 +163,7 @@ namespace PengolahanCitra
 
             try
             {
-                currentRotationAngle = 45; // Set to absolute angle
+                currentRotationAngle = 45;
                 Bitmap rotated = RotateImageToAngle(currentRotationAngle);
                 currentImage?.Dispose();
                 currentImage = rotated;
@@ -183,7 +183,7 @@ namespace PengolahanCitra
 
             try
             {
-                currentRotationAngle = 90; // Set to absolute angle
+                currentRotationAngle = 90;
                 Bitmap rotated = RotateImageToAngle(currentRotationAngle);
                 currentImage?.Dispose();
                 currentImage = rotated;
@@ -203,7 +203,7 @@ namespace PengolahanCitra
 
             try
             {
-                currentRotationAngle = 180; // Set to absolute angle
+                currentRotationAngle = 180;
                 Bitmap rotated = RotateImageToAngle(currentRotationAngle);
                 currentImage?.Dispose();
                 currentImage = rotated;
@@ -214,6 +214,64 @@ namespace PengolahanCitra
             catch (Exception ex)
             {
                 ShowError($"Error rotating image: {ex.Message}");
+            }
+        }
+
+        private void btnRotateCustom_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                // Ambil nilai dari NumericUpDown
+                int customDegree = (int)numericUpDownDegree.Value;
+                
+                // Validasi input
+                if (customDegree == 0)
+                {
+                    ShowWarning("Please enter a rotation degree (1-360 or -360 to -1)");
+                    return;
+                }
+
+                currentRotationAngle = customDegree;
+                Bitmap rotated = RotateImageToAngle(currentRotationAngle);
+                currentImage?.Dispose();
+                currentImage = rotated;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error rotating image: {ex.Message}");
+            }
+        }
+
+        private void btnTranslate_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                int offsetX = (int)numericUpDownTranslateX.Value;
+                int offsetY = (int)numericUpDownTranslateY.Value;
+
+                if (offsetX == 0 && offsetY == 0)
+                {
+                    ShowWarning("Masukkan nilai X atau Y offset yang tidak nol!");
+                    return;
+                }
+
+                Bitmap translated = TranslateImage(originalImage, offsetX, offsetY);
+                currentImage?.Dispose();
+                currentImage = translated;
+                BitmapToMatrix(currentImage);
+                UpdateMainImage(currentImage);
+                ShowSuccess($"Translasi berhasil! X: {offsetX}, Y: {offsetY}");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error translasi citra: {ex.Message}");
             }
         }
 
@@ -295,7 +353,8 @@ namespace PengolahanCitra
                     }
                     catch (Exception ex)
                     {
-                        ShowError($"Error saving image: {ex.Message}");
+                        ShowError($"Error saving image: {ex.Message}")
+;
                     }
                 }
             }
@@ -806,21 +865,34 @@ namespace PengolahanCitra
         }
 
         private Bitmap RotateImage45Degrees(Bitmap src)
-        {
-            int newSize = Math.Max(src.Width, src.Height);
-            Bitmap rotated = new Bitmap(newSize, newSize);
+{
+    // Hitung ukuran canvas baru berdasarkan diagonal
+    int diagonal = (int)Math.Ceiling(Math.Sqrt(src.Width * src.Width + src.Height * src.Height));
+    Bitmap rotated = new Bitmap(diagonal, diagonal);
 
-            using (Graphics g = Graphics.FromImage(rotated))
-            {
-                g.Clear(Color.FromArgb(28, 28, 28)); // Background sesuai tema
-                g.TranslateTransform(newSize / 2f, newSize / 2f);
-                g.RotateTransform(45);
-                g.TranslateTransform(-src.Width / 3f, -src.Height / 3f);
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(src, 0, 0);
-            }
-            return rotated;
-        }
+    using (Graphics g = Graphics.FromImage(rotated))
+    {
+        g.Clear(Color.FromArgb(28, 28, 28)); // Background sesuai tema
+        
+        // Set kualitas rendering tinggi
+        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+        
+        // Pindahkan origin ke center canvas
+        g.TranslateTransform(diagonal / 2f, diagonal / 2f);
+        
+        // Rotasi 45 derajat
+        g.RotateTransform(45);
+        
+        // Pindahkan gambar agar center-nya di origin (PERBAIKAN DI SINI!)
+        g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+        
+        // Draw gambar
+        g.DrawImage(src, 0, 0, src.Width, src.Height);
+    }
+    return rotated;
+}
         
 
         private Bitmap RotateImage90Degrees(Bitmap src)
@@ -869,21 +941,69 @@ namespace PengolahanCitra
             double cos = Math.Abs(Math.Cos(radians));
             double sin = Math.Abs(Math.Sin(radians));
             
-            int newWidth = (int)(src.Width * cos + src.Height * sin);
-            int newHeight = (int)(src.Width * sin + src.Height * cos);
+            int newWidth = (int)Math.Ceiling(src.Width * cos + src.Height * sin);
+            int newHeight = (int)Math.Ceiling(src.Width * sin + src.Height * cos);
             
             Bitmap rotated = new Bitmap(newWidth, newHeight);
             
             using (Graphics g = Graphics.FromImage(rotated))
             {
-                g.Clear(Color.White);
-                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
-                g.RotateTransform(angle);
-                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+                // Use dark background color consistent with the UI theme
+                g.Clear(Color.FromArgb(28, 28, 28));
+                
+                // Set high quality rendering
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(src, 0, 0);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                
+                // Move origin to center of new image
+                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+                
+                // Rotate
+                g.RotateTransform(angle);
+                
+                // Move image so its center is at origin
+                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+                
+                // Draw the image
+                g.DrawImage(src, 0, 0, src.Width, src.Height);
             }
             return rotated;
+        }
+
+        #endregion
+
+        #region Image Processing - Translation
+
+        /// <summary>
+        /// Translates (shifts) an image by specified X and Y offsets
+        /// </summary>
+        /// <param name="src">Source bitmap to translate</param>
+        /// <param name="offsetX">Horizontal offset (positive = right, negative = left)</param>
+        /// <param name="offsetY">Vertical offset (positive = down, negative = up)</param>
+        /// <returns>Translated bitmap with dark background</returns>
+        private Bitmap TranslateImage(Bitmap src, int offsetX, int offsetY)
+        {
+            if (src == null) return null;
+
+            // Create new bitmap with same size
+            Bitmap translated = new Bitmap(src.Width, src.Height);
+
+            using (Graphics g = Graphics.FromImage(translated))
+            {
+                // Fill background with dark theme color
+                g.Clear(Color.FromArgb(28, 28, 28));
+
+                // Set high quality rendering
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                // Draw the image at the translated position
+                g.DrawImage(src, offsetX, offsetY, src.Width, src.Height);
+            }
+
+            return translated;
         }
 
         #endregion
@@ -1060,6 +1180,175 @@ namespace PengolahanCitra
         #region Event Handlers - Rotation Operations
 
 
+
+        private void btnAddImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Ditambahkan";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap addedImage = new Bitmap(dialog.FileName);
+                    Bitmap result = AddImages(currentImage, addedImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Penjumlahan citra berhasil!");
+                }
+            }
+        }
+
+        private void btnSubtractImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Dikurangkan";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap subtractedImage = new Bitmap(dialog.FileName);
+                    Bitmap result = SubtractImages(currentImage, subtractedImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Pengurangan citra berhasil!");
+                }
+            }
+        }
+
+        // New: Fungsi perkalian citra (sama pola dengan tambah/kurang)
+        private void btnMultiplyImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Perkalian";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap mulImage = new Bitmap(dialog.FileName);
+                    Bitmap result = MultiplyImages(currentImage, mulImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Perkalian citra berhasil!");
+                }
+            }
+        }
+
+        // New: Fungsi pembagian citra (sama pola dengan tambah/kurang)
+        private void btnDivideImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Pembagian";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap divImage = new Bitmap(dialog.FileName);
+                    Bitmap result = DivideImages(currentImage, divImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Pembagian citra berhasil!");
+                }
+            }
+        }
+
+        // Fungsi penjumlahan citra
+        private Bitmap AddImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp(c1.R + c2.R, 0, 255);
+                    int g = Clamp(c1.G + c2.G, 0, 255);
+                    int b = Clamp(c1.B + c2.B, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi pengurangan citra
+        private Bitmap SubtractImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp(c1.R - c2.R, 0, 255);
+                    int g = Clamp(c1.G - c2.G, 0, 255);
+                    int b = Clamp(c1.B - c2.B, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi perkalian citra (pixel-wise, dinormalisasi)
+        private Bitmap MultiplyImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp((c1.R * c2.R) / 255, 0, 255);
+                    int g = Clamp((c1.G * c2.G) / 255, 0, 255);
+                    int b = Clamp((c1.B * c2.B) / 255, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi pembagian citra (pixel-wise, scaling dan penanganan pembagi 0)
+        private Bitmap DivideImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int rDen = Math.Max(1, (int)c2.R);
+                    int gDen = Math.Max(1, (int)c2.G);
+                    int bDen = Math.Max(1, (int)c2.B);
+                    int r = Clamp((c1.R * 255) / rDen, 0, 255);
+                    int g = Clamp((c1.G * 255) / gDen, 0, 255);
+                    int b = Clamp((c1.B * 255) / bDen, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
 
         #endregion
 
