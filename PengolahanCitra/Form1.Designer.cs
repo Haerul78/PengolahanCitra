@@ -58,6 +58,8 @@
             this.btnResetBrightness = new System.Windows.Forms.Button();
             this.panelAritmatikContainer = new System.Windows.Forms.Panel();
             this.labelAritmatikTitle = new System.Windows.Forms.Label();
+            this.btnAddImage = new System.Windows.Forms.Button();
+            this.btnSubtractImage = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -317,8 +319,8 @@
             // 
             this.panelSidebarRight.AutoScroll = true;
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
             this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
+            this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -590,6 +592,8 @@
             // panelAritmatikContainer
             // 
             this.panelAritmatikContainer.Controls.Add(this.labelAritmatikTitle);
+            this.panelAritmatikContainer.Controls.Add(this.btnAddImage);
+            this.panelAritmatikContainer.Controls.Add(this.btnSubtractImage);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
             this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 690);
@@ -606,6 +610,34 @@
             this.labelAritmatikTitle.TabIndex = 0;
             this.labelAritmatikTitle.Text = "Aritmatika";
             this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnAddImage
+            // 
+            this.btnAddImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnAddImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAddImage.ForeColor = System.Drawing.Color.White;
+            this.btnAddImage.Location = new System.Drawing.Point(36, 56);
+            this.btnAddImage.Name = "btnAddImage";
+            this.btnAddImage.Size = new System.Drawing.Size(180, 40);
+            this.btnAddImage.TabIndex = 0;
+            this.btnAddImage.Text = "Tambah Citra";
+            this.btnAddImage.UseVisualStyleBackColor = false;
+            this.btnAddImage.Click += new System.EventHandler(this.btnAddImage_Click);
+            // 
+            // btnSubtractImage
+            // 
+            this.btnSubtractImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(0)))), ((int)(((byte)(130)))));
+            this.btnSubtractImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSubtractImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnSubtractImage.ForeColor = System.Drawing.Color.White;
+            this.btnSubtractImage.Location = new System.Drawing.Point(36, 113);
+            this.btnSubtractImage.Name = "btnSubtractImage";
+            this.btnSubtractImage.Size = new System.Drawing.Size(180, 40);
+            this.btnSubtractImage.TabIndex = 1;
+            this.btnSubtractImage.Text = "Kurangi Citra";
+            this.btnSubtractImage.UseVisualStyleBackColor = false;
+            this.btnSubtractImage.Click += new System.EventHandler(this.btnSubtractImage_Click);
             // 
             // Form1
             // 
@@ -696,6 +728,8 @@
         private System.Windows.Forms.Button Aritmathic;
         private System.Windows.Forms.Panel panelAritmatikContainer;
         private System.Windows.Forms.Label labelAritmatikTitle;
-        protected internal System.Windows.Forms.Panel panelFilterContainer;
+        private System.Windows.Forms.Button btnAddImage;
+        private System.Windows.Forms.Button btnSubtractImage;
+        private System.Windows.Forms.Panel panelFilterContainer;
     }
 }

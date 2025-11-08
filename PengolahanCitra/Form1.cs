@@ -866,6 +866,88 @@ namespace PengolahanCitra
             }
         }
 
+        private void btnAddImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Ditambahkan";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap addedImage = new Bitmap(dialog.FileName);
+                    Bitmap result = AddImages(currentImage, addedImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Penjumlahan citra berhasil!");
+                }
+            }
+        }
+
+        private void btnSubtractImage_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar untuk Dikurangkan";
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap subtractedImage = new Bitmap(dialog.FileName);
+                    Bitmap result = SubtractImages(currentImage, subtractedImage);
+                    currentImage?.Dispose();
+                    currentImage = result;
+                    BitmapToMatrix(currentImage);
+                    UpdateMainImage(currentImage);
+                    ShowSuccess("Pengurangan citra berhasil!");
+                }
+            }
+        }
+
+        // Fungsi penjumlahan citra
+        private Bitmap AddImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp(c1.R + c2.R, 0, 255);
+                    int g = Clamp(c1.G + c2.G, 0, 255);
+                    int b = Clamp(c1.B + c2.B, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
+        // Fungsi pengurangan citra
+        private Bitmap SubtractImages(Bitmap img1, Bitmap img2)
+        {
+            int w = Math.Min(img1.Width, img2.Width);
+            int h = Math.Min(img1.Height, img2.Height);
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c1 = img1.GetPixel(x, y);
+                    Color c2 = img2.GetPixel(x, y);
+                    int r = Clamp(c1.R - c2.R, 0, 255);
+                    int g = Clamp(c1.G - c2.G, 0, 255);
+                    int b = Clamp(c1.B - c2.B, 0, 255);
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return result;
+        }
+
         #endregion
 
         #region Validation & Error Handling
