@@ -353,9 +353,6 @@
             // panelAritmatikContainer
             // 
             this.panelAritmatikContainer.AutoScroll = true;
-            this.panelAritmatikContainer.HorizontalScroll.Enabled = false;
-            this.panelAritmatikContainer.HorizontalScroll.Visible = false;
-            this.panelAritmatikContainer.HorizontalScroll.Maximum = 0;
             this.panelAritmatikContainer.Controls.Add(this.btnFlipVertical);
             this.panelAritmatikContainer.Controls.Add(this.btnFlipHorizontal);
             this.panelAritmatikContainer.Controls.Add(this.labelFlipTitle);
@@ -381,6 +378,7 @@
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
             this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 700);
             this.panelAritmatikContainer.TabIndex = 1;
+            this.panelAritmatikContainer.Visible = false;
             this.panelAritmatikContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelAritmatikContainer_Paint);
             // 
             // btnFlipVertical
