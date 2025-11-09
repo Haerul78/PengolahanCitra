@@ -1,4 +1,9 @@
-﻿namespace PengolahanCitra
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace PengolahanCitra
 {
     partial class Form1
     {
@@ -56,6 +61,11 @@
             this.btnSubtractImage = new System.Windows.Forms.Button();
             this.btnMultiplyImage = new System.Windows.Forms.Button();
             this.btnDivideImage = new System.Windows.Forms.Button();
+            this.labelZoomTitle = new System.Windows.Forms.Label();
+            this.trackBarZoom = new System.Windows.Forms.TrackBar();
+            this.labelZoomValue = new System.Windows.Forms.Label();
+            this.labelZoomMin = new System.Windows.Forms.Label();
+            this.labelZoomMax = new System.Windows.Forms.Label();
             this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
@@ -91,6 +101,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).BeginInit();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -374,9 +385,14 @@
             this.panelAritmatikContainer.Controls.Add(this.btnSubtractImage);
             this.panelAritmatikContainer.Controls.Add(this.btnMultiplyImage);
             this.panelAritmatikContainer.Controls.Add(this.btnDivideImage);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomTitle);
+            this.panelAritmatikContainer.Controls.Add(this.trackBarZoom);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomValue);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomMin);
+            this.panelAritmatikContainer.Controls.Add(this.labelZoomMax);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
-            this.panelAritmatikContainer.Size = new System.Drawing.Size(239, 700);
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(244, 691);
             this.panelAritmatikContainer.TabIndex = 1;
             this.panelAritmatikContainer.Visible = false;
             this.panelAritmatikContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelAritmatikContainer_Paint);
@@ -386,7 +402,7 @@
             this.btnFlipVertical.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnFlipVertical.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFlipVertical.ForeColor = System.Drawing.Color.White;
-            this.btnFlipVertical.Location = new System.Drawing.Point(126, 656);
+            this.btnFlipVertical.Location = new System.Drawing.Point(114, 664);
             this.btnFlipVertical.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
             this.btnFlipVertical.Name = "btnFlipVertical";
             this.btnFlipVertical.Size = new System.Drawing.Size(90, 35);
@@ -400,7 +416,7 @@
             this.btnFlipHorizontal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnFlipHorizontal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFlipHorizontal.ForeColor = System.Drawing.Color.White;
-            this.btnFlipHorizontal.Location = new System.Drawing.Point(36, 656);
+            this.btnFlipHorizontal.Location = new System.Drawing.Point(24, 664);
             this.btnFlipHorizontal.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
             this.btnFlipHorizontal.Name = "btnFlipHorizontal";
             this.btnFlipHorizontal.Size = new System.Drawing.Size(84, 35);
@@ -413,19 +429,20 @@
             // 
             this.labelFlipTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelFlipTitle.ForeColor = System.Drawing.Color.White;
-            this.labelFlipTitle.Location = new System.Drawing.Point(36, 630);
+            this.labelFlipTitle.Location = new System.Drawing.Point(24, 638);
             this.labelFlipTitle.Name = "labelFlipTitle";
             this.labelFlipTitle.Size = new System.Drawing.Size(180, 20);
             this.labelFlipTitle.TabIndex = 13;
             this.labelFlipTitle.Text = "Flip Gambar";
             this.labelFlipTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelFlipTitle.Click += new System.EventHandler(this.labelFlipTitle_Click);
             // 
             // btnTranslate
             // 
             this.btnTranslate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnTranslate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTranslate.ForeColor = System.Drawing.Color.White;
-            this.btnTranslate.Location = new System.Drawing.Point(36, 589);
+            this.btnTranslate.Location = new System.Drawing.Point(24, 597);
             this.btnTranslate.Name = "btnTranslate";
             this.btnTranslate.Size = new System.Drawing.Size(180, 35);
             this.btnTranslate.TabIndex = 13;
@@ -437,7 +454,7 @@
             // 
             this.numericUpDownTranslateY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateY.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateY.Location = new System.Drawing.Point(126, 544);
+            this.numericUpDownTranslateY.Location = new System.Drawing.Point(114, 552);
             this.numericUpDownTranslateY.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -452,12 +469,13 @@
             this.numericUpDownTranslateY.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateY.TabIndex = 12;
             this.numericUpDownTranslateY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownTranslateY.ValueChanged += new System.EventHandler(this.numericUpDownTranslateY_ValueChanged);
             // 
             // numericUpDownTranslateX
             // 
             this.numericUpDownTranslateX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateX.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateX.Location = new System.Drawing.Point(36, 544);
+            this.numericUpDownTranslateX.Location = new System.Drawing.Point(24, 552);
             this.numericUpDownTranslateX.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -472,46 +490,50 @@
             this.numericUpDownTranslateX.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateX.TabIndex = 11;
             this.numericUpDownTranslateX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownTranslateX.ValueChanged += new System.EventHandler(this.numericUpDownTranslateX_ValueChanged);
             // 
             // labelTranslateY
             // 
             this.labelTranslateY.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateY.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateY.Location = new System.Drawing.Point(126, 524);
+            this.labelTranslateY.Location = new System.Drawing.Point(114, 532);
             this.labelTranslateY.Name = "labelTranslateY";
             this.labelTranslateY.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateY.TabIndex = 10;
             this.labelTranslateY.Text = "Y Offset";
             this.labelTranslateY.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelTranslateY.Click += new System.EventHandler(this.labelTranslateY_Click);
             // 
             // labelTranslateX
             // 
             this.labelTranslateX.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateX.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateX.Location = new System.Drawing.Point(36, 524);
+            this.labelTranslateX.Location = new System.Drawing.Point(24, 532);
             this.labelTranslateX.Name = "labelTranslateX";
             this.labelTranslateX.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateX.TabIndex = 9;
             this.labelTranslateX.Text = "X Offset";
             this.labelTranslateX.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelTranslateX.Click += new System.EventHandler(this.labelTranslateX_Click);
             // 
             // labelTranslateTitle
             // 
             this.labelTranslateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelTranslateTitle.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateTitle.Location = new System.Drawing.Point(36, 570);
+            this.labelTranslateTitle.Location = new System.Drawing.Point(24, 578);
             this.labelTranslateTitle.Name = "labelTranslateTitle";
             this.labelTranslateTitle.Size = new System.Drawing.Size(180, 20);
             this.labelTranslateTitle.TabIndex = 8;
             this.labelTranslateTitle.Text = "Translasi / Pergeseran";
             this.labelTranslateTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelTranslateTitle.Click += new System.EventHandler(this.labelTranslateTitle_Click);
             // 
             // btnRotateCustom
             // 
             this.btnRotateCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnRotateCustom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotateCustom.ForeColor = System.Drawing.Color.White;
-            this.btnRotateCustom.Location = new System.Drawing.Point(36, 486);
+            this.btnRotateCustom.Location = new System.Drawing.Point(24, 494);
             this.btnRotateCustom.Name = "btnRotateCustom";
             this.btnRotateCustom.Size = new System.Drawing.Size(180, 35);
             this.btnRotateCustom.TabIndex = 7;
@@ -523,7 +545,7 @@
             // 
             this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownDegree.Location = new System.Drawing.Point(36, 459);
+            this.numericUpDownDegree.Location = new System.Drawing.Point(24, 467);
             this.numericUpDownDegree.Maximum = new decimal(new int[] {
             360,
             0,
@@ -538,24 +560,26 @@
             this.numericUpDownDegree.Size = new System.Drawing.Size(180, 20);
             this.numericUpDownDegree.TabIndex = 6;
             this.numericUpDownDegree.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownDegree.ValueChanged += new System.EventHandler(this.numericUpDownDegree_ValueChanged);
             // 
             // labelCustomRotate
             // 
             this.labelCustomRotate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelCustomRotate.ForeColor = System.Drawing.Color.White;
-            this.labelCustomRotate.Location = new System.Drawing.Point(36, 436);
+            this.labelCustomRotate.Location = new System.Drawing.Point(24, 444);
             this.labelCustomRotate.Name = "labelCustomRotate";
             this.labelCustomRotate.Size = new System.Drawing.Size(180, 20);
             this.labelCustomRotate.TabIndex = 5;
             this.labelCustomRotate.Text = "Custom Rotation";
             this.labelCustomRotate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelCustomRotate.Click += new System.EventHandler(this.labelCustomRotate_Click);
             // 
             // btnRotate45
             // 
             this.btnRotate45.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate45.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate45.ForeColor = System.Drawing.Color.White;
-            this.btnRotate45.Location = new System.Drawing.Point(36, 308);
+            this.btnRotate45.Location = new System.Drawing.Point(24, 304);
             this.btnRotate45.Name = "btnRotate45";
             this.btnRotate45.Size = new System.Drawing.Size(180, 35);
             this.btnRotate45.TabIndex = 2;
@@ -568,7 +592,7 @@
             this.btnRotate90.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate90.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate90.ForeColor = System.Drawing.Color.White;
-            this.btnRotate90.Location = new System.Drawing.Point(36, 353);
+            this.btnRotate90.Location = new System.Drawing.Point(24, 349);
             this.btnRotate90.Name = "btnRotate90";
             this.btnRotate90.Size = new System.Drawing.Size(180, 35);
             this.btnRotate90.TabIndex = 3;
@@ -581,7 +605,7 @@
             this.btnRotate180.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnRotate180.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotate180.ForeColor = System.Drawing.Color.White;
-            this.btnRotate180.Location = new System.Drawing.Point(36, 398);
+            this.btnRotate180.Location = new System.Drawing.Point(24, 394);
             this.btnRotate180.Name = "btnRotate180";
             this.btnRotate180.Size = new System.Drawing.Size(180, 35);
             this.btnRotate180.TabIndex = 4;
@@ -593,7 +617,7 @@
             // 
             this.labelRotateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelRotateTitle.ForeColor = System.Drawing.Color.White;
-            this.labelRotateTitle.Location = new System.Drawing.Point(36, 285);
+            this.labelRotateTitle.Location = new System.Drawing.Point(24, 281);
             this.labelRotateTitle.Name = "labelRotateTitle";
             this.labelRotateTitle.Size = new System.Drawing.Size(180, 20);
             this.labelRotateTitle.TabIndex = 1;
@@ -604,12 +628,13 @@
             // 
             this.labelAritmatikTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.labelAritmatikTitle.ForeColor = System.Drawing.Color.White;
-            this.labelAritmatikTitle.Location = new System.Drawing.Point(36, 16);
+            this.labelAritmatikTitle.Location = new System.Drawing.Point(24, 12);
             this.labelAritmatikTitle.Name = "labelAritmatikTitle";
             this.labelAritmatikTitle.Size = new System.Drawing.Size(180, 25);
             this.labelAritmatikTitle.TabIndex = 0;
             this.labelAritmatikTitle.Text = "Aritmatika";
             this.labelAritmatikTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelAritmatikTitle.Click += new System.EventHandler(this.labelAritmatikTitle_Click);
             // 
             // btnAddImage
             // 
@@ -617,7 +642,7 @@
             this.btnAddImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnAddImage.ForeColor = System.Drawing.Color.White;
-            this.btnAddImage.Location = new System.Drawing.Point(36, 56);
+            this.btnAddImage.Location = new System.Drawing.Point(24, 52);
             this.btnAddImage.Name = "btnAddImage";
             this.btnAddImage.Size = new System.Drawing.Size(180, 40);
             this.btnAddImage.TabIndex = 0;
@@ -631,7 +656,7 @@
             this.btnSubtractImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSubtractImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnSubtractImage.ForeColor = System.Drawing.Color.White;
-            this.btnSubtractImage.Location = new System.Drawing.Point(36, 113);
+            this.btnSubtractImage.Location = new System.Drawing.Point(24, 109);
             this.btnSubtractImage.Name = "btnSubtractImage";
             this.btnSubtractImage.Size = new System.Drawing.Size(180, 40);
             this.btnSubtractImage.TabIndex = 1;
@@ -645,7 +670,7 @@
             this.btnMultiplyImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMultiplyImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnMultiplyImage.ForeColor = System.Drawing.Color.White;
-            this.btnMultiplyImage.Location = new System.Drawing.Point(36, 170);
+            this.btnMultiplyImage.Location = new System.Drawing.Point(24, 166);
             this.btnMultiplyImage.Name = "btnMultiplyImage";
             this.btnMultiplyImage.Size = new System.Drawing.Size(180, 40);
             this.btnMultiplyImage.TabIndex = 2;
@@ -659,13 +684,72 @@
             this.btnDivideImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDivideImage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnDivideImage.ForeColor = System.Drawing.Color.White;
-            this.btnDivideImage.Location = new System.Drawing.Point(36, 227);
+            this.btnDivideImage.Location = new System.Drawing.Point(24, 223);
             this.btnDivideImage.Name = "btnDivideImage";
             this.btnDivideImage.Size = new System.Drawing.Size(180, 40);
             this.btnDivideImage.TabIndex = 3;
             this.btnDivideImage.Text = "Bagi Citra";
             this.btnDivideImage.UseVisualStyleBackColor = false;
             this.btnDivideImage.Click += new System.EventHandler(this.btnDivideImage_Click);
+            // 
+            // labelZoomTitle
+            // 
+            this.labelZoomTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelZoomTitle.ForeColor = System.Drawing.Color.White;
+            this.labelZoomTitle.Location = new System.Drawing.Point(24, 708);
+            this.labelZoomTitle.Name = "labelZoomTitle";
+            this.labelZoomTitle.Size = new System.Drawing.Size(180, 20);
+            this.labelZoomTitle.TabIndex = 19;
+            this.labelZoomTitle.Text = "Zoom Gambar";
+            this.labelZoomTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelZoomTitle.Click += new System.EventHandler(this.labelZoomTitle_Click);
+            // 
+            // trackBarZoom
+            // 
+            this.trackBarZoom.Location = new System.Drawing.Point(24, 725);
+            this.trackBarZoom.Maximum = 200;
+            this.trackBarZoom.Minimum = 10;
+            this.trackBarZoom.Name = "trackBarZoom";
+            this.trackBarZoom.Size = new System.Drawing.Size(180, 45);
+            this.trackBarZoom.TabIndex = 20;
+            this.trackBarZoom.TickFrequency = 10;
+            this.trackBarZoom.Value = 100;
+            this.trackBarZoom.Scroll += new System.EventHandler(this.trackBarZoom_Scroll);
+            // 
+            // labelZoomValue
+            // 
+            this.labelZoomValue.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomValue.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomValue.Location = new System.Drawing.Point(138, 708);
+            this.labelZoomValue.Name = "labelZoomValue";
+            this.labelZoomValue.Size = new System.Drawing.Size(66, 20);
+            this.labelZoomValue.TabIndex = 21;
+            this.labelZoomValue.Text = "100%";
+            this.labelZoomValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelZoomValue.Click += new System.EventHandler(this.labelZoomValue_Click);
+            // 
+            // labelZoomMin
+            // 
+            this.labelZoomMin.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomMin.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomMin.Location = new System.Drawing.Point(25, 773);
+            this.labelZoomMin.Name = "labelZoomMin";
+            this.labelZoomMin.Size = new System.Drawing.Size(40, 20);
+            this.labelZoomMin.TabIndex = 22;
+            this.labelZoomMin.Text = "10%";
+            this.labelZoomMin.Click += new System.EventHandler(this.labelZoomMin_Click);
+            // 
+            // labelZoomMax
+            // 
+            this.labelZoomMax.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelZoomMax.ForeColor = System.Drawing.Color.LightGray;
+            this.labelZoomMax.Location = new System.Drawing.Point(164, 773);
+            this.labelZoomMax.Name = "labelZoomMax";
+            this.labelZoomMax.Size = new System.Drawing.Size(40, 20);
+            this.labelZoomMax.TabIndex = 23;
+            this.labelZoomMax.Text = "200%";
+            this.labelZoomMax.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelZoomMax.Click += new System.EventHandler(this.labelZoomMax_Click);
             // 
             // panelFilterContainer
             // 
@@ -688,7 +772,7 @@
             this.panelFilterContainer.Controls.Add(this.panelBrightnessContainer);
             this.panelFilterContainer.Location = new System.Drawing.Point(5, 5);
             this.panelFilterContainer.Name = "panelFilterContainer";
-            this.panelFilterContainer.Size = new System.Drawing.Size(239, 690);
+            this.panelFilterContainer.Size = new System.Drawing.Size(244, 690);
             this.panelFilterContainer.TabIndex = 0;
             this.panelFilterContainer.Visible = false;
             // 
@@ -696,7 +780,7 @@
             // 
             this.labelFilterTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.labelFilterTitle.ForeColor = System.Drawing.Color.White;
-            this.labelFilterTitle.Location = new System.Drawing.Point(36, 16);
+            this.labelFilterTitle.Location = new System.Drawing.Point(32, 16);
             this.labelFilterTitle.Name = "labelFilterTitle";
             this.labelFilterTitle.Size = new System.Drawing.Size(180, 25);
             this.labelFilterTitle.TabIndex = 0;
@@ -706,7 +790,7 @@
             // pictureBoxOriginal
             // 
             this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxOriginal.Location = new System.Drawing.Point(50, 66);
+            this.pictureBoxOriginal.Location = new System.Drawing.Point(47, 69);
             this.pictureBoxOriginal.Name = "pictureBoxOriginal";
             this.pictureBoxOriginal.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -718,7 +802,7 @@
             // 
             this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelOriginal.ForeColor = System.Drawing.Color.White;
-            this.labelOriginal.Location = new System.Drawing.Point(50, 126);
+            this.labelOriginal.Location = new System.Drawing.Point(47, 129);
             this.labelOriginal.Name = "labelOriginal";
             this.labelOriginal.Size = new System.Drawing.Size(60, 20);
             this.labelOriginal.TabIndex = 2;
@@ -728,7 +812,7 @@
             // pictureBoxRed
             // 
             this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxRed.Location = new System.Drawing.Point(136, 66);
+            this.pictureBoxRed.Location = new System.Drawing.Point(133, 69);
             this.pictureBoxRed.Name = "pictureBoxRed";
             this.pictureBoxRed.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -740,7 +824,7 @@
             // 
             this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelRed.ForeColor = System.Drawing.Color.White;
-            this.labelRed.Location = new System.Drawing.Point(136, 126);
+            this.labelRed.Location = new System.Drawing.Point(133, 129);
             this.labelRed.Name = "labelRed";
             this.labelRed.Size = new System.Drawing.Size(60, 20);
             this.labelRed.TabIndex = 4;
@@ -750,7 +834,7 @@
             // pictureBoxGreen
             // 
             this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGreen.Location = new System.Drawing.Point(50, 156);
+            this.pictureBoxGreen.Location = new System.Drawing.Point(47, 159);
             this.pictureBoxGreen.Name = "pictureBoxGreen";
             this.pictureBoxGreen.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -762,7 +846,7 @@
             // 
             this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelGreen.ForeColor = System.Drawing.Color.White;
-            this.labelGreen.Location = new System.Drawing.Point(50, 219);
+            this.labelGreen.Location = new System.Drawing.Point(47, 222);
             this.labelGreen.Name = "labelGreen";
             this.labelGreen.Size = new System.Drawing.Size(60, 20);
             this.labelGreen.TabIndex = 6;
@@ -772,7 +856,7 @@
             // pictureBoxBlue
             // 
             this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxBlue.Location = new System.Drawing.Point(136, 156);
+            this.pictureBoxBlue.Location = new System.Drawing.Point(133, 159);
             this.pictureBoxBlue.Name = "pictureBoxBlue";
             this.pictureBoxBlue.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -784,7 +868,7 @@
             // 
             this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelBlue.ForeColor = System.Drawing.Color.White;
-            this.labelBlue.Location = new System.Drawing.Point(136, 219);
+            this.labelBlue.Location = new System.Drawing.Point(133, 222);
             this.labelBlue.Name = "labelBlue";
             this.labelBlue.Size = new System.Drawing.Size(60, 20);
             this.labelBlue.TabIndex = 8;
@@ -794,7 +878,7 @@
             // pictureBoxGray
             // 
             this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGray.Location = new System.Drawing.Point(50, 242);
+            this.pictureBoxGray.Location = new System.Drawing.Point(47, 245);
             this.pictureBoxGray.Name = "pictureBoxGray";
             this.pictureBoxGray.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -806,7 +890,7 @@
             // 
             this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelGray.ForeColor = System.Drawing.Color.White;
-            this.labelGray.Location = new System.Drawing.Point(49, 305);
+            this.labelGray.Location = new System.Drawing.Point(46, 308);
             this.labelGray.Name = "labelGray";
             this.labelGray.Size = new System.Drawing.Size(60, 20);
             this.labelGray.TabIndex = 10;
@@ -816,7 +900,7 @@
             // pictureBoxNegative
             // 
             this.pictureBoxNegative.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNegative.Location = new System.Drawing.Point(49, 328);
+            this.pictureBoxNegative.Location = new System.Drawing.Point(47, 331);
             this.pictureBoxNegative.Name = "pictureBoxNegative";
             this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -828,7 +912,7 @@
             // 
             this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelNegative.ForeColor = System.Drawing.Color.White;
-            this.labelNegative.Location = new System.Drawing.Point(49, 391);
+            this.labelNegative.Location = new System.Drawing.Point(47, 394);
             this.labelNegative.Name = "labelNegative";
             this.labelNegative.Size = new System.Drawing.Size(60, 20);
             this.labelNegative.TabIndex = 20;
@@ -851,7 +935,7 @@
             // pictureBoxThreshold
             // 
             this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxThreshold.Location = new System.Drawing.Point(136, 242);
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(133, 245);
             this.pictureBoxThreshold.Name = "pictureBoxThreshold";
             this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
             this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -863,7 +947,7 @@
             // 
             this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.labelThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelThreshold.Location = new System.Drawing.Point(136, 305);
+            this.labelThreshold.Location = new System.Drawing.Point(133, 308);
             this.labelThreshold.Name = "labelThreshold";
             this.labelThreshold.Size = new System.Drawing.Size(60, 20);
             this.labelThreshold.TabIndex = 18;
@@ -876,10 +960,11 @@
             this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
             this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
             this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(16, 423);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(12, 423);
             this.panelBrightnessContainer.Name = "panelBrightnessContainer";
             this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
             this.panelBrightnessContainer.TabIndex = 0;
+            this.panelBrightnessContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBrightnessContainer_Paint);
             // 
             // labelBrightness
             // 
@@ -952,9 +1037,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
             this.panelAritmatikContainer.ResumeLayout(false);
+            this.panelAritmatikContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -1044,5 +1131,10 @@
         private System.Windows.Forms.Button btnFlipVertical;
         
         private System.Windows.Forms.Panel panelFilterContainer;
+        private System.Windows.Forms.Label labelZoomTitle;
+        private System.Windows.Forms.TrackBar trackBarZoom;
+        private System.Windows.Forms.Label labelZoomValue;
+        private System.Windows.Forms.Label labelZoomMin;
+        private System.Windows.Forms.Label labelZoomMax;
     }
 }

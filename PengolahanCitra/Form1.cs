@@ -30,6 +30,7 @@ namespace PengolahanCitra
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
         private int currentRotationAngle = 0; // Track current rotation angle
+        private int currentZoomPercent = 100; // Track zoom level
 
         // Constants
         private const int THUMBNAIL_SIZE = 60;
@@ -44,13 +45,6 @@ namespace PengolahanCitra
         public Form1()
         {
             InitializeComponent();
-            
-            // Disable horizontal scroll on arithmetic panel, only allow vertical scroll
-            //panelAritmatikContainer.AutoScroll = true;
-            panelAritmatikContainer.HorizontalScroll.Enabled = false;
-            panelAritmatikContainer.HorizontalScroll.Visible = false;
-            panelAritmatikContainer.HorizontalScroll.Maximum = 0;
-            panelAritmatikContainer.AutoScrollMinSize = new System.Drawing.Size(0, 720);
         }
 
         #endregion
@@ -232,13 +226,13 @@ namespace PengolahanCitra
             {
                 // Ambil nilai dari NumericUpDown
                 int customDegree = (int)numericUpDownDegree.Value;
-                
+
                 // Validasi input
-                if (customDegree == 0)
-                {
-                    ShowWarning("Please enter a rotation degree (1-360 or -360 to -1)");
-                    return;
-                }
+                //if (customDegree == 0)
+                //{
+                //    ShowWarning("Please enter a rotation degree (1-360 or -360 to -1)");
+                //    return;
+                //}
 
                 currentRotationAngle = customDegree;
                 Bitmap rotated = RotateImageToAngle(currentRotationAngle);
@@ -302,6 +296,13 @@ namespace PengolahanCitra
         private void pictureBoxHistogramGray_Click(object sender, EventArgs e) { }
         private void pictureBoxHistogramB_Click(object sender, EventArgs e) { }
         private void pictureBoxHistogramG_Click(object sender, EventArgs e) { }
+
+        private void trackBarZoom_Scroll(object sender, EventArgs e)
+        {
+            currentZoomPercent = trackBarZoom.Value;
+            labelZoomValue.Text = currentZoomPercent + "%";
+            ApplyZoomToMainImage();
+        }
 
         #endregion
 
@@ -571,7 +572,7 @@ namespace PengolahanCitra
             return resultMatrix; // Kembalikan matriks sementara
         }
 
-        
+
         private Color ProcessPixelFromMatrix(byte r, byte g, byte b, byte gray, string filterType)
         {
             switch (filterType)
@@ -596,7 +597,7 @@ namespace PengolahanCitra
         }
 
         #endregion
-        
+
         #region Image Processing - Brightness (Fast & Separated)
 
         private Bitmap ApplyBrightness(byte[,,] sourceMatrix, int brightnessValue)
@@ -852,19 +853,19 @@ namespace PengolahanCitra
                 case 0:
                     // No rotation, return a copy of original
                     return new Bitmap(source);
-                
+
                 case 45:
                     return RotateImage45Degrees(source);
-                
+
                 case 90:
                     return RotateImage90Degrees(source);
-                
+
                 case 180:
                     return RotateImage180Degrees(source);
-                
+
                 case 270:
                     return RotateImage270Degrees(source);
-                
+
                 default:
                     // For other angles, use Graphics rotation
                     return RotateImageByAngle(source, angle);
@@ -872,35 +873,35 @@ namespace PengolahanCitra
         }
 
         private Bitmap RotateImage45Degrees(Bitmap src)
-{
-    // Hitung ukuran canvas baru berdasarkan diagonal
-    int diagonal = (int)Math.Ceiling(Math.Sqrt(src.Width * src.Width + src.Height * src.Height));
-    Bitmap rotated = new Bitmap(diagonal, diagonal);
+        {
+            // Hitung ukuran canvas baru berdasarkan diagonal
+            int diagonal = (int)Math.Ceiling(Math.Sqrt(src.Width * src.Width + src.Height * src.Height));
+            Bitmap rotated = new Bitmap(diagonal, diagonal);
 
-    using (Graphics g = Graphics.FromImage(rotated))
-    {
-        g.Clear(Color.FromArgb(28, 28, 28)); // Background sesuai tema
-        
-        // Set kualitas rendering tinggi
-        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-        
-        // Pindahkan origin ke center canvas
-        g.TranslateTransform(diagonal / 2f, diagonal / 2f);
-        
-        // Rotasi 45 derajat
-        g.RotateTransform(45);
-        
-        // Pindahkan gambar agar center-nya di origin (PERBAIKAN DI SINI!)
-        g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
-        
-        // Draw gambar
-        g.DrawImage(src, 0, 0, src.Width, src.Height);
-    }
-    return rotated;
-}
-        
+            using (Graphics g = Graphics.FromImage(rotated))
+            {
+                g.Clear(Color.FromArgb(28, 28, 28)); // Background sesuai tema
+
+                // Set kualitas rendering tinggi
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                // Pindahkan origin ke center canvas
+                g.TranslateTransform(diagonal / 2f, diagonal / 2f);
+
+                // Rotasi 45 derajat
+                g.RotateTransform(45);
+
+                // Pindahkan gambar agar center-nya di origin (PERBAIKAN DI SINI!)
+                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+
+                // Draw gambar
+                g.DrawImage(src, 0, 0, src.Width, src.Height);
+            }
+            return rotated;
+        }
+
 
         private Bitmap RotateImage90Degrees(Bitmap src)
         {
@@ -947,31 +948,31 @@ namespace PengolahanCitra
             double radians = angle * Math.PI / 180;
             double cos = Math.Abs(Math.Cos(radians));
             double sin = Math.Abs(Math.Sin(radians));
-            
+
             int newWidth = (int)Math.Ceiling(src.Width * cos + src.Height * sin);
             int newHeight = (int)Math.Ceiling(src.Width * sin + src.Height * cos);
-            
+
             Bitmap rotated = new Bitmap(newWidth, newHeight);
-            
+
             using (Graphics g = Graphics.FromImage(rotated))
             {
                 // Use dark background color consistent with the UI theme
                 g.Clear(Color.FromArgb(28, 28, 28));
-                
+
                 // Set high quality rendering
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                
+
                 // Move origin to center of new image
                 g.TranslateTransform(newWidth / 2f, newHeight / 2f);
-                
+
                 // Rotate
                 g.RotateTransform(angle);
-                
+
                 // Move image so its center is at origin
                 g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
-                
+
                 // Draw the image
                 g.DrawImage(src, 0, 0, src.Width, src.Height);
             }
@@ -1092,7 +1093,7 @@ namespace PengolahanCitra
             {
                 for (int x = 0; x < imageWidth; x++)
                 {
-                    Color pixel = image.GetPixel(x, y); 
+                    Color pixel = image.GetPixel(x, y);
                     rgbMatrix[y, x, 0] = pixel.R;
                     rgbMatrix[y, x, 1] = pixel.G;
                     rgbMatrix[y, x, 2] = pixel.B;
@@ -1107,8 +1108,7 @@ namespace PengolahanCitra
 
         private void UpdateMainImage(Bitmap image)
         {
-            pictureBoxMain.Image = image;
-            GenerateHistograms(image);
+            ApplyZoomToMainImage();
         }
 
         private void ShowFilterPanel()
@@ -1140,7 +1140,7 @@ namespace PengolahanCitra
         {
             // Sembunyikan panel filter
             HideFilterPanel();
-            
+
             // Tampilkan panel aritmatika
             panelAritmatikContainer.Visible = true;
             isAritmatikPanelVisible = true;
@@ -1208,10 +1208,26 @@ namespace PengolahanCitra
             }
         }
 
+        private void ApplyZoomToMainImage()
+        {
+            if (currentImage == null) return;
+            int zoom = currentZoomPercent;
+            int newWidth = currentImage.Width * zoom / 100;
+            int newHeight = currentImage.Height * zoom / 100;
+            Bitmap zoomed = new Bitmap(newWidth, newHeight);
+            using (Graphics g = Graphics.FromImage(zoomed))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(currentImage, 0, 0, newWidth, newHeight);
+            }
+            pictureBoxMain.Image = zoomed;
+            GenerateHistograms(currentImage); // Histogram tetap dari gambar asli
+        }
+
         #endregion
 
         #region Utility Methods
-        
+
         private int CalculateGrayscale(Color pixel)
         {
             return (int)((pixel.R + pixel.G + pixel.B) / 3);
@@ -1237,9 +1253,9 @@ namespace PengolahanCitra
         #endregion
 
 
-        
 
-        
+
+
 
         #region Event Handlers - Rotation Operations
 
@@ -1457,6 +1473,76 @@ namespace PengolahanCitra
 
         }
 
+        private void labelZoomMin_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelAritmatikTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panelBrightnessContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void labelFlipTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDownTranslateY_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDownTranslateX_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelTranslateY_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelTranslateX_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelTranslateTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelCustomRotate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDownDegree_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelZoomTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelZoomValue_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelZoomMax_Click(object sender, EventArgs e)
+        {
+
+        }
+
         #endregion
 
         #region Validation & Error Handling
@@ -1487,7 +1573,6 @@ namespace PengolahanCitra
         }
 
         #endregion
-
-
     }
+
 }
