@@ -88,6 +88,7 @@ namespace PengolahanCitra
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.labelBrightnessValue = new System.Windows.Forms.Label();
             this.btnResetBrightness = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -262,6 +263,7 @@ namespace PengolahanCitra
             // panelToolbar
             // 
             this.panelToolbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.panelToolbar.Controls.Add(this.btnReset);
             this.panelToolbar.Controls.Add(this.Aritmathic);
             this.panelToolbar.Controls.Add(this.btnSave);
             this.panelToolbar.Controls.Add(this.btnSaveToTxt);
@@ -392,7 +394,7 @@ namespace PengolahanCitra
             this.panelAritmatikContainer.Controls.Add(this.labelZoomMax);
             this.panelAritmatikContainer.Location = new System.Drawing.Point(5, 5);
             this.panelAritmatikContainer.Name = "panelAritmatikContainer";
-            this.panelAritmatikContainer.Size = new System.Drawing.Size(244, 691);
+            this.panelAritmatikContainer.Size = new System.Drawing.Size(244, 696);
             this.panelAritmatikContainer.TabIndex = 1;
             this.panelAritmatikContainer.Visible = false;
             this.panelAritmatikContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelAritmatikContainer_Paint);
@@ -454,7 +456,7 @@ namespace PengolahanCitra
             // 
             this.numericUpDownTranslateY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateY.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateY.Location = new System.Drawing.Point(114, 552);
+            this.numericUpDownTranslateY.Location = new System.Drawing.Point(114, 571);
             this.numericUpDownTranslateY.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -475,7 +477,7 @@ namespace PengolahanCitra
             // 
             this.numericUpDownTranslateX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateX.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownTranslateX.Location = new System.Drawing.Point(24, 552);
+            this.numericUpDownTranslateX.Location = new System.Drawing.Point(24, 571);
             this.numericUpDownTranslateX.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -496,7 +498,7 @@ namespace PengolahanCitra
             // 
             this.labelTranslateY.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateY.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateY.Location = new System.Drawing.Point(114, 532);
+            this.labelTranslateY.Location = new System.Drawing.Point(114, 551);
             this.labelTranslateY.Name = "labelTranslateY";
             this.labelTranslateY.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateY.TabIndex = 10;
@@ -508,7 +510,7 @@ namespace PengolahanCitra
             // 
             this.labelTranslateX.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.labelTranslateX.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateX.Location = new System.Drawing.Point(24, 532);
+            this.labelTranslateX.Location = new System.Drawing.Point(24, 551);
             this.labelTranslateX.Name = "labelTranslateX";
             this.labelTranslateX.Size = new System.Drawing.Size(90, 17);
             this.labelTranslateX.TabIndex = 9;
@@ -520,7 +522,7 @@ namespace PengolahanCitra
             // 
             this.labelTranslateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.labelTranslateTitle.ForeColor = System.Drawing.Color.White;
-            this.labelTranslateTitle.Location = new System.Drawing.Point(24, 578);
+            this.labelTranslateTitle.Location = new System.Drawing.Point(24, 526);
             this.labelTranslateTitle.Name = "labelTranslateTitle";
             this.labelTranslateTitle.Size = new System.Drawing.Size(180, 20);
             this.labelTranslateTitle.TabIndex = 8;
@@ -533,7 +535,7 @@ namespace PengolahanCitra
             this.btnRotateCustom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnRotateCustom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRotateCustom.ForeColor = System.Drawing.Color.White;
-            this.btnRotateCustom.Location = new System.Drawing.Point(24, 494);
+            this.btnRotateCustom.Location = new System.Drawing.Point(24, 487);
             this.btnRotateCustom.Name = "btnRotateCustom";
             this.btnRotateCustom.Size = new System.Drawing.Size(180, 35);
             this.btnRotateCustom.TabIndex = 7;
@@ -545,7 +547,7 @@ namespace PengolahanCitra
             // 
             this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
-            this.numericUpDownDegree.Location = new System.Drawing.Point(24, 467);
+            this.numericUpDownDegree.Location = new System.Drawing.Point(27, 461);
             this.numericUpDownDegree.Maximum = new decimal(new int[] {
             360,
             0,
@@ -732,7 +734,7 @@ namespace PengolahanCitra
             // 
             this.labelZoomMin.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelZoomMin.ForeColor = System.Drawing.Color.LightGray;
-            this.labelZoomMin.Location = new System.Drawing.Point(25, 773);
+            this.labelZoomMin.Location = new System.Drawing.Point(24, 769);
             this.labelZoomMin.Name = "labelZoomMin";
             this.labelZoomMin.Size = new System.Drawing.Size(40, 20);
             this.labelZoomMin.TabIndex = 22;
@@ -743,7 +745,7 @@ namespace PengolahanCitra
             // 
             this.labelZoomMax.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelZoomMax.ForeColor = System.Drawing.Color.LightGray;
-            this.labelZoomMax.Location = new System.Drawing.Point(164, 773);
+            this.labelZoomMax.Location = new System.Drawing.Point(164, 769);
             this.labelZoomMax.Name = "labelZoomMax";
             this.labelZoomMax.Size = new System.Drawing.Size(40, 20);
             this.labelZoomMax.TabIndex = 23;
@@ -1011,6 +1013,21 @@ namespace PengolahanCitra
             this.btnResetBrightness.UseVisualStyleBackColor = false;
             this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
             // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.btnReset.FlatAppearance.BorderSize = 0;
+            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReset.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReset.ForeColor = System.Drawing.Color.White;
+            this.btnReset.Location = new System.Drawing.Point(1060, 10);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(54, 40);
+            this.btnReset.TabIndex = 5;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1136,5 +1153,6 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelZoomValue;
         private System.Windows.Forms.Label labelZoomMin;
         private System.Windows.Forms.Label labelZoomMax;
+        private Button btnReset;
     }
 }

@@ -227,13 +227,6 @@ namespace PengolahanCitra
                 // Ambil nilai dari NumericUpDown
                 int customDegree = (int)numericUpDownDegree.Value;
 
-                // Validasi input
-                //if (customDegree == 0)
-                //{
-                //    ShowWarning("Please enter a rotation degree (1-360 or -360 to -1)");
-                //    return;
-                //}
-
                 currentRotationAngle = customDegree;
                 Bitmap rotated = RotateImageToAngle(currentRotationAngle);
                 currentImage?.Dispose();
@@ -257,13 +250,7 @@ namespace PengolahanCitra
                 int offsetX = (int)numericUpDownTranslateX.Value;
                 int offsetY = (int)numericUpDownTranslateY.Value;
 
-                if (offsetX == 0 && offsetY == 0)
-                {
-                    ShowWarning("Masukkan nilai X atau Y offset yang tidak nol!");
-                    return;
-                }
-
-                Bitmap translated = TranslateImage(originalImage, offsetX, offsetY);
+                Bitmap translated = TranslateImage(currentImage, offsetX, offsetY);
                 currentImage?.Dispose();
                 currentImage = translated;
                 BitmapToMatrix(currentImage);
@@ -1541,6 +1528,22 @@ namespace PengolahanCitra
         private void labelZoomMax_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void BtnReset_Click(object sender, EventArgs e)
+        {
+            if (currentImage == null)
+            {
+                ShowError("Please load an image first.");
+                return;
+            }
+
+            currentImage?.Dispose();
+            currentImage = new Bitmap(originalImage);
+            BitmapToMatrix(currentImage);
+            UpdateMainImage(currentImage);
+            ShowSuccess("Image has been reset to original.");
         }
 
         #endregion
