@@ -210,7 +210,7 @@ namespace PengolahanCitra
             }
         }
 
-                private void btnAddImage_Click(object sender, EventArgs e) => PerformImageArithmetic(AddImages, "Ditambahkan", "Penjumlahan");
+        private void btnAddImage_Click(object sender, EventArgs e) => PerformImageArithmetic(AddImages, "Ditambahkan", "Penjumlahan");
 
         private void btnSubtractImage_Click(object sender, EventArgs e) => PerformImageArithmetic(SubtractImages, "Dikurangkan", "Pengurangan");
 
@@ -845,8 +845,7 @@ namespace PengolahanCitra
 
             try
             {
-                currentRotationAngle = angle;
-                Bitmap rotated = RotateImageToAngle(currentRotationAngle);
+                Bitmap rotated = RotateImageToAngle(currentImage, angle);
                 UpdateCurrentImage(rotated);
                 ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
             }
@@ -856,11 +855,9 @@ namespace PengolahanCitra
             }
         }
 
-        private Bitmap RotateImageToAngle(int angle)
+        private Bitmap RotateImageToAngle(Bitmap source, int angle)
         {
-            if (originalImage == null) return null;
-
-            Bitmap source = originalImage;
+            if (source == null) return null;
 
             angle = angle % 360;
             if (angle < 0) angle += 360;
