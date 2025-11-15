@@ -30,7 +30,7 @@ namespace PengolahanCitra
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
         private int currentRotationAngle = 0;
-        private int currentZoomPercent = 100;
+        private int currentZoomPercent = 20;
 
         // Constants
         private const int THUMBNAIL_SIZE = 60;
