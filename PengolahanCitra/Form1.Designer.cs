@@ -33,6 +33,7 @@ namespace PengolahanCitra
             this.BtnSetColor = new System.Windows.Forms.Button();
             this.btnSaveToTxt = new System.Windows.Forms.Button();
             this.panelToolbar = new System.Windows.Forms.Panel();
+            this.btnReset = new System.Windows.Forms.Button();
             this.Aritmathic = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
@@ -88,7 +89,6 @@ namespace PengolahanCitra
             this.trackBarBrightness = new System.Windows.Forms.TrackBar();
             this.labelBrightnessValue = new System.Windows.Forms.Label();
             this.btnResetBrightness = new System.Windows.Forms.Button();
-            this.btnReset = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -276,6 +276,21 @@ namespace PengolahanCitra
             this.panelToolbar.Size = new System.Drawing.Size(1284, 60);
             this.panelToolbar.TabIndex = 1;
             // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.btnReset.FlatAppearance.BorderSize = 0;
+            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReset.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReset.ForeColor = System.Drawing.Color.White;
+            this.btnReset.Location = new System.Drawing.Point(1060, 10);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(54, 40);
+            this.btnReset.TabIndex = 5;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            // 
             // Aritmathic
             // 
             this.Aritmathic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
@@ -345,7 +360,7 @@ namespace PengolahanCitra
             this.pictureBoxMain.Name = "pictureBoxMain";
             this.pictureBoxMain.Padding = new System.Windows.Forms.Padding(15, 10, 15, 20);
             this.pictureBoxMain.Size = new System.Drawing.Size(785, 701);
-            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
             // 
@@ -1012,21 +1027,6 @@ namespace PengolahanCitra
             this.btnResetBrightness.Text = "Reset";
             this.btnResetBrightness.UseVisualStyleBackColor = false;
             this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
-            // 
-            // btnReset
-            // 
-            this.btnReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.btnReset.FlatAppearance.BorderSize = 0;
-            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReset.ForeColor = System.Drawing.Color.White;
-            this.btnReset.Location = new System.Drawing.Point(1060, 10);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(54, 40);
-            this.btnReset.TabIndex = 5;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = false;
-            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
             // Form1
             // 
