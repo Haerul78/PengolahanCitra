@@ -610,36 +610,24 @@ namespace PengolahanCitra
             Bitmap thumbResult = new Bitmap(thumbnailSource);
             int thumbW = thumbResult.Width;
             int thumbH = thumbResult.Height;
-            
-            byte[,,] thumbMatrix = new byte[thumbH, thumbW, 3];
-            byte[,] thumbGrayMatrix = new byte[thumbH, thumbW];
 
             for (int y = 0; y < thumbH; y++)
             {
                 for (int x = 0; x < thumbW; x++)
                 {
                     Color pixel = thumbResult.GetPixel(x, y);
-                    thumbMatrix[y, x, 0] = pixel.R;
-                    thumbMatrix[y, x, 1] = pixel.G;
-                    thumbMatrix[y, x, 2] = pixel.B;
-                    thumbGrayMatrix[y, x] = (byte)CalculateGrayscale(pixel);
-                }
-            }
 
-            for (int y = 0; y < thumbH; y++)
-            {
-                for (int x = 0; x < thumbW; x++)
-                {
-                    byte r = thumbMatrix[y, x, 0];
-                    byte g = thumbMatrix[y, x, 1];
-                    byte b = thumbMatrix[y, x, 2];
-                    byte gray = thumbGrayMatrix[y, x];
-                    
+                    byte r = pixel.R;
+                    byte g = pixel.G;
+                    byte b = pixel.B;
+                    byte gray = (byte)CalculateGrayscale(pixel);
+
                     Color processed = ProcessPixelFromMatrix(r, g, b, gray, filterType);
+
                     thumbResult.SetPixel(x, y, processed);
                 }
             }
-            
+
             return thumbResult;
         }
 
@@ -1321,3 +1309,5 @@ namespace PengolahanCitra
         #endregion
     }
 }
+
+// End
