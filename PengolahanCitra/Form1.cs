@@ -210,7 +210,7 @@ namespace PengolahanCitra
             }
         }
 
-                private void btnAddImage_Click(object sender, EventArgs e) => PerformImageArithmetic(AddImages, "Ditambahkan", "Penjumlahan");
+        private void btnAddImage_Click(object sender, EventArgs e) => PerformImageArithmetic(AddImages, "Ditambahkan", "Penjumlahan");
 
         private void btnSubtractImage_Click(object sender, EventArgs e) => PerformImageArithmetic(SubtractImages, "Dikurangkan", "Pengurangan");
 
@@ -1305,6 +1305,11 @@ namespace PengolahanCitra
                 return System.Drawing.Imaging.ImageFormat.Bmp;
             
             return System.Drawing.Imaging.ImageFormat.Png;
+        }
+
+        private void pictureBoxMain_Click(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
