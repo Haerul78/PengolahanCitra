@@ -610,36 +610,24 @@ namespace PengolahanCitra
             Bitmap thumbResult = new Bitmap(thumbnailSource);
             int thumbW = thumbResult.Width;
             int thumbH = thumbResult.Height;
-            
-            byte[,,] thumbMatrix = new byte[thumbH, thumbW, 3];
-            byte[,] thumbGrayMatrix = new byte[thumbH, thumbW];
 
             for (int y = 0; y < thumbH; y++)
             {
                 for (int x = 0; x < thumbW; x++)
                 {
                     Color pixel = thumbResult.GetPixel(x, y);
-                    thumbMatrix[y, x, 0] = pixel.R;
-                    thumbMatrix[y, x, 1] = pixel.G;
-                    thumbMatrix[y, x, 2] = pixel.B;
-                    thumbGrayMatrix[y, x] = (byte)CalculateGrayscale(pixel);
-                }
-            }
 
-            for (int y = 0; y < thumbH; y++)
-            {
-                for (int x = 0; x < thumbW; x++)
-                {
-                    byte r = thumbMatrix[y, x, 0];
-                    byte g = thumbMatrix[y, x, 1];
-                    byte b = thumbMatrix[y, x, 2];
-                    byte gray = thumbGrayMatrix[y, x];
-                    
+                    byte r = pixel.R;
+                    byte g = pixel.G;
+                    byte b = pixel.B;
+                    byte gray = (byte)CalculateGrayscale(pixel);
+
                     Color processed = ProcessPixelFromMatrix(r, g, b, gray, filterType);
+
                     thumbResult.SetPixel(x, y, processed);
                 }
             }
-            
+
             return thumbResult;
         }
 
@@ -660,29 +648,12 @@ namespace PengolahanCitra
 
         #region Image Processing - Histogram
 
-        private void GenerateHistograms(Bitmap image)
+        private void GenerateHistograms()
         {
-            if (image == null) return;
-
-            int w = image.Width;
-            int h = image.Height;
-            byte[,,] histRgbMatrix = new byte[h, w, 3];
-            byte[,] histGrayMatrix = new byte[h, w];
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Color pixel = image.GetPixel(x, y);
-                    histRgbMatrix[y, x, 0] = pixel.R;
-                    histRgbMatrix[y, x, 1] = pixel.G;
-                    histRgbMatrix[y, x, 2] = pixel.B;
-                    histGrayMatrix[y, x] = (byte)CalculateGrayscale(pixel);
-                }
-            }
+            if (rgbMatrix == null || grayMatrix == null) return;
 
             DisposeHistogramImages();
-            CreateHistogramImages(histRgbMatrix, histGrayMatrix);
+            CreateHistogramImages(rgbMatrix, grayMatrix);
         }
 
         private void DisposeHistogramImages()
@@ -839,13 +810,15 @@ namespace PengolahanCitra
 
         #region Image Processing - Rotation
 
-        private void RotateImage(int angle)
+        private void RotateImage(int targetAngle)
         {
             if (!ValidateImageLoaded()) return;
 
             try
             {
-                Bitmap rotated = RotateImageToAngle(currentImage, angle);
+                int angleToApply = targetAngle - currentRotationAngle;
+                Bitmap rotated = RotateImageToAngle(currentImage, angleToApply);
+                currentRotationAngle = targetAngle;
                 UpdateCurrentImage(rotated);
                 ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
             }
@@ -1183,7 +1156,7 @@ namespace PengolahanCitra
         private void UpdateMainImage(Bitmap image)
         {
             ApplyZoomToMainImage();
-            GenerateHistograms(image);
+            GenerateHistograms();
         }
 
         private void ShowFilterPanel()
@@ -1211,7 +1184,7 @@ namespace PengolahanCitra
             pictureBoxHistogramB.Visible = true;
             pictureBoxHistogramGray.Visible = true;
             
-            GenerateHistograms(currentImage);
+            GenerateHistograms();
         }
 
         private void ShowAritmatikPanel()
@@ -1341,3 +1314,5 @@ namespace PengolahanCitra
         #endregion
     }
 }
+
+// End
