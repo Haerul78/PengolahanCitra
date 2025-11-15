@@ -964,9 +964,9 @@ namespace PengolahanCitra
                 ConfigureGraphicsQuality(g);
                 g.Clear(Color.FromArgb(28, 28, 28));
 
-                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+                //g.TranslateTransform(newWidth / 2f, newHeight / 2f);
                 g.RotateTransform(angle);
-                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
+                //g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
                 g.DrawImage(src, 0, 0, src.Width, src.Height);
             }
             
