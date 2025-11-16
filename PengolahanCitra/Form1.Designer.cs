@@ -368,8 +368,8 @@ namespace PengolahanCitra
             // panelSidebarRight
             // 
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
+            this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
