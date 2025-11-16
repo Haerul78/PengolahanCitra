@@ -360,9 +360,10 @@ namespace PengolahanCitra
             this.pictureBoxMain.Name = "pictureBoxMain";
             this.pictureBoxMain.Padding = new System.Windows.Forms.Padding(15, 10, 15, 20);
             this.pictureBoxMain.Size = new System.Drawing.Size(785, 701);
-            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
+            this.pictureBoxMain.Click += new System.EventHandler(this.pictureBoxMain_Click);
             // 
             // panelSidebarRight
             // 
@@ -730,7 +731,7 @@ namespace PengolahanCitra
             this.trackBarZoom.Size = new System.Drawing.Size(180, 45);
             this.trackBarZoom.TabIndex = 20;
             this.trackBarZoom.TickFrequency = 10;
-            this.trackBarZoom.Value = 100;
+            this.trackBarZoom.Value = 20;
             this.trackBarZoom.Scroll += new System.EventHandler(this.trackBarZoom_Scroll);
             // 
             // labelZoomValue
