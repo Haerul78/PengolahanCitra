@@ -56,6 +56,8 @@ namespace PengolahanCitra
             this.labelNegative = new System.Windows.Forms.Label();
             this.pictureBoxGaussian = new System.Windows.Forms.PictureBox();
             this.labelGaussian = new System.Windows.Forms.Label();
+            this.pictureBoxSharpen = new System.Windows.Forms.PictureBox();
+            this.labelSharpen = new System.Windows.Forms.Label();
             this.btnApplyFilter = new System.Windows.Forms.Button();
             this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
             this.labelThreshold = new System.Windows.Forms.Label();
@@ -91,6 +93,7 @@ namespace PengolahanCitra
             this.labelZoomValue = new System.Windows.Forms.Label();
             this.labelZoomMin = new System.Windows.Forms.Label();
             this.labelZoomMax = new System.Windows.Forms.Label();
+            this.btnPreviewSharpen = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -108,6 +111,7 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGaussian)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSharpen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             this.panelBrightnessContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
@@ -371,8 +375,8 @@ namespace PengolahanCitra
             // panelSidebarRight
             // 
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
+            this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSidebarRight.Location = new System.Drawing.Point(1035, 60);
             this.panelSidebarRight.Name = "panelSidebarRight";
@@ -399,6 +403,8 @@ namespace PengolahanCitra
             this.panelFilterContainer.Controls.Add(this.labelNegative);
             this.panelFilterContainer.Controls.Add(this.pictureBoxGaussian);
             this.panelFilterContainer.Controls.Add(this.labelGaussian);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxSharpen);
+            this.panelFilterContainer.Controls.Add(this.labelSharpen);
             this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
             this.panelFilterContainer.Controls.Add(this.pictureBoxThreshold);
             this.panelFilterContainer.Controls.Add(this.labelThreshold);
@@ -574,12 +580,34 @@ namespace PengolahanCitra
             this.labelGaussian.Text = "Gaussian";
             this.labelGaussian.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // pictureBoxSharpen
+            // 
+            this.pictureBoxSharpen.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxSharpen.Location = new System.Drawing.Point(46, 421);
+            this.pictureBoxSharpen.Name = "pictureBoxSharpen";
+            this.pictureBoxSharpen.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxSharpen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSharpen.TabIndex = 23;
+            this.pictureBoxSharpen.TabStop = false;
+            this.pictureBoxSharpen.Click += new System.EventHandler(this.pictureBoxSharpen_Click);
+            // 
+            // labelSharpen
+            // 
+            this.labelSharpen.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelSharpen.ForeColor = System.Drawing.Color.White;
+            this.labelSharpen.Location = new System.Drawing.Point(46, 484);
+            this.labelSharpen.Name = "labelSharpen";
+            this.labelSharpen.Size = new System.Drawing.Size(60, 20);
+            this.labelSharpen.TabIndex = 24;
+            this.labelSharpen.Text = "Sharpen";
+            this.labelSharpen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // btnApplyFilter
             // 
             this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.btnApplyFilter.Location = new System.Drawing.Point(36, 642);
+            this.btnApplyFilter.Location = new System.Drawing.Point(36, 638);
             this.btnApplyFilter.Name = "btnApplyFilter";
             this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
             this.btnApplyFilter.TabIndex = 11;
@@ -615,7 +643,7 @@ namespace PengolahanCitra
             this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
             this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
             this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(12, 423);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(12, 512);
             this.panelBrightnessContainer.Name = "panelBrightnessContainer";
             this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
             this.panelBrightnessContainer.TabIndex = 0;
@@ -1056,6 +1084,20 @@ namespace PengolahanCitra
             this.labelZoomMax.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.labelZoomMax.Click += new System.EventHandler(this.labelZoomMax_Click);
             // 
+            // btnPreviewSharpen
+            // 
+            this.btnPreviewSharpen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnPreviewSharpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPreviewSharpen.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewSharpen.Location = new System.Drawing.Point(113, 470);
+            this.btnPreviewSharpen.Name = "btnPreviewSharpen";
+            this.btnPreviewSharpen.Size = new System.Drawing.Size(100, 30);
+            this.btnPreviewSharpen.TabIndex = 25;
+            this.btnPreviewSharpen.Text = "Preview";
+            this.btnPreviewSharpen.UseVisualStyleBackColor = false;
+            this.btnPreviewSharpen.Visible = false;
+            this.btnPreviewSharpen.Click += new System.EventHandler(this.btnPreviewSharpen_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1089,6 +1131,7 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGaussian)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSharpen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).EndInit();
             this.panelBrightnessContainer.ResumeLayout(false);
             this.panelBrightnessContainer.PerformLayout();
@@ -1128,6 +1171,8 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelGray;
         private System.Windows.Forms.PictureBox pictureBoxNegative;
         private System.Windows.Forms.Label labelNegative;
+        private System.Windows.Forms.PictureBox pictureBoxGaussian;
+        private System.Windows.Forms.Label labelGaussian;
         private System.Windows.Forms.Button btnApplyFilter;
         private System.Windows.Forms.PictureBox pictureBoxThreshold;
         private System.Windows.Forms.Label labelThreshold;
@@ -1183,7 +1228,8 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelZoomMin;
         private System.Windows.Forms.Label labelZoomMax;
         private Button btnReset;
-        private System.Windows.Forms.PictureBox pictureBoxGaussian;
-        private System.Windows.Forms.Label labelGaussian;
+        private System.Windows.Forms.PictureBox pictureBoxSharpen;
+        private System.Windows.Forms.Label labelSharpen;
+        private System.Windows.Forms.Button btnPreviewSharpen;
     }
 }
