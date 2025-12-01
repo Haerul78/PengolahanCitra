@@ -40,6 +40,30 @@ namespace PengolahanCitra
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
+            this.panelFilterContainer = new System.Windows.Forms.Panel();
+            this.labelFilterTitle = new System.Windows.Forms.Label();
+            this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
+            this.labelOriginal = new System.Windows.Forms.Label();
+            this.pictureBoxRed = new System.Windows.Forms.PictureBox();
+            this.labelRed = new System.Windows.Forms.Label();
+            this.pictureBoxGreen = new System.Windows.Forms.PictureBox();
+            this.labelGreen = new System.Windows.Forms.Label();
+            this.pictureBoxBlue = new System.Windows.Forms.PictureBox();
+            this.labelBlue = new System.Windows.Forms.Label();
+            this.pictureBoxGray = new System.Windows.Forms.PictureBox();
+            this.labelGray = new System.Windows.Forms.Label();
+            this.pictureBoxNegative = new System.Windows.Forms.PictureBox();
+            this.labelNegative = new System.Windows.Forms.Label();
+            this.pictureBoxGaussian = new System.Windows.Forms.PictureBox();
+            this.labelGaussian = new System.Windows.Forms.Label();
+            this.btnApplyFilter = new System.Windows.Forms.Button();
+            this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
+            this.labelThreshold = new System.Windows.Forms.Label();
+            this.panelBrightnessContainer = new System.Windows.Forms.Panel();
+            this.labelBrightness = new System.Windows.Forms.Label();
+            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
+            this.labelBrightnessValue = new System.Windows.Forms.Label();
+            this.btnResetBrightness = new System.Windows.Forms.Button();
             this.panelAritmatikContainer = new System.Windows.Forms.Panel();
             this.btnFlipVertical = new System.Windows.Forms.Button();
             this.btnFlipHorizontal = new System.Windows.Forms.Button();
@@ -67,28 +91,6 @@ namespace PengolahanCitra
             this.labelZoomValue = new System.Windows.Forms.Label();
             this.labelZoomMin = new System.Windows.Forms.Label();
             this.labelZoomMax = new System.Windows.Forms.Label();
-            this.panelFilterContainer = new System.Windows.Forms.Panel();
-            this.labelFilterTitle = new System.Windows.Forms.Label();
-            this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
-            this.labelOriginal = new System.Windows.Forms.Label();
-            this.pictureBoxRed = new System.Windows.Forms.PictureBox();
-            this.labelRed = new System.Windows.Forms.Label();
-            this.pictureBoxGreen = new System.Windows.Forms.PictureBox();
-            this.labelGreen = new System.Windows.Forms.Label();
-            this.pictureBoxBlue = new System.Windows.Forms.PictureBox();
-            this.labelBlue = new System.Windows.Forms.Label();
-            this.pictureBoxGray = new System.Windows.Forms.PictureBox();
-            this.labelGray = new System.Windows.Forms.Label();
-            this.pictureBoxNegative = new System.Windows.Forms.PictureBox();
-            this.labelNegative = new System.Windows.Forms.Label();
-            this.btnApplyFilter = new System.Windows.Forms.Button();
-            this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
-            this.labelThreshold = new System.Windows.Forms.Label();
-            this.panelBrightnessContainer = new System.Windows.Forms.Panel();
-            this.labelBrightness = new System.Windows.Forms.Label();
-            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
-            this.labelBrightnessValue = new System.Windows.Forms.Label();
-            this.btnResetBrightness = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -98,11 +100,6 @@ namespace PengolahanCitra
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.panelSidebarRight.SuspendLayout();
-            this.panelAritmatikContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).BeginInit();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -110,9 +107,15 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGaussian)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             this.panelBrightnessContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
+            this.panelAritmatikContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -378,6 +381,290 @@ namespace PengolahanCitra
             this.panelSidebarRight.Size = new System.Drawing.Size(249, 701);
             this.panelSidebarRight.TabIndex = 2;
             this.panelSidebarRight.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSidebarRight_Paint);
+            // 
+            // panelFilterContainer
+            // 
+            this.panelFilterContainer.Controls.Add(this.labelFilterTitle);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxOriginal);
+            this.panelFilterContainer.Controls.Add(this.labelOriginal);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxRed);
+            this.panelFilterContainer.Controls.Add(this.labelRed);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxGreen);
+            this.panelFilterContainer.Controls.Add(this.labelGreen);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxBlue);
+            this.panelFilterContainer.Controls.Add(this.labelBlue);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxGray);
+            this.panelFilterContainer.Controls.Add(this.labelGray);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxNegative);
+            this.panelFilterContainer.Controls.Add(this.labelNegative);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxGaussian);
+            this.panelFilterContainer.Controls.Add(this.labelGaussian);
+            this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
+            this.panelFilterContainer.Controls.Add(this.pictureBoxThreshold);
+            this.panelFilterContainer.Controls.Add(this.labelThreshold);
+            this.panelFilterContainer.Controls.Add(this.panelBrightnessContainer);
+            this.panelFilterContainer.Location = new System.Drawing.Point(5, 5);
+            this.panelFilterContainer.Name = "panelFilterContainer";
+            this.panelFilterContainer.Size = new System.Drawing.Size(244, 690);
+            this.panelFilterContainer.TabIndex = 0;
+            this.panelFilterContainer.Visible = false;
+            // 
+            // labelFilterTitle
+            // 
+            this.labelFilterTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelFilterTitle.ForeColor = System.Drawing.Color.White;
+            this.labelFilterTitle.Location = new System.Drawing.Point(32, 16);
+            this.labelFilterTitle.Name = "labelFilterTitle";
+            this.labelFilterTitle.Size = new System.Drawing.Size(180, 25);
+            this.labelFilterTitle.TabIndex = 0;
+            this.labelFilterTitle.Text = "Filter Preview";
+            this.labelFilterTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxOriginal
+            // 
+            this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxOriginal.Location = new System.Drawing.Point(47, 69);
+            this.pictureBoxOriginal.Name = "pictureBoxOriginal";
+            this.pictureBoxOriginal.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxOriginal.TabIndex = 1;
+            this.pictureBoxOriginal.TabStop = false;
+            this.pictureBoxOriginal.Click += new System.EventHandler(this.pictureBoxOriginal_Click);
+            // 
+            // labelOriginal
+            // 
+            this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelOriginal.ForeColor = System.Drawing.Color.White;
+            this.labelOriginal.Location = new System.Drawing.Point(47, 129);
+            this.labelOriginal.Name = "labelOriginal";
+            this.labelOriginal.Size = new System.Drawing.Size(60, 20);
+            this.labelOriginal.TabIndex = 2;
+            this.labelOriginal.Text = "Original";
+            this.labelOriginal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxRed
+            // 
+            this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxRed.Location = new System.Drawing.Point(133, 69);
+            this.pictureBoxRed.Name = "pictureBoxRed";
+            this.pictureBoxRed.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxRed.TabIndex = 3;
+            this.pictureBoxRed.TabStop = false;
+            this.pictureBoxRed.Click += new System.EventHandler(this.pictureBoxRed_Click);
+            // 
+            // labelRed
+            // 
+            this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelRed.ForeColor = System.Drawing.Color.White;
+            this.labelRed.Location = new System.Drawing.Point(133, 129);
+            this.labelRed.Name = "labelRed";
+            this.labelRed.Size = new System.Drawing.Size(60, 20);
+            this.labelRed.TabIndex = 4;
+            this.labelRed.Text = "Red";
+            this.labelRed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxGreen
+            // 
+            this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxGreen.Location = new System.Drawing.Point(47, 159);
+            this.pictureBoxGreen.Name = "pictureBoxGreen";
+            this.pictureBoxGreen.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGreen.TabIndex = 5;
+            this.pictureBoxGreen.TabStop = false;
+            this.pictureBoxGreen.Click += new System.EventHandler(this.pictureBoxGreen_Click);
+            // 
+            // labelGreen
+            // 
+            this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGreen.ForeColor = System.Drawing.Color.White;
+            this.labelGreen.Location = new System.Drawing.Point(47, 222);
+            this.labelGreen.Name = "labelGreen";
+            this.labelGreen.Size = new System.Drawing.Size(60, 20);
+            this.labelGreen.TabIndex = 6;
+            this.labelGreen.Text = "Green";
+            this.labelGreen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxBlue
+            // 
+            this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxBlue.Location = new System.Drawing.Point(133, 159);
+            this.pictureBoxBlue.Name = "pictureBoxBlue";
+            this.pictureBoxBlue.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxBlue.TabIndex = 7;
+            this.pictureBoxBlue.TabStop = false;
+            this.pictureBoxBlue.Click += new System.EventHandler(this.pictureBoxBlue_Click);
+            // 
+            // labelBlue
+            // 
+            this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelBlue.ForeColor = System.Drawing.Color.White;
+            this.labelBlue.Location = new System.Drawing.Point(133, 222);
+            this.labelBlue.Name = "labelBlue";
+            this.labelBlue.Size = new System.Drawing.Size(60, 20);
+            this.labelBlue.TabIndex = 8;
+            this.labelBlue.Text = "Blue";
+            this.labelBlue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxGray
+            // 
+            this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxGray.Location = new System.Drawing.Point(47, 245);
+            this.pictureBoxGray.Name = "pictureBoxGray";
+            this.pictureBoxGray.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGray.TabIndex = 9;
+            this.pictureBoxGray.TabStop = false;
+            this.pictureBoxGray.Click += new System.EventHandler(this.pictureBoxGray_Click);
+            // 
+            // labelGray
+            // 
+            this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGray.ForeColor = System.Drawing.Color.White;
+            this.labelGray.Location = new System.Drawing.Point(46, 308);
+            this.labelGray.Name = "labelGray";
+            this.labelGray.Size = new System.Drawing.Size(60, 20);
+            this.labelGray.TabIndex = 10;
+            this.labelGray.Text = "Grayscale";
+            this.labelGray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxNegative
+            // 
+            this.pictureBoxNegative.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxNegative.Location = new System.Drawing.Point(47, 331);
+            this.pictureBoxNegative.Name = "pictureBoxNegative";
+            this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxNegative.TabIndex = 11;
+            this.pictureBoxNegative.TabStop = false;
+            this.pictureBoxNegative.Click += new System.EventHandler(this.pictureBoxNegative_Click);
+            // 
+            // labelNegative
+            // 
+            this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelNegative.ForeColor = System.Drawing.Color.White;
+            this.labelNegative.Location = new System.Drawing.Point(47, 394);
+            this.labelNegative.Name = "labelNegative";
+            this.labelNegative.Size = new System.Drawing.Size(60, 20);
+            this.labelNegative.TabIndex = 20;
+            this.labelNegative.Text = "Negative";
+            this.labelNegative.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxGaussian
+            // 
+            this.pictureBoxGaussian.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxGaussian.Location = new System.Drawing.Point(133, 331);
+            this.pictureBoxGaussian.Name = "pictureBoxGaussian";
+            this.pictureBoxGaussian.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxGaussian.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxGaussian.TabIndex = 21;
+            this.pictureBoxGaussian.TabStop = false;
+            this.pictureBoxGaussian.Click += new System.EventHandler(this.pictureBoxGaussian_Click);
+            // 
+            // labelGaussian
+            // 
+            this.labelGaussian.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGaussian.ForeColor = System.Drawing.Color.White;
+            this.labelGaussian.Location = new System.Drawing.Point(133, 394);
+            this.labelGaussian.Name = "labelGaussian";
+            this.labelGaussian.Size = new System.Drawing.Size(60, 20);
+            this.labelGaussian.TabIndex = 22;
+            this.labelGaussian.Text = "Gaussian";
+            this.labelGaussian.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnApplyFilter
+            // 
+            this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
+            this.btnApplyFilter.Location = new System.Drawing.Point(36, 642);
+            this.btnApplyFilter.Name = "btnApplyFilter";
+            this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
+            this.btnApplyFilter.TabIndex = 11;
+            this.btnApplyFilter.Text = "Apply Filter";
+            this.btnApplyFilter.UseVisualStyleBackColor = false;
+            this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
+            // 
+            // pictureBoxThreshold
+            // 
+            this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(133, 245);
+            this.pictureBoxThreshold.Name = "pictureBoxThreshold";
+            this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
+            this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxThreshold.TabIndex = 17;
+            this.pictureBoxThreshold.TabStop = false;
+            this.pictureBoxThreshold.Click += new System.EventHandler(this.pictureBoxThreshold_Click);
+            // 
+            // labelThreshold
+            // 
+            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelThreshold.ForeColor = System.Drawing.Color.White;
+            this.labelThreshold.Location = new System.Drawing.Point(133, 308);
+            this.labelThreshold.Name = "labelThreshold";
+            this.labelThreshold.Size = new System.Drawing.Size(60, 20);
+            this.labelThreshold.TabIndex = 18;
+            this.labelThreshold.Text = "Threshold";
+            this.labelThreshold.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // panelBrightnessContainer
+            // 
+            this.panelBrightnessContainer.Controls.Add(this.labelBrightness);
+            this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
+            this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
+            this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(12, 423);
+            this.panelBrightnessContainer.Name = "panelBrightnessContainer";
+            this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
+            this.panelBrightnessContainer.TabIndex = 0;
+            this.panelBrightnessContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBrightnessContainer_Paint);
+            // 
+            // labelBrightness
+            // 
+            this.labelBrightness.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.labelBrightness.ForeColor = System.Drawing.Color.White;
+            this.labelBrightness.Location = new System.Drawing.Point(5, 5);
+            this.labelBrightness.Name = "labelBrightness";
+            this.labelBrightness.Size = new System.Drawing.Size(100, 20);
+            this.labelBrightness.TabIndex = 0;
+            this.labelBrightness.Text = "Brightness";
+            // 
+            // trackBarBrightness
+            // 
+            this.trackBarBrightness.Location = new System.Drawing.Point(5, 30);
+            this.trackBarBrightness.Maximum = 100;
+            this.trackBarBrightness.Minimum = -100;
+            this.trackBarBrightness.Name = "trackBarBrightness";
+            this.trackBarBrightness.Size = new System.Drawing.Size(210, 45);
+            this.trackBarBrightness.TabIndex = 1;
+            this.trackBarBrightness.TickFrequency = 10;
+            this.trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
+            // 
+            // labelBrightnessValue
+            // 
+            this.labelBrightnessValue.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelBrightnessValue.ForeColor = System.Drawing.Color.LightGray;
+            this.labelBrightnessValue.Location = new System.Drawing.Point(165, 7);
+            this.labelBrightnessValue.Name = "labelBrightnessValue";
+            this.labelBrightnessValue.Size = new System.Drawing.Size(50, 20);
+            this.labelBrightnessValue.TabIndex = 2;
+            this.labelBrightnessValue.Text = "0";
+            this.labelBrightnessValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnResetBrightness
+            // 
+            this.btnResetBrightness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnResetBrightness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetBrightness.ForeColor = System.Drawing.Color.White;
+            this.btnResetBrightness.Location = new System.Drawing.Point(5, 75);
+            this.btnResetBrightness.Name = "btnResetBrightness";
+            this.btnResetBrightness.Size = new System.Drawing.Size(210, 30);
+            this.btnResetBrightness.TabIndex = 3;
+            this.btnResetBrightness.Text = "Reset";
+            this.btnResetBrightness.UseVisualStyleBackColor = false;
+            this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
             // 
             // panelAritmatikContainer
             // 
@@ -731,7 +1018,7 @@ namespace PengolahanCitra
             this.trackBarZoom.Size = new System.Drawing.Size(180, 45);
             this.trackBarZoom.TabIndex = 20;
             this.trackBarZoom.TickFrequency = 10;
-            this.trackBarZoom.Value = 100;
+            this.trackBarZoom.Value = 20;
             this.trackBarZoom.Scroll += new System.EventHandler(this.trackBarZoom_Scroll);
             // 
             // labelZoomValue
@@ -769,266 +1056,6 @@ namespace PengolahanCitra
             this.labelZoomMax.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.labelZoomMax.Click += new System.EventHandler(this.labelZoomMax_Click);
             // 
-            // panelFilterContainer
-            // 
-            this.panelFilterContainer.Controls.Add(this.labelFilterTitle);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxOriginal);
-            this.panelFilterContainer.Controls.Add(this.labelOriginal);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxRed);
-            this.panelFilterContainer.Controls.Add(this.labelRed);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxGreen);
-            this.panelFilterContainer.Controls.Add(this.labelGreen);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxBlue);
-            this.panelFilterContainer.Controls.Add(this.labelBlue);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxGray);
-            this.panelFilterContainer.Controls.Add(this.labelGray);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxNegative);
-            this.panelFilterContainer.Controls.Add(this.labelNegative);
-            this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxThreshold);
-            this.panelFilterContainer.Controls.Add(this.labelThreshold);
-            this.panelFilterContainer.Controls.Add(this.panelBrightnessContainer);
-            this.panelFilterContainer.Location = new System.Drawing.Point(5, 5);
-            this.panelFilterContainer.Name = "panelFilterContainer";
-            this.panelFilterContainer.Size = new System.Drawing.Size(244, 690);
-            this.panelFilterContainer.TabIndex = 0;
-            this.panelFilterContainer.Visible = false;
-            // 
-            // labelFilterTitle
-            // 
-            this.labelFilterTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelFilterTitle.ForeColor = System.Drawing.Color.White;
-            this.labelFilterTitle.Location = new System.Drawing.Point(32, 16);
-            this.labelFilterTitle.Name = "labelFilterTitle";
-            this.labelFilterTitle.Size = new System.Drawing.Size(180, 25);
-            this.labelFilterTitle.TabIndex = 0;
-            this.labelFilterTitle.Text = "Filter Preview";
-            this.labelFilterTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxOriginal
-            // 
-            this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxOriginal.Location = new System.Drawing.Point(47, 69);
-            this.pictureBoxOriginal.Name = "pictureBoxOriginal";
-            this.pictureBoxOriginal.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxOriginal.TabIndex = 1;
-            this.pictureBoxOriginal.TabStop = false;
-            this.pictureBoxOriginal.Click += new System.EventHandler(this.pictureBoxOriginal_Click);
-            // 
-            // labelOriginal
-            // 
-            this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelOriginal.ForeColor = System.Drawing.Color.White;
-            this.labelOriginal.Location = new System.Drawing.Point(47, 129);
-            this.labelOriginal.Name = "labelOriginal";
-            this.labelOriginal.Size = new System.Drawing.Size(60, 20);
-            this.labelOriginal.TabIndex = 2;
-            this.labelOriginal.Text = "Original";
-            this.labelOriginal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxRed
-            // 
-            this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxRed.Location = new System.Drawing.Point(133, 69);
-            this.pictureBoxRed.Name = "pictureBoxRed";
-            this.pictureBoxRed.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxRed.TabIndex = 3;
-            this.pictureBoxRed.TabStop = false;
-            this.pictureBoxRed.Click += new System.EventHandler(this.pictureBoxRed_Click);
-            // 
-            // labelRed
-            // 
-            this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelRed.ForeColor = System.Drawing.Color.White;
-            this.labelRed.Location = new System.Drawing.Point(133, 129);
-            this.labelRed.Name = "labelRed";
-            this.labelRed.Size = new System.Drawing.Size(60, 20);
-            this.labelRed.TabIndex = 4;
-            this.labelRed.Text = "Red";
-            this.labelRed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxGreen
-            // 
-            this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGreen.Location = new System.Drawing.Point(47, 159);
-            this.pictureBoxGreen.Name = "pictureBoxGreen";
-            this.pictureBoxGreen.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxGreen.TabIndex = 5;
-            this.pictureBoxGreen.TabStop = false;
-            this.pictureBoxGreen.Click += new System.EventHandler(this.pictureBoxGreen_Click);
-            // 
-            // labelGreen
-            // 
-            this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelGreen.ForeColor = System.Drawing.Color.White;
-            this.labelGreen.Location = new System.Drawing.Point(47, 222);
-            this.labelGreen.Name = "labelGreen";
-            this.labelGreen.Size = new System.Drawing.Size(60, 20);
-            this.labelGreen.TabIndex = 6;
-            this.labelGreen.Text = "Green";
-            this.labelGreen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxBlue
-            // 
-            this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxBlue.Location = new System.Drawing.Point(133, 159);
-            this.pictureBoxBlue.Name = "pictureBoxBlue";
-            this.pictureBoxBlue.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxBlue.TabIndex = 7;
-            this.pictureBoxBlue.TabStop = false;
-            this.pictureBoxBlue.Click += new System.EventHandler(this.pictureBoxBlue_Click);
-            // 
-            // labelBlue
-            // 
-            this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelBlue.ForeColor = System.Drawing.Color.White;
-            this.labelBlue.Location = new System.Drawing.Point(133, 222);
-            this.labelBlue.Name = "labelBlue";
-            this.labelBlue.Size = new System.Drawing.Size(60, 20);
-            this.labelBlue.TabIndex = 8;
-            this.labelBlue.Text = "Blue";
-            this.labelBlue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxGray
-            // 
-            this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGray.Location = new System.Drawing.Point(47, 245);
-            this.pictureBoxGray.Name = "pictureBoxGray";
-            this.pictureBoxGray.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxGray.TabIndex = 9;
-            this.pictureBoxGray.TabStop = false;
-            this.pictureBoxGray.Click += new System.EventHandler(this.pictureBoxGray_Click);
-            // 
-            // labelGray
-            // 
-            this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelGray.ForeColor = System.Drawing.Color.White;
-            this.labelGray.Location = new System.Drawing.Point(46, 308);
-            this.labelGray.Name = "labelGray";
-            this.labelGray.Size = new System.Drawing.Size(60, 20);
-            this.labelGray.TabIndex = 10;
-            this.labelGray.Text = "Grayscale";
-            this.labelGray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxNegative
-            // 
-            this.pictureBoxNegative.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNegative.Location = new System.Drawing.Point(47, 331);
-            this.pictureBoxNegative.Name = "pictureBoxNegative";
-            this.pictureBoxNegative.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxNegative.TabIndex = 11;
-            this.pictureBoxNegative.TabStop = false;
-            this.pictureBoxNegative.Click += new System.EventHandler(this.pictureBoxNegative_Click);
-            // 
-            // labelNegative
-            // 
-            this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelNegative.ForeColor = System.Drawing.Color.White;
-            this.labelNegative.Location = new System.Drawing.Point(47, 394);
-            this.labelNegative.Name = "labelNegative";
-            this.labelNegative.Size = new System.Drawing.Size(60, 20);
-            this.labelNegative.TabIndex = 20;
-            this.labelNegative.Text = "Negative";
-            this.labelNegative.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // btnApplyFilter
-            // 
-            this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.btnApplyFilter.Location = new System.Drawing.Point(36, 642);
-            this.btnApplyFilter.Name = "btnApplyFilter";
-            this.btnApplyFilter.Size = new System.Drawing.Size(180, 35);
-            this.btnApplyFilter.TabIndex = 11;
-            this.btnApplyFilter.Text = "Apply Filter";
-            this.btnApplyFilter.UseVisualStyleBackColor = false;
-            this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
-            // 
-            // pictureBoxThreshold
-            // 
-            this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxThreshold.Location = new System.Drawing.Point(133, 245);
-            this.pictureBoxThreshold.Name = "pictureBoxThreshold";
-            this.pictureBoxThreshold.Size = new System.Drawing.Size(60, 60);
-            this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxThreshold.TabIndex = 17;
-            this.pictureBoxThreshold.TabStop = false;
-            this.pictureBoxThreshold.Click += new System.EventHandler(this.pictureBoxThreshold_Click);
-            // 
-            // labelThreshold
-            // 
-            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelThreshold.Location = new System.Drawing.Point(133, 308);
-            this.labelThreshold.Name = "labelThreshold";
-            this.labelThreshold.Size = new System.Drawing.Size(60, 20);
-            this.labelThreshold.TabIndex = 18;
-            this.labelThreshold.Text = "Threshold";
-            this.labelThreshold.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // panelBrightnessContainer
-            // 
-            this.panelBrightnessContainer.Controls.Add(this.labelBrightness);
-            this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
-            this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
-            this.panelBrightnessContainer.Controls.Add(this.btnResetBrightness);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(12, 423);
-            this.panelBrightnessContainer.Name = "panelBrightnessContainer";
-            this.panelBrightnessContainer.Size = new System.Drawing.Size(220, 120);
-            this.panelBrightnessContainer.TabIndex = 0;
-            this.panelBrightnessContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBrightnessContainer_Paint);
-            // 
-            // labelBrightness
-            // 
-            this.labelBrightness.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.labelBrightness.ForeColor = System.Drawing.Color.White;
-            this.labelBrightness.Location = new System.Drawing.Point(5, 5);
-            this.labelBrightness.Name = "labelBrightness";
-            this.labelBrightness.Size = new System.Drawing.Size(100, 20);
-            this.labelBrightness.TabIndex = 0;
-            this.labelBrightness.Text = "Brightness";
-            // 
-            // trackBarBrightness
-            // 
-            this.trackBarBrightness.Location = new System.Drawing.Point(5, 30);
-            this.trackBarBrightness.Maximum = 100;
-            this.trackBarBrightness.Minimum = -100;
-            this.trackBarBrightness.Name = "trackBarBrightness";
-            this.trackBarBrightness.Size = new System.Drawing.Size(210, 45);
-            this.trackBarBrightness.TabIndex = 1;
-            this.trackBarBrightness.TickFrequency = 10;
-            this.trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
-            // 
-            // labelBrightnessValue
-            // 
-            this.labelBrightnessValue.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.labelBrightnessValue.ForeColor = System.Drawing.Color.LightGray;
-            this.labelBrightnessValue.Location = new System.Drawing.Point(165, 7);
-            this.labelBrightnessValue.Name = "labelBrightnessValue";
-            this.labelBrightnessValue.Size = new System.Drawing.Size(50, 20);
-            this.labelBrightnessValue.TabIndex = 2;
-            this.labelBrightnessValue.Text = "0";
-            this.labelBrightnessValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnResetBrightness
-            // 
-            this.btnResetBrightness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.btnResetBrightness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetBrightness.ForeColor = System.Drawing.Color.White;
-            this.btnResetBrightness.Location = new System.Drawing.Point(5, 75);
-            this.btnResetBrightness.Name = "btnResetBrightness";
-            this.btnResetBrightness.Size = new System.Drawing.Size(210, 30);
-            this.btnResetBrightness.TabIndex = 3;
-            this.btnResetBrightness.Text = "Reset";
-            this.btnResetBrightness.UseVisualStyleBackColor = false;
-            this.btnResetBrightness.Click += new System.EventHandler(this.btnResetBrightness_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1054,12 +1081,6 @@ namespace PengolahanCitra
             this.panelToolbar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
-            this.panelAritmatikContainer.ResumeLayout(false);
-            this.panelAritmatikContainer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -1067,10 +1088,17 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGray)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNegative)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGaussian)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).EndInit();
             this.panelBrightnessContainer.ResumeLayout(false);
             this.panelBrightnessContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
+            this.panelAritmatikContainer.ResumeLayout(false);
+            this.panelAritmatikContainer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1155,5 +1183,7 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelZoomMin;
         private System.Windows.Forms.Label labelZoomMax;
         private Button btnReset;
+        private System.Windows.Forms.PictureBox pictureBoxGaussian;
+        private System.Windows.Forms.Label labelGaussian;
     }
 }
