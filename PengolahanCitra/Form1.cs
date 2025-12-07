@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace PengolahanCitra
 {
@@ -23,6 +24,8 @@ namespace PengolahanCitra
         private Bitmap previewOriginal;
         private Bitmap previewRed, previewGreen, previewBlue;
         private Bitmap previewGray, previewThreshold, previewNegative;
+        private Bitmap previewGaussian;
+        private Bitmap previewSharpen;
 
         // State
         private bool isFilterPanelVisible;
@@ -37,6 +40,20 @@ namespace PengolahanCitra
         private const int HISTOGRAM_WIDTH = 220;
         private const int HISTOGRAM_HEIGHT = 90;
         private const int THRESHOLD_VALUE = 128;
+
+        // Gaussian Kernel 3x3 (Standard approximation)
+        // Total Sum = 16
+        private static readonly (int dx, int dy, int w)[] GAUSSIAN_3x3_OFFSETS = new (int, int, int)[]
+        {
+            // Baris 1
+            (-1, -1, 1), (0, -1, 2), (1, -1, 1),
+            // Baris 2
+            (-1,  0, 2), (0,  0, 4), (1,  0, 2),
+            // Baris 3
+            (-1,  1, 1), (0,  1, 2), (1,  1, 1)
+        };
+
+        private const int GAUSSIAN_SUM = 16; // Total semua bobot di atas
 
         #endregion
 
@@ -96,6 +113,16 @@ namespace PengolahanCitra
         private void pictureBoxNegative_Click(object sender, EventArgs e)
         {
             SelectFilter("Negative", pictureBoxNegative);
+        }
+
+        private void pictureBoxGaussian_Click(object sender, EventArgs e)
+        {
+            SelectFilter("Gaussian", pictureBoxGaussian);
+        }
+
+        private void pictureBoxSharpen_Click(object sender, EventArgs e)
+        {
+            SelectFilter("Sharpen", pictureBoxSharpen);
         }
 
         private void btnApplyFilter_Click(object sender, EventArgs e) => ApplySelectedFilter();
@@ -432,16 +459,23 @@ namespace PengolahanCitra
         {
             if (currentImage == null) return;
 
-            selectedPreview?.Dispose();
-
+            // Build new preview
             byte[,,] filteredMatrix = ApplyFilter(selectedFilterType);
-            selectedPreview = ApplyBrightness(filteredMatrix, currentBrightnessValue);
+            var newPreview = ApplyBrightness(filteredMatrix, currentBrightnessValue);
 
-            pictureBoxMain.Image = selectedPreview;
+            // Assign to picture box safely (dispose previous image)
+            SetPictureBoxImage(pictureBoxMain, newPreview);
+
+            // Track current preview reference
+            selectedPreview = newPreview;
         }
 
         private void GenerateFilterPreviews()
         {
+            // Clear UI images first to avoid painting disposed bitmaps
+            ClearPreviewPictureBoxes();
+
+            // Dispose and null-out previous previews
             DisposeFilterPreviews();
 
             previewOriginal = CreateThumbnail(currentImage);
@@ -451,8 +485,31 @@ namespace PengolahanCitra
             previewGray = CreateFilterPreview(previewOriginal, "Gray");
             previewThreshold = CreateFilterPreview(previewOriginal, "Threshold");
             previewNegative = CreateFilterPreview(previewOriginal, "Negative");
+            previewGaussian = CreateFilterPreview(previewOriginal, "Gaussian");
+            previewSharpen = CreateFilterPreview(previewOriginal, "Sharpen");
 
             AssignFilterPreviews();
+
+            // Enable preview button now that previews exist
+            btnPreviewSharpen.Visible = true;
+        }
+
+        private void btnPreviewSharpen_Click(object sender, EventArgs e)
+        {
+            if (previewSharpen == null)
+            {
+                ShowWarning("Preview belum tersedia.");
+                return;
+            }
+
+            // Show sharpen preview in main picture box without applying (temporary preview)
+            SetPictureBoxImage(pictureBoxMain, new Bitmap(previewSharpen));
+
+            // Keep selectedPreview pointing to previewSharpen so Apply Filter will use it
+            selectedPreview?.Dispose();
+            selectedPreview = new Bitmap(previewSharpen);
+            selectedFilterType = "Sharpen";
+            HighlightSelectedThumbnail(pictureBoxSharpen);
         }
 
         private void DisposeFilterPreviews()
@@ -468,13 +525,15 @@ namespace PengolahanCitra
 
         private void AssignFilterPreviews()
         {
-            pictureBoxOriginal.Image = previewOriginal;
-            pictureBoxRed.Image = previewRed;
-            pictureBoxGreen.Image = previewGreen;
-            pictureBoxBlue.Image = previewBlue;
-            pictureBoxGray.Image = previewGray;
-            pictureBoxThreshold.Image = previewThreshold;
-            pictureBoxNegative.Image = previewNegative;
+            SetPictureBoxImage(pictureBoxOriginal, previewOriginal);
+            SetPictureBoxImage(pictureBoxRed, previewRed);
+            SetPictureBoxImage(pictureBoxGreen, previewGreen);
+            SetPictureBoxImage(pictureBoxBlue, previewBlue);
+            SetPictureBoxImage(pictureBoxGray, previewGray);
+            SetPictureBoxImage(pictureBoxThreshold, previewThreshold);
+            SetPictureBoxImage(pictureBoxNegative, previewNegative);
+            SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
+            SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
         }
 
         private void ApplySelectedFilter()
@@ -511,6 +570,8 @@ namespace PengolahanCitra
             pictureBoxGray.BorderStyle = BorderStyle.None;
             pictureBoxThreshold.BorderStyle = BorderStyle.None;
             pictureBoxNegative.BorderStyle = BorderStyle.None;
+            pictureBoxGaussian.BorderStyle = BorderStyle.None;
+            pictureBoxSharpen.BorderStyle = BorderStyle.None;
         }
 
         #endregion
@@ -523,6 +584,16 @@ namespace PengolahanCitra
             {
                 if (rgbMatrix == null) BitmapToMatrix(currentImage);
                 return rgbMatrix;
+            }
+
+            if (filterType == "Gaussian")
+            {
+                return ApplyGaussianBlurParallel(rgbMatrix, imageWidth, imageHeight);
+            }
+
+            if (filterType == "Sharpen")
+            {
+                return ApplySharpen(rgbMatrix, imageWidth, imageHeight);
             }
 
             byte[,,] resultMatrix = new byte[imageHeight, imageWidth, 3];
@@ -575,6 +646,179 @@ namespace PengolahanCitra
             }
         }
 
+        private int ClampIndex(int idx, int max)
+        {
+            if (idx < 0) return 0;
+            if (idx >= max) return max - 1;
+            return idx;
+        }
+        private byte[,,] ApplyGaussianBlurParallel(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            int jumlahPass = 10;
+
+            byte[,,] inputBuffer = source;
+
+            if (jumlahPass > 1) inputBuffer = (byte[,,])source.Clone();
+
+            for (int i = 0; i < jumlahPass; i++)
+            {
+                // Siapkan array untuk hasil pass ini
+                byte[,,] outputBuffer = new byte[height, width, 3];
+
+                var coords = Enumerable.Range(0, height)
+                    .SelectMany(y => Enumerable.Range(0, width).Select(x => new { x, y }));
+
+                coords.AsParallel().ForAll(t =>
+                {
+                    int y = t.y;
+                    int x = t.x;
+
+                    // Menggunakan Kernel 3x3
+                    long sumR = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 0] * k.w);
+                    long sumG = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 1] * k.w);
+                    long sumB = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 2] * k.w);
+
+                    // Normalisasi (Bagi dengan 16)
+                    outputBuffer[y, x, 0] = (byte)Clamp((int)(sumR / GAUSSIAN_SUM), 0, 255);
+                    outputBuffer[y, x, 1] = (byte)Clamp((int)(sumG / GAUSSIAN_SUM), 0, 255);
+                    outputBuffer[y, x, 2] = (byte)Clamp((int)(sumB / GAUSSIAN_SUM), 0, 255);
+                });
+
+                // Update inputBuffer untuk iterasi berikutnya (jika ada)
+                inputBuffer = outputBuffer;
+
+                // Hasil akhir adalah output dari iterasi terakhir
+                result = outputBuffer;
+            }
+
+            return result;
+        }
+
+        // Sharpen convolution (3x3 kernel):
+        // [ 0 -1  0]
+        // [-1  5 -1]
+        // [ 0 -1  0]
+        private byte[,,] ApplySharpen(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int r = 0, g = 0, b = 0;
+
+                    // center * 9
+                    r += source[y, x, 0] * 9;
+                    g += source[y, x, 1] * 9;
+                    b += source[y, x, 2] * 9;
+
+                    // 2. Loop 3x3 di sekitar pixel untuk dikurangi 1 (dikali -1)
+                    for (int ky = -1; ky <= 1; ky++)
+                    {
+                        for (int kx = -1; kx <= 1; kx++)
+                        {
+                            // Skip titik tengah (0,0) karena sudah dihitung di atas
+                            if (ky == 0 && kx == 0) continue;
+
+                            int ny = ClampIndex(y + ky, height);
+                            int nx = ClampIndex(x + kx, width);
+
+                            r -= source[ny, nx, 0]; // dikali -1
+                            g -= source[ny, nx, 1];
+                            b -= source[ny, nx, 2];
+                        }
+                    }
+
+                    result[y, x, 0] = (byte)Clamp(r, 0, 255);
+                    result[y, x, 1] = (byte)Clamp(g, 0, 255);
+                    result[y, x, 2] = (byte)Clamp(b, 0, 255);
+                }
+            }
+            
+            return result;
+        }
+
+        private Bitmap CreateGaussianThumbnail(Bitmap thumbnailSource)
+        {
+            int w = thumbnailSource.Width;
+            int h = thumbnailSource.Height;
+
+            var localSrc = new byte[h, w, 3];
+
+            // Read pixels sequentially to avoid GDI+ thread-safety issues
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c = thumbnailSource.GetPixel(x, y);
+                    localSrc[y, x, 0] = c.R;
+                    localSrc[y, x, 1] = c.G;
+                    localSrc[y, x, 2] = c.B;
+                }
+            }
+
+            // Gaussian blur core remains multithreaded (PLINQ)
+            var blurred = ApplyGaussianBlurParallel(localSrc, w, h);
+
+            Bitmap result = new Bitmap(w, h);
+
+            // Write pixels sequentially to the bitmap (thread-safe)
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var r = blurred[y, x, 0];
+                    var g = blurred[y, x, 1];
+                    var b = blurred[y, x, 2];
+                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+
+            return result;
+        }
+
+        private Bitmap CreateSharpenThumbnail(Bitmap thumbnailSource)
+        {
+            int w = thumbnailSource.Width;
+            int h = thumbnailSource.Height;
+
+            var localSrc = new byte[h, w, 3];
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c = thumbnailSource.GetPixel(x, y);
+                    localSrc[y, x, 0] = c.R;
+                    localSrc[y, x, 1] = c.G;
+                    localSrc[y, x, 2] = c.B;
+                }
+            }
+
+            var sharpened = ApplySharpen(localSrc, w, h);
+
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var rr = sharpened[y, x, 0];
+                    var gg = sharpened[y, x, 1];
+                    var bb = sharpened[y, x, 2];
+                    result.SetPixel(x, y, Color.FromArgb(rr, gg, bb));
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Image Processing - Brightness
@@ -608,6 +852,16 @@ namespace PengolahanCitra
 
         private Bitmap CreateFilterPreview(Bitmap thumbnailSource, string filterType)
         {
+            if (filterType == "Gaussian")
+            {
+                return CreateGaussianThumbnail(thumbnailSource);
+            }
+
+            if (filterType == "Sharpen")
+            {
+                return CreateSharpenThumbnail(thumbnailSource);
+            }
+
             Bitmap thumbResult = new Bitmap(thumbnailSource);
             int thumbW = thumbResult.Width;
             int thumbH = thumbResult.Height;
@@ -1164,14 +1418,18 @@ namespace PengolahanCitra
         {
             panelFilterContainer.Visible = true;
             isFilterPanelVisible = true;
+            // hide preview button until previews are generated
+            try { btnPreviewSharpen.Visible = false; } catch { /* ignore if control not yet created */ }
         }
 
         private void HideFilterPanel()
         {
             panelFilterContainer.Visible = false;
             isFilterPanelVisible = false;
+
             UpdateMainImage(currentImage);
-            selectedPreview?.Dispose();
+
+            // Do not dispose here; pictureBoxMain already replaced in UpdateMainImage
             selectedPreview = null;
         }
 
@@ -1246,7 +1504,30 @@ namespace PengolahanCitra
                 g.DrawImage(currentImage, 0, 0, newWidth, newHeight);
             }
             
-            pictureBoxMain.Image = zoomed;
+            SetPictureBoxImage(pictureBoxMain, zoomed);
+        }
+
+        private void SetPictureBoxImage(PictureBox pb, Image newImage)
+        {
+            var old = pb.Image;
+            pb.Image = newImage;
+            if (old != null && !ReferenceEquals(old, newImage))
+            {
+                try { old.Dispose(); } catch { /* ignore */ }
+            }
+        }
+
+        private void ClearPreviewPictureBoxes()
+        {
+            SetPictureBoxImage(pictureBoxOriginal, null);
+            SetPictureBoxImage(pictureBoxRed, null);
+            SetPictureBoxImage(pictureBoxGreen, null);
+            SetPictureBoxImage(pictureBoxBlue, null);
+            SetPictureBoxImage(pictureBoxGray, null);
+            SetPictureBoxImage(pictureBoxThreshold, null);
+            SetPictureBoxImage(pictureBoxNegative, null);
+            SetPictureBoxImage(pictureBoxGaussian, null);
+            SetPictureBoxImage(pictureBoxSharpen, null);
         }
 
         #endregion
@@ -1279,6 +1560,11 @@ namespace PengolahanCitra
         }
 
         private void pictureBoxMain_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panelFilterContainer_Paint(object sender, PaintEventArgs e)
         {
 
         }
