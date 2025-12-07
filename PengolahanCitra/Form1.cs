@@ -26,6 +26,7 @@ namespace PengolahanCitra
         private Bitmap previewGray, previewThreshold, previewNegative;
         private Bitmap previewGaussian;
         private Bitmap previewSharpen;
+        private Bitmap previewEqualizer;
 
         // State
         private bool isFilterPanelVisible;
@@ -123,6 +124,11 @@ namespace PengolahanCitra
         private void pictureBoxSharpen_Click(object sender, EventArgs e)
         {
             SelectFilter("Sharpen", pictureBoxSharpen);
+        }
+
+        private void pictureBoxEqualizer_Click(object sender, EventArgs e)
+        {
+            SelectFilter("Equalizer", pictureBoxEqualizer);
         }
 
         private void btnApplyFilter_Click(object sender, EventArgs e) => ApplySelectedFilter();
@@ -487,6 +493,7 @@ namespace PengolahanCitra
             previewNegative = CreateFilterPreview(previewOriginal, "Negative");
             previewGaussian = CreateFilterPreview(previewOriginal, "Gaussian");
             previewSharpen = CreateFilterPreview(previewOriginal, "Sharpen");
+            previewEqualizer = CreateFilterPreview(previewOriginal, "Equalizer");
 
             AssignFilterPreviews();
 
@@ -521,6 +528,9 @@ namespace PengolahanCitra
             previewGray?.Dispose();
             previewThreshold?.Dispose();
             previewNegative?.Dispose();
+            previewGaussian?.Dispose();
+            previewSharpen?.Dispose();
+            previewEqualizer?.Dispose();
         }
 
         private void AssignFilterPreviews()
@@ -534,6 +544,7 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxNegative, previewNegative);
             SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
             SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
+            SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
         }
 
         private void ApplySelectedFilter()
@@ -572,6 +583,7 @@ namespace PengolahanCitra
             pictureBoxNegative.BorderStyle = BorderStyle.None;
             pictureBoxGaussian.BorderStyle = BorderStyle.None;
             pictureBoxSharpen.BorderStyle = BorderStyle.None;
+            pictureBoxEqualizer.BorderStyle = BorderStyle.None;
         }
 
         #endregion
@@ -594,6 +606,11 @@ namespace PengolahanCitra
             if (filterType == "Sharpen")
             {
                 return ApplySharpen(rgbMatrix, imageWidth, imageHeight);
+            }
+
+            if (filterType == "Equalizer")
+            {
+                return ApplyHistogramEqualization(rgbMatrix, imageWidth, imageHeight);
             }
 
             byte[,,] resultMatrix = new byte[imageHeight, imageWidth, 3];
@@ -745,6 +762,110 @@ namespace PengolahanCitra
             return result;
         }
 
+        /// <summary>
+        /// Histogram Equalization dengan metode Intensity Scaling
+        /// Mempertahankan warna RGB dengan menskala setiap channel berdasarkan rasio intensitas baru/lama
+        /// Formula: R_baru = R_lama * (Intensitas_baru / Intensitas_lama)
+        /// </summary>
+        private byte[,,] ApplyHistogramEqualization(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+            int totalPixels = width * height;
+
+            // Step 1: Hitung histogram berdasarkan rata-rata intensitas (R+G+B)/3
+            int[] intensityHistogram = new int[256];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int intensity = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    intensityHistogram[intensity]++;
+                }
+            }
+
+            // Step 2: Hitung CDF (Cumulative Distribution Function)
+            int[] cdf = new int[256];
+            cdf[0] = intensityHistogram[0];
+            for (int i = 1; i < 256; i++)
+            {
+                cdf[i] = cdf[i - 1] + intensityHistogram[i];
+            }
+
+            // Step 3: Cari nilai CDF minimum (non-zero pertama)
+            int cdfMin = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                if (cdf[i] > 0)
+                {
+                    cdfMin = cdf[i];
+                    break;
+                }
+            }
+
+            // Step 4: Buat lookup table untuk mapping intensitas
+            // Formula: newIntensity = ((cdf[v] - cdfMin) / (totalPixels - cdfMin)) * 255
+            byte[] intensityLUT = new byte[256];
+            int denominator = totalPixels - cdfMin;
+            if (denominator == 0) denominator = 1; // Hindari pembagian dengan nol
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (cdf[i] == 0)
+                {
+                    intensityLUT[i] = 0;
+                }
+                else
+                {
+                    double normalized = (double)(cdf[i] - cdfMin) / denominator;
+                    intensityLUT[i] = (byte)Clamp((int)(normalized * 255), 0, 255);
+                }
+            }
+
+            // Step 5: Terapkan equalization dengan intensity scaling untuk mempertahankan warna
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    // Hitung intensitas lama (rata-rata RGB)
+                    int oldIntensity = (r + g + b) / 3;
+
+                    // Dapatkan intensitas baru dari LUT
+                    int newIntensity = intensityLUT[oldIntensity];
+
+                    // Hitung rasio scaling
+                    // Jika intensitas lama = 0, gunakan nilai baru langsung untuk menghindari pembagian dengan nol
+                    if (oldIntensity == 0)
+                    {
+                        // Jika pixel asli hitam, tetap hitam atau gunakan intensitas baru
+                        result[y, x, 0] = (byte)newIntensity;
+                        result[y, x, 1] = (byte)newIntensity;
+                        result[y, x, 2] = (byte)newIntensity;
+                    }
+                    else
+                    {
+                        // Scaling proporsional: R_baru = R_lama * (I_baru / I_lama)
+                        double ratio = (double)newIntensity / oldIntensity;
+
+                        int newR = (int)(r * ratio);
+                        int newG = (int)(g * ratio);
+                        int newB = (int)(b * ratio);
+
+                        result[y, x, 0] = (byte)Clamp(newR, 0, 255);
+                        result[y, x, 1] = (byte)Clamp(newG, 0, 255);
+                        result[y, x, 2] = (byte)Clamp(newB, 0, 255);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private Bitmap CreateGaussianThumbnail(Bitmap thumbnailSource)
         {
             int w = thumbnailSource.Width;
@@ -819,6 +940,41 @@ namespace PengolahanCitra
             return result;
         }
 
+        private Bitmap CreateEqualizerThumbnail(Bitmap thumbnailSource)
+        {
+            int w = thumbnailSource.Width;
+            int h = thumbnailSource.Height;
+
+            var localSrc = new byte[h, w, 3];
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    Color c = thumbnailSource.GetPixel(x, y);
+                    localSrc[y, x, 0] = c.R;
+                    localSrc[y, x, 1] = c.G;
+                    localSrc[y, x, 2] = c.B;
+                }
+            }
+
+            var equalized = ApplyHistogramEqualization(localSrc, w, h);
+
+            Bitmap result = new Bitmap(w, h);
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    var rr = equalized[y, x, 0];
+                    var gg = equalized[y, x, 1];
+                    var bb = equalized[y, x, 2];
+                    result.SetPixel(x, y, Color.FromArgb(rr, gg, bb));
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Image Processing - Brightness
@@ -860,6 +1016,11 @@ namespace PengolahanCitra
             if (filterType == "Sharpen")
             {
                 return CreateSharpenThumbnail(thumbnailSource);
+            }
+
+            if (filterType == "Equalizer")
+            {
+                return CreateEqualizerThumbnail(thumbnailSource);
             }
 
             Bitmap thumbResult = new Bitmap(thumbnailSource);
@@ -1528,6 +1689,7 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxNegative, null);
             SetPictureBoxImage(pictureBoxGaussian, null);
             SetPictureBoxImage(pictureBoxSharpen, null);
+            SetPictureBoxImage(pictureBoxEqualizer, null);
         }
 
         #endregion
@@ -1565,6 +1727,11 @@ namespace PengolahanCitra
         }
 
         private void panelFilterContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void labelSharpen_Click(object sender, EventArgs e)
         {
 
         }
