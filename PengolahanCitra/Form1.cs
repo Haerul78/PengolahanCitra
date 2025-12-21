@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Linq;
+using PengolahanCitra.Helpers;
+using PengolahanCitra.Services;
 
 namespace PengolahanCitra
 {
     public partial class Form1 : Form
     {
-        #region Fields & Constants
+        #region Fields
 
         // Images
         private Bitmap originalImage;
         private Bitmap currentImage;
         private Bitmap selectedPreview;
 
-        // Storage Matrix
+        // Matrix Storage
         private byte[,,] rgbMatrix;
         private byte[,] grayMatrix;
         private int imageWidth;
         private int imageHeight;
 
-        // Preview thumbnails
+        // Preview Thumbnails
         private Bitmap previewOriginal;
         private Bitmap previewRed, previewGreen, previewBlue;
         private Bitmap previewGray, previewThreshold, previewNegative;
-        private Bitmap previewGaussian;
-        private Bitmap previewSharpen;
-        private Bitmap previewEqualizer;
+        private Bitmap previewGaussian, previewSharpen, previewEqualizer;
 
         // State
         private bool isFilterPanelVisible;
@@ -38,23 +37,12 @@ namespace PengolahanCitra
 
         // Constants
         private const int THUMBNAIL_SIZE = 60;
-        private const int HISTOGRAM_WIDTH = 220;
-        private const int HISTOGRAM_HEIGHT = 90;
         private const int THRESHOLD_VALUE = 128;
 
-        // Gaussian Kernel 3x3 (Standard approximation)
-        // Total Sum = 16
-        private static readonly (int dx, int dy, int w)[] GAUSSIAN_3x3_OFFSETS = new (int, int, int)[]
-        {
-            // Baris 1
-            (-1, -1, 1), (0, -1, 2), (1, -1, 1),
-            // Baris 2
-            (-1,  0, 2), (0,  0, 4), (1,  0, 2),
-            // Baris 3
-            (-1,  1, 1), (0,  1, 2), (1,  1, 1)
-        };
-
-        private const int GAUSSIAN_SUM = 16; // Total semua bobot di atas
+        // Filter Settings (bisa diubah sesuai kebutuhan)
+        private int gaussianBlurPasses = 5;      // Kekuatan blur (1-20)
+        private bool useSharpenStrong = true;     // true = kuat, false = halus
+        private int sharpenPasses = 1;            // Pengulangan sharpen (1-5)
 
         #endregion
 
@@ -69,85 +57,120 @@ namespace PengolahanCitra
 
         #region Event Handlers - Image Operations
 
-        private void btnBukaGambar_Click(object sender, EventArgs e) => LoadImageFromDialog();
+        private void btnBukaGambar_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                dialog.Title = "Pilih Gambar";
 
-        private void btnSave_Click(object sender, EventArgs e) => SaveCurrentImage();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    LoadImage(dialog.FileName);
+                }
+            }
+        }
 
-        private void btnSaveToTxt_Click(object sender, EventArgs e) => SaveImageAsTextMatrix();
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                dialog.Filter = "PNG Image|*.png|JPEG Image|*.jpg|Bitmap Image|*.bmp";
+                dialog.Title = "Save Image";
+                dialog.FileName = "image.png";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ImageHelper.SaveImage(currentImage, dialog.FileName);
+                        ShowSuccess($"Image saved: {dialog.FileName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError($"Error: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        private void btnSaveToTxt_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            using (SaveFileDialog dialog = new SaveFileDialog())
+            {
+                dialog.Filter = "Text Files|*.txt";
+                dialog.Title = "Save as Matrix";
+                dialog.FileName = "image_matrix.txt";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    SaveMatrixToFile(dialog.FileName);
+                }
+            }
+        }
 
         #endregion
 
         #region Event Handlers - Filter Operations
 
-        private void BtnFilter_Click(object sender, EventArgs e) => ToggleFilterPanel();
-
-        private void pictureBoxOriginal_Click(object sender, EventArgs e)
+        private void BtnFilter_Click(object sender, EventArgs e)
         {
-            SelectFilter("Original", pictureBoxOriginal);
+            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+
+            HideAritmatikPanel();
+
+            if (isFilterPanelVisible)
+            {
+                HideFilterPanel();
+            }
+            else
+            {
+                GenerateFilterPreviews();
+                ShowFilterPanel();
+                ResetFilterSettings();
+            }
         }
 
-        private void pictureBoxRed_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Red", pictureBoxRed);
-        }
+        private void pictureBoxOriginal_Click(object sender, EventArgs e) => SelectFilter("Original", pictureBoxOriginal);
+        private void pictureBoxRed_Click(object sender, EventArgs e) => SelectFilter("Red", pictureBoxRed);
+        private void pictureBoxGreen_Click(object sender, EventArgs e) => SelectFilter("Green", pictureBoxGreen);
+        private void pictureBoxBlue_Click(object sender, EventArgs e) => SelectFilter("Blue", pictureBoxBlue);
+        private void pictureBoxGray_Click(object sender, EventArgs e) => SelectFilter("Gray", pictureBoxGray);
+        private void pictureBoxThreshold_Click(object sender, EventArgs e) => SelectFilter("Threshold", pictureBoxThreshold);
+        private void pictureBoxNegative_Click(object sender, EventArgs e) => SelectFilter("Negative", pictureBoxNegative);
+        private void pictureBoxGaussian_Click(object sender, EventArgs e) => SelectFilter("Gaussian", pictureBoxGaussian);
+        private void pictureBoxSharpen_Click(object sender, EventArgs e) => SelectFilter("Sharpen", pictureBoxSharpen);
+        private void pictureBoxEqualizer_Click(object sender, EventArgs e) => SelectFilter("Equalizer", pictureBoxEqualizer);
 
-        private void pictureBoxGreen_Click(object sender, EventArgs e)
+        private void btnApplyFilter_Click(object sender, EventArgs e)
         {
-            SelectFilter("Green", pictureBoxGreen);
-        }
+            if (selectedPreview == null)
+            {
+                ShowWarning("Pilih filter terlebih dahulu!");
+                return;
+            }
 
-        private void pictureBoxBlue_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Blue", pictureBoxBlue);
-        }
-
-        private void pictureBoxGray_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Gray", pictureBoxGray);
-        }
-
-        private void pictureBoxThreshold_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Threshold", pictureBoxThreshold);
-        }
-
-        private void pictureBoxNegative_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Negative", pictureBoxNegative);
-        }
-
-        private void pictureBoxGaussian_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Gaussian", pictureBoxGaussian);
-        }
-
-        private void pictureBoxSharpen_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Sharpen", pictureBoxSharpen);
-        }
-
-        private void pictureBoxEqualizer_Click(object sender, EventArgs e)
-        {
-            SelectFilter("Equalizer", pictureBoxEqualizer);
-        }
-
-        private void btnApplyFilter_Click(object sender, EventArgs e) => ApplySelectedFilter();
-
-        private void SelectFilter(string filterType, PictureBox pictureBox)
-        {
-            selectedFilterType = filterType;
-            HighlightSelectedThumbnail(pictureBox);
-            UpdateMainPreview();
+            currentImage?.Dispose();
+            currentImage = new Bitmap(selectedPreview);
+            UpdateMatrixFromBitmap();
+            ResetFilterSettings();
+            HideFilterPanel();
+            ShowHistogram();
+            ShowSuccess("Filter applied!");
         }
 
         #endregion
 
-        #region Event Handlers - Brightness Operations
+        #region Event Handlers - Brightness
 
         private void trackBarBrightness_Scroll(object sender, EventArgs e)
         {
             if (currentImage == null) return;
-            
+
             currentBrightnessValue = trackBarBrightness.Value;
             labelBrightnessValue.Text = currentBrightnessValue.ToString();
             UpdateMainPreview();
@@ -163,7 +186,7 @@ namespace PengolahanCitra
 
         #endregion
 
-        #region Event Handlers - Aritmatika Operations
+        #region Event Handlers - Geometry (Rotate, Flip, Translate)
 
         private void BtnAritmathic_Click(object sender, EventArgs e)
         {
@@ -176,20 +199,51 @@ namespace PengolahanCitra
             }
             else
             {
+                HideFilterPanel();
                 ShowAritmatikPanel();
             }
         }
 
         private void btnRotate45_Click(object sender, EventArgs e) => RotateImage(45);
-
         private void btnRotate90_Click(object sender, EventArgs e) => RotateImage(90);
-
         private void btnRotate180_Click(object sender, EventArgs e) => RotateImage(180);
 
         private void btnRotateCustom_Click(object sender, EventArgs e)
         {
-            int customDegree = (int)numericUpDownDegree.Value;
-            RotateImage(customDegree);
+            int degree = (int)numericUpDownDegree.Value;
+            RotateImage(degree);
+        }
+
+        private void btnFlipHorizontal_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                Bitmap flipped = GeometryService.FlipHorizontal(currentImage);
+                UpdateCurrentImage(flipped);
+                ShowSuccess("Flip horizontal berhasil!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error: {ex.Message}");
+            }
+        }
+
+        private void btnFlipVertical_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                Bitmap flipped = GeometryService.FlipVertical(currentImage);
+                UpdateCurrentImage(flipped);
+                ShowSuccess("Flip vertical berhasil!");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error: {ex.Message}");
+            }
         }
 
         private void btnTranslate_Click(object sender, EventArgs e)
@@ -201,77 +255,40 @@ namespace PengolahanCitra
                 int offsetX = (int)numericUpDownTranslateX.Value;
                 int offsetY = (int)numericUpDownTranslateY.Value;
 
-                Bitmap translated = TranslateImage(currentImage, offsetX, offsetY);
+                Bitmap translated = GeometryService.Translate(currentImage, offsetX, offsetY);
                 UpdateCurrentImage(translated);
                 ShowSuccess($"Translasi berhasil! X: {offsetX}, Y: {offsetY}");
             }
             catch (Exception ex)
             {
-                ShowError($"Error translasi citra: {ex.Message}");
+                ShowError($"Error: {ex.Message}");
             }
-        }
-
-        private void btnFlipHorizontal_Click(object sender, EventArgs e)
-        {
-            if (!ValidateImageLoaded()) return;
-
-            try
-            {
-                Bitmap flipped = FlipImageHorizontal(currentImage);
-                UpdateCurrentImage(flipped);
-                ShowSuccess("Gambar berhasil di-flip horizontal!");
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Error flip horizontal: {ex.Message}");
-            }
-        }
-
-        private void btnFlipVertical_Click(object sender, EventArgs e)
-        {
-            if (!ValidateImageLoaded()) return;
-
-            try
-            {
-                Bitmap flipped = FlipImageVertical(currentImage);
-                UpdateCurrentImage(flipped);
-                ShowSuccess("Gambar berhasil di-flip vertical!");
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Error flip vertical: {ex.Message}");
-            }
-        }
-
-        private void btnAddImage_Click(object sender, EventArgs e) => PerformImageArithmetic(AddImages, "Ditambahkan", "Penjumlahan");
-
-        private void btnSubtractImage_Click(object sender, EventArgs e) => PerformImageArithmetic(SubtractImages, "Dikurangkan", "Pengurangan");
-
-        private void btnMultiplyImage_Click(object sender, EventArgs e) => PerformImageArithmetic(MultiplyImages, "Perkalian", "Perkalian");
-
-        private void btnDivideImage_Click(object sender, EventArgs e) => PerformImageArithmetic(DivideImages, "Pembagian", "Pembagian");
-
-        private void BtnReset_Click(object sender, EventArgs e)
-        {
-            if (!ValidateImageLoaded("Please load an image first.")) return;
-
-            currentImage?.Dispose();
-            currentImage = new Bitmap(originalImage);
-            currentRotationAngle = 0;
-            BitmapToMatrix(currentImage);
-            UpdateMainImage(currentImage);
-            ShowSuccess("Image has been reset to original.");
         }
 
         #endregion
 
-        #region Event Handlers - UI & Navigation
+        #region Event Handlers - Arithmetic Operations
 
-        private void btnHome_Click(object sender, EventArgs e) => ResetToHome();
+        private void btnAddImage_Click(object sender, EventArgs e) => PerformArithmetic("Add");
+        private void btnSubtractImage_Click(object sender, EventArgs e) => PerformArithmetic("Subtract");
+        private void btnMultiplyImage_Click(object sender, EventArgs e) => PerformArithmetic("Multiply");
+        private void btnDivideImage_Click(object sender, EventArgs e) => PerformArithmetic("Divide");
 
-        private void Button_MouseEnter(object sender, EventArgs e) => HandleButtonHover((Button)sender, true);
+        private void BtnReset_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
 
-        private void Button_MouseLeave(object sender, EventArgs e) => HandleButtonHover((Button)sender, false);
+            currentImage?.Dispose();
+            currentImage = new Bitmap(originalImage);
+            currentRotationAngle = 0;
+            UpdateMatrixFromBitmap();
+            UpdateMainImage();
+            ShowSuccess("Image reset to original!");
+        }
+
+        #endregion
+
+        #region Event Handlers - Zoom
 
         private void trackBarZoom_Scroll(object sender, EventArgs e)
         {
@@ -280,66 +297,24 @@ namespace PengolahanCitra
             ApplyZoomToMainImage();
         }
 
-        // Empty event handlers
-        private void labelImageInfo_Click(object sender, EventArgs e) { }
-        private void panelSidebarRight_Paint(object sender, PaintEventArgs e) { }
-        private void pictureBoxHistogramR_Click(object sender, EventArgs e) { }
-        private void labelHistogram_Click(object sender, EventArgs e) { }
-        private void pictureBoxHistogramGray_Click(object sender, EventArgs e) { }
-        private void pictureBoxHistogramB_Click(object sender, EventArgs e) { }
-        private void pictureBoxHistogramG_Click(object sender, EventArgs e) { }
-        private void panelAritmatikContainer_Paint(object sender, PaintEventArgs e) { }
-        private void labelZoomMin_Click(object sender, EventArgs e) { }
-        private void labelAritmatikTitle_Click(object sender, EventArgs e) { }
-        private void panelBrightnessContainer_Paint(object sender, PaintEventArgs e) { }
-        private void labelFlipTitle_Click(object sender, EventArgs e) { }
-        private void numericUpDownTranslateY_ValueChanged(object sender, EventArgs e) { }
-        private void numericUpDownTranslateX_ValueChanged(object sender, EventArgs e) { }
-        private void labelTranslateY_Click(object sender, EventArgs e) { }
-        private void labelTranslateX_Click(object sender, EventArgs e) { }
-        private void labelTranslateTitle_Click(object sender, EventArgs e) { }
-        private void labelCustomRotate_Click(object sender, EventArgs e) { }
-        private void numericUpDownDegree_ValueChanged(object sender, EventArgs e) { }
-        private void labelZoomTitle_Click(object sender, EventArgs e) { }
-        private void labelZoomValue_Click(object sender, EventArgs e) { }
-        private void labelZoomMax_Click(object sender, EventArgs e) { }
-
         #endregion
 
-        #region Core Logic - Image Operations
+        #region Core Logic - Load & Save
 
-        private void LoadImageFromDialog()
-        {
-            using (OpenFileDialog dialog = new OpenFileDialog())
-            {
-                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-                dialog.Title = "Pilih Gambar";
-                
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    LoadImageFromPath(dialog.FileName);
-                }
-            }
-        }
-
-        private void LoadImageFromPath(string filePath)
+        private void LoadImage(string filePath)
         {
             try
             {
                 originalImage?.Dispose();
                 currentImage?.Dispose();
-                
-                originalImage = new Bitmap(filePath);
-                currentImage = new Bitmap(originalImage);
-                
-                BitmapToMatrix(currentImage);
-                UpdateMainImage(currentImage);
-                
-                if (isFilterPanelVisible)
-                {
-                    HideFilterPanel();
-                }
-                
+
+                originalImage = ImageHelper.LoadImage(filePath);
+                currentImage = ImageHelper.Clone(originalImage);
+
+                UpdateMatrixFromBitmap();
+                UpdateMainImage();
+
+                if (isFilterPanelVisible) HideFilterPanel();
                 ShowHistogram();
             }
             catch (Exception ex)
@@ -348,108 +323,348 @@ namespace PengolahanCitra
             }
         }
 
-        private void SaveCurrentImage()
+        private void SaveMatrixToFile(string filePath)
+        {
+            try
+            {
+                using (var writer = new System.IO.StreamWriter(filePath))
+                {
+                    writer.WriteLine($"Width: {imageWidth}");
+                    writer.WriteLine($"Height: {imageHeight}");
+                    writer.WriteLine("Format: R,G,B per pixel");
+                    writer.WriteLine();
+
+                    for (int y = 0; y < imageHeight; y++)
+                    {
+                        for (int x = 0; x < imageWidth; x++)
+                        {
+                            byte r = rgbMatrix[y, x, 0];
+                            byte g = rgbMatrix[y, x, 1];
+                            byte b = rgbMatrix[y, x, 2];
+                            writer.Write($"({r},{g},{b})".PadRight(15));
+                        }
+                        writer.WriteLine();
+                    }
+                }
+                ShowSuccess($"Matrix saved: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error: {ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Core Logic - Apply Filters
+
+        private byte[,,] ApplyFilter(string filterType)
+        {
+            switch (filterType)
+            {
+                case "Original":
+                    return rgbMatrix;
+
+                case "Red":
+                    return FilterService.RedChannel(rgbMatrix, imageWidth, imageHeight);
+
+                case "Green":
+                    return FilterService.GreenChannel(rgbMatrix, imageWidth, imageHeight);
+
+                case "Blue":
+                    return FilterService.BlueChannel(rgbMatrix, imageWidth, imageHeight);
+
+                case "Gray":
+                    return FilterService.Grayscale(rgbMatrix, imageWidth, imageHeight);
+
+                case "Threshold":
+                    return FilterService.Threshold(rgbMatrix, imageWidth, imageHeight, THRESHOLD_VALUE);
+
+                case "Negative":
+                    return FilterService.Negative(rgbMatrix, imageWidth, imageHeight);
+
+                case "Gaussian":
+                    return ConvolutionService.GaussianBlur(rgbMatrix, imageWidth, imageHeight, gaussianBlurPasses);
+
+                case "Sharpen":
+                    return ConvolutionService.Sharpen(rgbMatrix, imageWidth, imageHeight, useSharpenStrong, sharpenPasses);
+
+                case "Equalizer":
+                    // Pilih metode equalization (uncomment yang diinginkan):
+                    // return HistogramService.EqualizeIntensityScaling(rgbMatrix, imageWidth, imageHeight);
+                    // return HistogramService.EqualizePerChannel(rgbMatrix, imageWidth, imageHeight);
+                    return HistogramService.EqualizeLuminance(rgbMatrix, imageWidth, imageHeight);
+
+                default:
+                    return rgbMatrix;
+            }
+        }
+
+        private void SelectFilter(string filterType, PictureBox pictureBox)
+        {
+            selectedFilterType = filterType;
+            HighlightSelectedThumbnail(pictureBox);
+            UpdateMainPreview();
+        }
+
+        private void UpdateMainPreview()
+        {
+            if (currentImage == null) return;
+
+            byte[,,] filtered = ApplyFilter(selectedFilterType);
+            byte[,,] withBrightness = FilterService.Brightness(filtered, imageWidth, imageHeight, currentBrightnessValue);
+
+            Bitmap preview = ImageHelper.RgbMatrixToBitmap(withBrightness);
+            SetPictureBoxImage(pictureBoxMain, preview);
+            selectedPreview = preview;
+        }
+
+        #endregion
+
+        #region Core Logic - Geometry
+
+        private void RotateImage(int targetAngle)
         {
             if (!ValidateImageLoaded()) return;
-            
-            using (SaveFileDialog dialog = new SaveFileDialog())
+
+            try
             {
-                dialog.Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg|Bitmap Image|*.bmp";
-                dialog.Title = "Save Image";
-                dialog.FileName = "image.png";
-                
+                Bitmap rotated = GeometryService.Rotate(currentImage, targetAngle);
+                currentRotationAngle = targetAngle;
+                UpdateCurrentImage(rotated);
+                ShowSuccess($"Rotated to {currentRotationAngle}°");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error: {ex.Message}");
+            }
+        }
+
+        #endregion
+
+        #region Core Logic - Arithmetic
+
+        private void PerformArithmetic(string operation)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+                dialog.Title = "Pilih gambar kedua";
+
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        var format = GetImageFormat(dialog.FileName);
-                        currentImage.Save(dialog.FileName, format);
-                        ShowSuccess($"Image saved successfully:\n{dialog.FileName}");
+                        Bitmap img2 = ImageHelper.LoadImage(dialog.FileName);
+                        byte[,,] matrix2 = ImageHelper.BitmapToRgbMatrix(img2);
+                        img2.Dispose();
+
+                        byte[,,] result;
+                        switch (operation)
+                        {
+                            case "Add":
+                                result = ArithmeticService.Add(rgbMatrix, matrix2, imageWidth, imageHeight);
+                                break;
+                            case "Subtract":
+                                result = ArithmeticService.Subtract(rgbMatrix, matrix2, imageWidth, imageHeight);
+                                break;
+                            case "Multiply":
+                                result = ArithmeticService.Multiply(rgbMatrix, matrix2, imageWidth, imageHeight);
+                                break;
+                            case "Divide":
+                                result = ArithmeticService.Divide(rgbMatrix, matrix2, imageWidth, imageHeight);
+                                break;
+                            default:
+                                return;
+                        }
+
+                        Bitmap resultBitmap = ImageHelper.RgbMatrixToBitmap(result);
+                        UpdateCurrentImage(resultBitmap);
+                        ShowSuccess($"{operation} berhasil!");
                     }
                     catch (Exception ex)
                     {
-                        ShowError($"Error saving image: {ex.Message}");
+                        ShowError($"Error: {ex.Message}");
                     }
-                }
-            }
-        }
-
-        private void SaveImageAsTextMatrix()
-        {
-            if (!ValidateImageLoaded()) return;
-            
-            if (rgbMatrix == null)
-            {
-                ShowError("Matrix data is not available.");
-                return;
-            }
-            
-            using (SaveFileDialog dialog = new SaveFileDialog())
-            {
-                dialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
-                dialog.Title = "Save Image as RGB Matrix";
-                dialog.FileName = "image_matrix.txt";
-                
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        WriteImageMatrixFromMatrix(dialog.FileName);
-                        ShowSuccess($"Image saved as RGB matrix!\nFile: {dialog.FileName}");
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowError($"Error saving file: {ex.Message}");
-                    }
-                }
-            }
-        }
-
-        private void WriteImageMatrixFromMatrix(string filePath)
-        {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filePath))
-            {
-                file.WriteLine($"Width: {imageWidth}");
-                file.WriteLine($"Height: {imageHeight}");
-                file.WriteLine("Format: R,G,B per pixel");
-                file.WriteLine();
-                
-                for (int y = 0; y < imageHeight; y++)
-                {
-                    for (int x = 0; x < imageWidth; x++)
-                    {
-                        byte r = rgbMatrix[y, x, 0];
-                        byte g = rgbMatrix[y, x, 1];
-                        byte b = rgbMatrix[y, x, 2];
-                        file.Write($"({r},{g},{b})".PadRight(15));
-                    }
-                    file.WriteLine();
                 }
             }
         }
 
         #endregion
 
-        #region Core Logic - Filter Operations
+        #region Preview Generation
 
-        private void ToggleFilterPanel()
+        private void GenerateFilterPreviews()
         {
-            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+            ClearPreviewPictureBoxes();
+            DisposeFilterPreviews();
 
-            HideAritmatikPanel();
+            previewOriginal = ImageHelper.CreateThumbnail(currentImage, THUMBNAIL_SIZE);
 
-            if (isFilterPanelVisible)
+            // Generate previews menggunakan services
+            previewRed = CreateFilterThumbnail("Red");
+            previewGreen = CreateFilterThumbnail("Green");
+            previewBlue = CreateFilterThumbnail("Blue");
+            previewGray = CreateFilterThumbnail("Gray");
+            previewThreshold = CreateFilterThumbnail("Threshold");
+            previewNegative = CreateFilterThumbnail("Negative");
+            previewGaussian = CreateFilterThumbnail("Gaussian");
+            previewSharpen = CreateFilterThumbnail("Sharpen");
+            previewEqualizer = CreateFilterThumbnail("Equalizer");
+
+            AssignFilterPreviews();
+        }
+
+        private Bitmap CreateFilterThumbnail(string filterType)
+        {
+            // Buat matrix dari thumbnail
+            byte[,,] thumbMatrix = ImageHelper.BitmapToRgbMatrix(previewOriginal);
+            int w = previewOriginal.Width;
+            int h = previewOriginal.Height;
+
+            byte[,,] filtered;
+            switch (filterType)
             {
-                HideFilterPanel();
-                ShowHistogram();
+                case "Red":
+                    filtered = FilterService.RedChannel(thumbMatrix, w, h);
+                    break;
+                case "Green":
+                    filtered = FilterService.GreenChannel(thumbMatrix, w, h);
+                    break;
+                case "Blue":
+                    filtered = FilterService.BlueChannel(thumbMatrix, w, h);
+                    break;
+                case "Gray":
+                    filtered = FilterService.Grayscale(thumbMatrix, w, h);
+                    break;
+                case "Threshold":
+                    filtered = FilterService.Threshold(thumbMatrix, w, h, THRESHOLD_VALUE);
+                    break;
+                case "Negative":
+                    filtered = FilterService.Negative(thumbMatrix, w, h);
+                    break;
+                case "Gaussian":
+                    filtered = ConvolutionService.GaussianBlur(thumbMatrix, w, h, gaussianBlurPasses);
+                    break;
+                case "Sharpen":
+                    filtered = ConvolutionService.Sharpen(thumbMatrix, w, h, useSharpenStrong, sharpenPasses);
+                    break;
+                case "Equalizer":
+                    filtered = HistogramService.EqualizeLuminance(thumbMatrix, w, h);
+                    break;
+                default:
+                    filtered = thumbMatrix;
+                    break;
             }
-            else
+
+            return ImageHelper.RgbMatrixToBitmap(filtered);
+        }
+
+        #endregion
+
+        #region Histogram
+
+        private void GenerateHistograms()
+        {
+            if (rgbMatrix == null || grayMatrix == null) return;
+
+            DisposeHistogramImages();
+
+            int[] histR = HistogramService.CalculateHistogram(rgbMatrix, grayMatrix, "R");
+            int[] histG = HistogramService.CalculateHistogram(rgbMatrix, grayMatrix, "G");
+            int[] histB = HistogramService.CalculateHistogram(rgbMatrix, grayMatrix, "B");
+            int[] histGray = HistogramService.CalculateHistogram(rgbMatrix, grayMatrix, "Gray");
+
+            pictureBoxHistogramR.Image = HistogramService.GenerateHistogramImage(histR, Color.Red);
+            pictureBoxHistogramG.Image = HistogramService.GenerateHistogramImage(histG, Color.Lime);
+            pictureBoxHistogramB.Image = HistogramService.GenerateHistogramImage(histB, Color.Blue);
+            pictureBoxHistogramGray.Image = HistogramService.GenerateHistogramImage(histGray, Color.White);
+        }
+
+        #endregion
+
+        #region Matrix Operations
+
+        private void UpdateMatrixFromBitmap()
+        {
+            if (currentImage == null)
             {
-                GenerateFilterPreviews();
-                ShowFilterPanel();
-                ResetFilterSettings();
-                UpdateMainPreview();
+                rgbMatrix = null;
+                grayMatrix = null;
+                return;
             }
+
+            imageWidth = currentImage.Width;
+            imageHeight = currentImage.Height;
+            rgbMatrix = ImageHelper.BitmapToRgbMatrix(currentImage);
+            grayMatrix = ImageHelper.BitmapToGrayMatrix(currentImage);
+        }
+
+        #endregion
+
+        #region UI Helper Methods
+
+        private void UpdateCurrentImage(Bitmap newImage)
+        {
+            currentImage?.Dispose();
+            currentImage = newImage;
+            UpdateMatrixFromBitmap();
+            UpdateMainImage();
+        }
+
+        private void UpdateMainImage()
+        {
+            ApplyZoomToMainImage();
+            GenerateHistograms();
+        }
+
+        private void ApplyZoomToMainImage()
+        {
+            if (currentImage == null) return;
+
+            Bitmap zoomed = ImageHelper.Resize(currentImage, currentZoomPercent);
+            SetPictureBoxImage(pictureBoxMain, zoomed);
+        }
+
+        private void ShowFilterPanel()
+        {
+            panelFilterContainer.Visible = true;
+            isFilterPanelVisible = true;
+        }
+
+        private void HideFilterPanel()
+        {
+            panelFilterContainer.Visible = false;
+            isFilterPanelVisible = false;
+            UpdateMainImage();
+            selectedPreview = null;
+        }
+
+        private void ShowAritmatikPanel()
+        {
+            panelAritmatikContainer.Visible = true;
+            isAritmatikPanelVisible = true;
+        }
+
+        private void HideAritmatikPanel()
+        {
+            panelAritmatikContainer.Visible = false;
+            isAritmatikPanelVisible = false;
+        }
+
+        private void ShowHistogram()
+        {
+            if (currentImage == null) return;
+
+            labelHistogram.Visible = true;
+            pictureBoxHistogramR.Visible = true;
+            pictureBoxHistogramG.Visible = true;
+            pictureBoxHistogramB.Visible = true;
+            pictureBoxHistogramGray.Visible = true;
+
+            GenerateHistograms();
         }
 
         private void ResetFilterSettings()
@@ -459,111 +674,6 @@ namespace PengolahanCitra
             trackBarBrightness.Value = 0;
             currentBrightnessValue = 0;
             labelBrightnessValue.Text = "0";
-        }
-
-        private void UpdateMainPreview()
-        {
-            if (currentImage == null) return;
-
-            // Build new preview
-            byte[,,] filteredMatrix = ApplyFilter(selectedFilterType);
-            var newPreview = ApplyBrightness(filteredMatrix, currentBrightnessValue);
-
-            // Assign to picture box safely (dispose previous image)
-            SetPictureBoxImage(pictureBoxMain, newPreview);
-
-            // Track current preview reference
-            selectedPreview = newPreview;
-        }
-
-        private void GenerateFilterPreviews()
-        {
-            // Clear UI images first to avoid painting disposed bitmaps
-            ClearPreviewPictureBoxes();
-
-            // Dispose and null-out previous previews
-            DisposeFilterPreviews();
-
-            previewOriginal = CreateThumbnail(currentImage);
-            previewRed = CreateFilterPreview(previewOriginal, "Red");
-            previewGreen = CreateFilterPreview(previewOriginal, "Green");
-            previewBlue = CreateFilterPreview(previewOriginal, "Blue");
-            previewGray = CreateFilterPreview(previewOriginal, "Gray");
-            previewThreshold = CreateFilterPreview(previewOriginal, "Threshold");
-            previewNegative = CreateFilterPreview(previewOriginal, "Negative");
-            previewGaussian = CreateFilterPreview(previewOriginal, "Gaussian");
-            previewSharpen = CreateFilterPreview(previewOriginal, "Sharpen");
-            previewEqualizer = CreateFilterPreview(previewOriginal, "Equalizer");
-
-            AssignFilterPreviews();
-
-            // Enable preview button now that previews exist
-            btnPreviewSharpen.Visible = true;
-        }
-
-        private void btnPreviewSharpen_Click(object sender, EventArgs e)
-        {
-            if (previewSharpen == null)
-            {
-                ShowWarning("Preview belum tersedia.");
-                return;
-            }
-
-            // Show sharpen preview in main picture box without applying (temporary preview)
-            SetPictureBoxImage(pictureBoxMain, new Bitmap(previewSharpen));
-
-            // Keep selectedPreview pointing to previewSharpen so Apply Filter will use it
-            selectedPreview?.Dispose();
-            selectedPreview = new Bitmap(previewSharpen);
-            selectedFilterType = "Sharpen";
-            HighlightSelectedThumbnail(pictureBoxSharpen);
-        }
-
-        private void DisposeFilterPreviews()
-        {
-            previewOriginal?.Dispose();
-            previewRed?.Dispose();
-            previewGreen?.Dispose();
-            previewBlue?.Dispose();
-            previewGray?.Dispose();
-            previewThreshold?.Dispose();
-            previewNegative?.Dispose();
-            previewGaussian?.Dispose();
-            previewSharpen?.Dispose();
-            previewEqualizer?.Dispose();
-        }
-
-        private void AssignFilterPreviews()
-        {
-            SetPictureBoxImage(pictureBoxOriginal, previewOriginal);
-            SetPictureBoxImage(pictureBoxRed, previewRed);
-            SetPictureBoxImage(pictureBoxGreen, previewGreen);
-            SetPictureBoxImage(pictureBoxBlue, previewBlue);
-            SetPictureBoxImage(pictureBoxGray, previewGray);
-            SetPictureBoxImage(pictureBoxThreshold, previewThreshold);
-            SetPictureBoxImage(pictureBoxNegative, previewNegative);
-            SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
-            SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
-            SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
-        }
-
-        private void ApplySelectedFilter()
-        {
-            if (selectedPreview == null)
-            {
-                ShowWarning("Pilih filter terlebih dahulu!");
-                return;
-            }
-
-            currentImage?.Dispose();
-            currentImage = new Bitmap(selectedPreview);
-
-            BitmapToMatrix(currentImage);
-            ResetFilterSettings();
-
-            HideFilterPanel();
-            ShowHistogram();
-            ShowSuccess("Filter applied successfully!");
         }
 
         private void HighlightSelectedThumbnail(PictureBox selected)
@@ -586,1096 +696,28 @@ namespace PengolahanCitra
             pictureBoxEqualizer.BorderStyle = BorderStyle.None;
         }
 
-        #endregion
-
-        #region Image Processing - Filters
-
-        private byte[,,] ApplyFilter(string filterType)
-        {
-            if (filterType == "Original")
-            {
-                if (rgbMatrix == null) BitmapToMatrix(currentImage);
-                return rgbMatrix;
-            }
-
-            if (filterType == "Gaussian")
-            {
-                return ApplyGaussianBlurParallel(rgbMatrix, imageWidth, imageHeight);
-            }
-
-            if (filterType == "Sharpen")
-            {
-                return ApplySharpen(rgbMatrix, imageWidth, imageHeight);
-            }
-
-            if (filterType == "Equalizer")
-            {
-                return ApplyHistogramEqualization(rgbMatrix, imageWidth, imageHeight);
-            }
-
-            byte[,,] resultMatrix = new byte[imageHeight, imageWidth, 3];
-
-            for (int y = 0; y < imageHeight; y++)
-            {
-                for (int x = 0; x < imageWidth; x++)
-                {
-                    byte r = rgbMatrix[y, x, 0];
-                    byte g = rgbMatrix[y, x, 1];
-                    byte b = rgbMatrix[y, x, 2];
-                    byte gray = grayMatrix[y, x];
-
-                    Color processedColor = ProcessPixelFromMatrix(r, g, b, gray, filterType);
-
-                    resultMatrix[y, x, 0] = processedColor.R;
-                    resultMatrix[y, x, 1] = processedColor.G;
-                    resultMatrix[y, x, 2] = processedColor.B;
-                }
-            }
-            
-            return resultMatrix;
-        }
-
-        private Color ProcessPixelFromMatrix(byte r, byte g, byte b, byte gray, string filterType)
-        {
-            switch (filterType)
-            {
-                case "Red":
-                    return Color.FromArgb(r, 0, 0);
-                
-                case "Green":
-                    return Color.FromArgb(0, g, 0);
-                
-                case "Blue":
-                    return Color.FromArgb(0, 0, b);
-                
-                case "Gray":
-                    return Color.FromArgb(gray, gray, gray);
-                
-                case "Threshold":
-                    return gray > THRESHOLD_VALUE ? Color.White : Color.Black;
-                
-                case "Negative":
-                    byte inverted = (byte)(255 - gray);
-                    return Color.FromArgb(inverted, inverted, inverted);
-
-                default:
-                    return Color.FromArgb(r, g, b);
-            }
-        }
-
-        private int ClampIndex(int idx, int max)
-        {
-            if (idx < 0) return 0;
-            if (idx >= max) return max - 1;
-            return idx;
-        }
-        private byte[,,] ApplyGaussianBlurParallel(byte[,,] source, int width, int height)
-        {
-            if (source == null) return null;
-
-            var result = new byte[height, width, 3];
-
-            int jumlahPass = 10;
-
-            byte[,,] inputBuffer = source;
-
-            if (jumlahPass > 1) inputBuffer = (byte[,,])source.Clone();
-
-            for (int i = 0; i < jumlahPass; i++)
-            {
-                // Siapkan array untuk hasil pass ini
-                byte[,,] outputBuffer = new byte[height, width, 3];
-
-                var coords = Enumerable.Range(0, height)
-                    .SelectMany(y => Enumerable.Range(0, width).Select(x => new { x, y }));
-
-                coords.AsParallel().ForAll(t =>
-                {
-                    int y = t.y;
-                    int x = t.x;
-
-                    // Menggunakan Kernel 3x3
-                    long sumR = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 0] * k.w);
-                    long sumG = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 1] * k.w);
-                    long sumB = GAUSSIAN_3x3_OFFSETS.Sum(k => inputBuffer[ClampIndex(y + k.dy, height), ClampIndex(x + k.dx, width), 2] * k.w);
-
-                    // Normalisasi (Bagi dengan 16)
-                    outputBuffer[y, x, 0] = (byte)Clamp((int)(sumR / GAUSSIAN_SUM), 0, 255);
-                    outputBuffer[y, x, 1] = (byte)Clamp((int)(sumG / GAUSSIAN_SUM), 0, 255);
-                    outputBuffer[y, x, 2] = (byte)Clamp((int)(sumB / GAUSSIAN_SUM), 0, 255);
-                });
-
-                // Update inputBuffer untuk iterasi berikutnya (jika ada)
-                inputBuffer = outputBuffer;
-
-                // Hasil akhir adalah output dari iterasi terakhir
-                result = outputBuffer;
-            }
-
-            return result;
-        }
-
-        // Sharpen convolution (3x3 kernel):
-        // [ 0 -1  0]
-        // [-1  5 -1]
-        // [ 0 -1  0]
-        private byte[,,] ApplySharpen(byte[,,] source, int width, int height)
-        {
-            if (source == null) return null;
-
-            var result = new byte[height, width, 3];
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int r = 0, g = 0, b = 0;
-
-                    // center * 9
-                    r += source[y, x, 0] * 9;
-                    g += source[y, x, 1] * 9;
-                    b += source[y, x, 2] * 9;
-
-                    // 2. Loop 3x3 di sekitar pixel untuk dikurangi 1 (dikali -1)
-                    for (int ky = -1; ky <= 1; ky++)
-                    {
-                        for (int kx = -1; kx <= 1; kx++)
-                        {
-                            // Skip titik tengah (0,0) karena sudah dihitung di atas
-                            if (ky == 0 && kx == 0) continue;
-
-                            int ny = ClampIndex(y + ky, height);
-                            int nx = ClampIndex(x + kx, width);
-
-                            r -= source[ny, nx, 0]; // dikali -1
-                            g -= source[ny, nx, 1];
-                            b -= source[ny, nx, 2];
-                        }
-                    }
-
-                    result[y, x, 0] = (byte)Clamp(r, 0, 255);
-                    result[y, x, 1] = (byte)Clamp(g, 0, 255);
-                    result[y, x, 2] = (byte)Clamp(b, 0, 255);
-                }
-            }
-            
-            return result;
-        }
-
-        /// <summary>
-        /// Histogram Equalization dengan metode Intensity Scaling
-        /// Mempertahankan warna RGB dengan menskala setiap channel berdasarkan rasio intensitas baru/lama
-        /// Formula: R_baru = R_lama * (Intensitas_baru / Intensitas_lama)
-        /// </summary>
-        private byte[,,] ApplyHistogramEqualization(byte[,,] source, int width, int height)
-        {
-            if (source == null) return null;
-
-            var result = new byte[height, width, 3];
-            int totalPixels = width * height;
-
-            // Step 1: Hitung histogram berdasarkan rata-rata intensitas (R+G+B)/3
-            int[] intensityHistogram = new int[256];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int intensity = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
-                    intensityHistogram[intensity]++;
-                }
-            }
-
-            // Step 2: Hitung CDF (Cumulative Distribution Function)
-            int[] cdf = new int[256];
-            cdf[0] = intensityHistogram[0];
-            for (int i = 1; i < 256; i++)
-            {
-                cdf[i] = cdf[i - 1] + intensityHistogram[i];
-            }
-
-            // Step 3: Cari nilai CDF minimum (non-zero pertama)
-            int cdfMin = 0;
-            for (int i = 0; i < 256; i++)
-            {
-                if (cdf[i] > 0)
-                {
-                    cdfMin = cdf[i];
-                    break;
-                }
-            }
-
-            // Step 4: Buat lookup table untuk mapping intensitas
-            // Formula: newIntensity = ((cdf[v] - cdfMin) / (totalPixels - cdfMin)) * 255
-            byte[] intensityLUT = new byte[256];
-            int denominator = totalPixels - cdfMin;
-            if (denominator == 0) denominator = 1; // Hindari pembagian dengan nol
-
-            for (int i = 0; i < 256; i++)
-            {
-                if (cdf[i] == 0)
-                {
-                    intensityLUT[i] = 0;
-                }
-                else
-                {
-                    double normalized = (double)(cdf[i] - cdfMin) / denominator;
-                    intensityLUT[i] = (byte)Clamp((int)(normalized * 255), 0, 255);
-                }
-            }
-
-            // Step 5: Terapkan equalization dengan intensity scaling untuk mempertahankan warna
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    byte r = source[y, x, 0];
-                    byte g = source[y, x, 1];
-                    byte b = source[y, x, 2];
-
-                    // Hitung intensitas lama (rata-rata RGB)
-                    int oldIntensity = (r + g + b) / 3;
-
-                    // Dapatkan intensitas baru dari LUT
-                    int newIntensity = intensityLUT[oldIntensity];
-
-                    // Hitung rasio scaling
-                    // Jika intensitas lama = 0, gunakan nilai baru langsung untuk menghindari pembagian dengan nol
-                    if (oldIntensity == 0)
-                    {
-                        // Jika pixel asli hitam, tetap hitam atau gunakan intensitas baru
-                        result[y, x, 0] = (byte)newIntensity;
-                        result[y, x, 1] = (byte)newIntensity;
-                        result[y, x, 2] = (byte)newIntensity;
-                    }
-                    else
-                    {
-                        // Scaling proporsional: R_baru = R_lama * (I_baru / I_lama)
-                        double ratio = (double)newIntensity / oldIntensity;
-
-                        int newR = (int)(r * ratio);
-                        int newG = (int)(g * ratio);
-                        int newB = (int)(b * ratio);
-
-                        result[y, x, 0] = (byte)Clamp(newR, 0, 255);
-                        result[y, x, 1] = (byte)Clamp(newG, 0, 255);
-                        result[y, x, 2] = (byte)Clamp(newB, 0, 255);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private Bitmap CreateGaussianThumbnail(Bitmap thumbnailSource)
-        {
-            int w = thumbnailSource.Width;
-            int h = thumbnailSource.Height;
-
-            var localSrc = new byte[h, w, 3];
-
-            // Read pixels sequentially to avoid GDI+ thread-safety issues
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Color c = thumbnailSource.GetPixel(x, y);
-                    localSrc[y, x, 0] = c.R;
-                    localSrc[y, x, 1] = c.G;
-                    localSrc[y, x, 2] = c.B;
-                }
-            }
-
-            // Gaussian blur core remains multithreaded (PLINQ)
-            var blurred = ApplyGaussianBlurParallel(localSrc, w, h);
-
-            Bitmap result = new Bitmap(w, h);
-
-            // Write pixels sequentially to the bitmap (thread-safe)
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    var r = blurred[y, x, 0];
-                    var g = blurred[y, x, 1];
-                    var b = blurred[y, x, 2];
-                    result.SetPixel(x, y, Color.FromArgb(r, g, b));
-                }
-            }
-
-            return result;
-        }
-
-        private Bitmap CreateSharpenThumbnail(Bitmap thumbnailSource)
-        {
-            int w = thumbnailSource.Width;
-            int h = thumbnailSource.Height;
-
-            var localSrc = new byte[h, w, 3];
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Color c = thumbnailSource.GetPixel(x, y);
-                    localSrc[y, x, 0] = c.R;
-                    localSrc[y, x, 1] = c.G;
-                    localSrc[y, x, 2] = c.B;
-                }
-            }
-
-            var sharpened = ApplySharpen(localSrc, w, h);
-
-            Bitmap result = new Bitmap(w, h);
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    var rr = sharpened[y, x, 0];
-                    var gg = sharpened[y, x, 1];
-                    var bb = sharpened[y, x, 2];
-                    result.SetPixel(x, y, Color.FromArgb(rr, gg, bb));
-                }
-            }
-
-            return result;
-        }
-
-        private Bitmap CreateEqualizerThumbnail(Bitmap thumbnailSource)
-        {
-            int w = thumbnailSource.Width;
-            int h = thumbnailSource.Height;
-
-            var localSrc = new byte[h, w, 3];
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Color c = thumbnailSource.GetPixel(x, y);
-                    localSrc[y, x, 0] = c.R;
-                    localSrc[y, x, 1] = c.G;
-                    localSrc[y, x, 2] = c.B;
-                }
-            }
-
-            var equalized = ApplyHistogramEqualization(localSrc, w, h);
-
-            Bitmap result = new Bitmap(w, h);
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    var rr = equalized[y, x, 0];
-                    var gg = equalized[y, x, 1];
-                    var bb = equalized[y, x, 2];
-                    result.SetPixel(x, y, Color.FromArgb(rr, gg, bb));
-                }
-            }
-
-            return result;
-        }
-
-        #endregion
-
-        #region Image Processing - Brightness
-
-        private Bitmap ApplyBrightness(byte[,,] sourceMatrix, int brightnessValue)
-        {
-            Bitmap result = new Bitmap(imageWidth, imageHeight);
-
-            for (int y = 0; y < imageHeight; y++)
-            {
-                for (int x = 0; x < imageWidth; x++)
-                {
-                    int r = sourceMatrix[y, x, 0];
-                    int g = sourceMatrix[y, x, 1];
-                    int b = sourceMatrix[y, x, 2];
-
-                    int newR = Clamp(r + brightnessValue, 0, 255);
-                    int newG = Clamp(g + brightnessValue, 0, 255);
-                    int newB = Clamp(b + brightnessValue, 0, 255);
-
-                    result.SetPixel(x, y, Color.FromArgb(newR, newG, newB));
-                }
-            }
-            
-            return result;
-        }
-
-        #endregion
-
-        #region Image Processing - Thumbnails
-
-        private Bitmap CreateFilterPreview(Bitmap thumbnailSource, string filterType)
-        {
-            if (filterType == "Gaussian")
-            {
-                return CreateGaussianThumbnail(thumbnailSource);
-            }
-
-            if (filterType == "Sharpen")
-            {
-                return CreateSharpenThumbnail(thumbnailSource);
-            }
-
-            if (filterType == "Equalizer")
-            {
-                return CreateEqualizerThumbnail(thumbnailSource);
-            }
-
-            Bitmap thumbResult = new Bitmap(thumbnailSource);
-            int thumbW = thumbResult.Width;
-            int thumbH = thumbResult.Height;
-
-            for (int y = 0; y < thumbH; y++)
-            {
-                for (int x = 0; x < thumbW; x++)
-                {
-                    Color pixel = thumbResult.GetPixel(x, y);
-
-                    byte r = pixel.R;
-                    byte g = pixel.G;
-                    byte b = pixel.B;
-                    byte gray = (byte)CalculateGrayscale(pixel);
-
-                    Color processed = ProcessPixelFromMatrix(r, g, b, gray, filterType);
-
-                    thumbResult.SetPixel(x, y, processed);
-                }
-            }
-
-            return thumbResult;
-        }
-
-        private Bitmap CreateThumbnail(Bitmap src)
-        {
-            Bitmap thumb = new Bitmap(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-            
-            using (Graphics g = Graphics.FromImage(thumb))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(src, 0, 0, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-            }
-            
-            return thumb;
-        }
-
-        #endregion
-
-        #region Image Processing - Histogram
-
-        private void GenerateHistograms()
-        {
-            if (rgbMatrix == null || grayMatrix == null) return;
-
-            DisposeHistogramImages();
-            CreateHistogramImages(rgbMatrix, grayMatrix);
-        }
-
-        private void DisposeHistogramImages()
-        {
-            pictureBoxHistogramR.Image?.Dispose();
-            pictureBoxHistogramG.Image?.Dispose();
-            pictureBoxHistogramB.Image?.Dispose();
-            pictureBoxHistogramGray.Image?.Dispose();
-        }
-
-        private void CreateHistogramImages(byte[,,] rgb, byte[,] gray)
-        {
-            pictureBoxHistogramR.Image = CreateHistogramImage(rgb, gray, "R", Color.Red);
-            pictureBoxHistogramG.Image = CreateHistogramImage(rgb, gray, "G", Color.Lime);
-            pictureBoxHistogramB.Image = CreateHistogramImage(rgb, gray, "B", Color.Blue);
-            pictureBoxHistogramGray.Image = CreateHistogramImage(rgb, gray, "Gray", Color.White);
-        }
-
-        private Bitmap CreateHistogramImage(byte[,,] rgb, byte[,] gray, string channel, Color color)
-        {
-            int[] histogram = CalculateHistogram(rgb, gray, channel);
-            return DrawHistogram(histogram, color);
-        }
-
-        private int[] CalculateHistogram(byte[,,] rgb, byte[,] gray, string channel)
-        {
-            int[] histogram = new int[256];
-            int h = gray.GetLength(0);
-            int w = gray.GetLength(1);
-            
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    int value = GetChannelValue(rgb, gray, channel, y, x);
-                    histogram[value]++;
-                }
-            }
-            
-            return histogram;
-        }
-
-        private int GetChannelValue(byte[,,] rgb, byte[,] gray, string channel, int y, int x)
-        {
-            switch (channel)
-            {
-                case "R": return rgb[y, x, 0];
-                case "G": return rgb[y, x, 1];
-                case "B": return rgb[y, x, 2];
-                case "Gray": return gray[y, x];
-                default: return 0;
-            }
-        }
-
-        private Bitmap DrawHistogram(int[] histogram, Color color)
-        {
-            Bitmap bmp = new Bitmap(HISTOGRAM_WIDTH, HISTOGRAM_HEIGHT);
-            
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                g.Clear(Color.FromArgb(28, 28, 28));
-                
-                double[] logHistogram = CalculateLogHistogram(histogram);
-                double maxLogValue = GetMaxValue(logHistogram);
-                
-                if (maxLogValue == 0) return bmp;
-                
-                DrawHistogramBars(g, logHistogram, maxLogValue, color);
-                DrawHistogramGrid(g);
-                DrawHistogramBorder(g);
-                DrawHistogramLabel(g, color);
-            }
-            
-            return bmp;
-        }
-
-        private double[] CalculateLogHistogram(int[] histogram)
-        {
-            double[] logHistogram = new double[256];
-            
-            for (int i = 0; i < histogram.Length; i++)
-            {
-                logHistogram[i] = Math.Log10(1 + histogram[i]);
-            }
-            
-            return logHistogram;
-        }
-
-        private double GetMaxValue(double[] values)
-        {
-            double max = 0;
-            
-            foreach (double value in values)
-            {
-                if (value > max) max = value;
-            }
-            
-            return max;
-        }
-
-        private void DrawHistogramBars(Graphics g, double[] logHistogram, double maxValue, Color color)
-        {
-            using (Pen pen = new Pen(color, 1))
-            {
-                for (int i = 0; i < 256; i++)
-                {
-                    float x = (float)i * HISTOGRAM_WIDTH / 256f;
-                    float barHeight = (float)(logHistogram[i] / maxValue) * (HISTOGRAM_HEIGHT - 10);
-                    
-                    if (barHeight > 0)
-                    {
-                        g.DrawLine(pen, x, HISTOGRAM_HEIGHT, x, HISTOGRAM_HEIGHT - barHeight);
-                    }
-                }
-            }
-        }
-
-        private void DrawHistogramGrid(Graphics g)
-        {
-            using (Pen gridPen = new Pen(Color.FromArgb(50, 50, 50), 1))
-            {
-                g.DrawLine(gridPen, 0, HISTOGRAM_HEIGHT / 2, HISTOGRAM_WIDTH, HISTOGRAM_HEIGHT / 2);
-            }
-        }
-
-        private void DrawHistogramBorder(Graphics g)
-        {
-            using (Pen borderPen = new Pen(Color.FromArgb(60, 60, 60), 1))
-            {
-                g.DrawRectangle(borderPen, 0, 0, HISTOGRAM_WIDTH - 1, HISTOGRAM_HEIGHT - 1);
-            }
-        }
-
-        private void DrawHistogramLabel(Graphics g, Color color)
-        {
-            using (Font font = new Font("Segoe UI", 7, FontStyle.Bold))
-            using (SolidBrush brush = new SolidBrush(color))
-            {
-                string label = GetColorLabel(color);
-                g.DrawString(label, font, brush, 5, 5);
-            }
-        }
-
-        private string GetColorLabel(Color color)
-        {
-            if (color == Color.Red) return "Red";
-            if (color == Color.Lime) return "Green";
-            if (color == Color.Blue) return "Blue";
-            if (color == Color.White) return "Grayscale";
-            return "";
-        }
-
-        #endregion
-
-        #region Image Processing - Rotation
-
-        private void RotateImage(int targetAngle)
-        {
-            if (!ValidateImageLoaded()) return;
-
-            try
-            {
-                int angleToApply = targetAngle - currentRotationAngle;
-                Bitmap rotated = RotateImageToAngle(currentImage, angleToApply);
-                currentRotationAngle = targetAngle;
-                UpdateCurrentImage(rotated);
-                ShowSuccess($"Image rotated to {currentRotationAngle}° successfully!");
-            }
-            catch (Exception ex)
-            {
-                ShowError($"Error rotating image: {ex.Message}");
-            }
-        }
-
-        private Bitmap RotateImageToAngle(Bitmap source, int angle)
-        {
-            if (source == null) return null;
-
-            angle = angle % 360;
-            if (angle < 0) angle += 360;
-
-            switch (angle)
-            {
-                case 0:
-                    return new Bitmap(source);
-                
-                case 45:
-                    return RotateImage45Degrees(source);
-                
-                case 90:
-                    return RotateImage90Degrees(source);
-                
-                case 180:
-                    return RotateImage180Degrees(source);
-                
-                case 270:
-                    return RotateImage270Degrees(source);
-                
-                default:
-                    return RotateImageByAngle(source, angle);
-            }
-        }
-
-        private Bitmap RotateImage45Degrees(Bitmap src)
-        {
-            int diagonal = (int)Math.Ceiling(Math.Sqrt(src.Width * src.Width + src.Height * src.Height));
-            Bitmap rotated = new Bitmap(diagonal, diagonal);
-
-            using (Graphics g = Graphics.FromImage(rotated))
-            {
-                ConfigureGraphicsQuality(g);
-                g.Clear(Color.FromArgb(28, 28, 28));
-
-                g.TranslateTransform(diagonal / 2f, diagonal / 2f);
-                g.RotateTransform(45);
-                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
-                g.DrawImage(src, 0, 0, src.Width, src.Height);
-            }
-            
-            return rotated;
-        }
-
-        private Bitmap RotateImage90Degrees(Bitmap src)
-        {
-            Bitmap rotated = new Bitmap(src.Height, src.Width);
-            
-            for (int y = 0; y < src.Height; y++)
-            {
-                for (int x = 0; x < src.Width; x++)
-                {
-                    rotated.SetPixel(src.Height - y - 1, x, src.GetPixel(x, y));
-                }
-            }
-            
-            return rotated;
-        }
-
-        private Bitmap RotateImage180Degrees(Bitmap src)
-        {
-            Bitmap rotated = new Bitmap(src.Width, src.Height);
-            
-            for (int y = 0; y < src.Height; y++)
-            {
-                for (int x = 0; x < src.Width; x++)
-                {
-                    rotated.SetPixel(src.Width - x - 1, src.Height - y - 1, src.GetPixel(x, y));
-                }
-            }
-            
-            return rotated;
-        }
-
-        private Bitmap RotateImage270Degrees(Bitmap src)
-        {
-            Bitmap rotated = new Bitmap(src.Height, src.Width);
-            
-            for (int y = 0; y < src.Height; y++)
-            {
-                for (int x = 0; x < src.Width; x++)
-                {
-                    rotated.SetPixel(y, src.Width - x - 1, src.GetPixel(x, y));
-                }
-            }
-            
-            return rotated;
-        }
-
-        private Bitmap RotateImageByAngle(Bitmap src, int angle)
-        {
-            double radians = angle * Math.PI / 180;
-            double cos = Math.Abs(Math.Cos(radians));
-            double sin = Math.Abs(Math.Sin(radians));
-
-            int newWidth = (int)Math.Ceiling(src.Width * cos + src.Height * sin);
-            int newHeight = (int)Math.Ceiling(src.Width * sin + src.Height * cos);
-
-            Bitmap rotated = new Bitmap(newWidth, newHeight);
-
-            using (Graphics g = Graphics.FromImage(rotated))
-            {
-                ConfigureGraphicsQuality(g);
-                g.Clear(Color.FromArgb(28, 28, 28));
-
-                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
-                g.RotateTransform(angle);
-                g.TranslateTransform(-src.Width / 2f, -src.Height / 2f);
-                g.DrawImage(src, 0, 0, src.Width, src.Height);
-            }
-            
-            return rotated;
-        }
-
-        private void ConfigureGraphicsQuality(Graphics g)
-        {
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-        }
-
-        #endregion
-
-        #region Image Processing - Translation
-
-        private Bitmap TranslateImage(Bitmap src, int offsetX, int offsetY)
-        {
-            if (src == null) return null;
-
-            Bitmap translated = new Bitmap(src.Width, src.Height);
-
-            using (Graphics g = Graphics.FromImage(translated))
-            {
-                ConfigureGraphicsQuality(g);
-                g.Clear(Color.FromArgb(28, 28, 28));
-                g.DrawImage(src, offsetX, offsetY, src.Width, src.Height);
-            }
-
-            return translated;
-        }
-
-        #endregion
-
-        #region Image Processing - Flip
-
-        private Bitmap FlipImageHorizontal(Bitmap src)
-        {
-            if (src == null) return null;
-
-            int width = src.Width;
-            int height = src.Height;
-            Bitmap flipped = new Bitmap(width, height);
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    Color pixel = src.GetPixel(x, y);
-                    flipped.SetPixel(width - x - 1, y, pixel);
-                }
-            }
-
-            return flipped;
-        }
-
-        private Bitmap FlipImageVertical(Bitmap src)
-        {
-            if (src == null) return null;
-
-            int width = src.Width;
-            int height = src.Height;
-            Bitmap flipped = new Bitmap(width, height);
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    Color pixel = src.GetPixel(x, y);
-                    flipped.SetPixel(x, height - y - 1, pixel);
-                }
-            }
-
-            return flipped;
-        }
-
-        #endregion
-
-        #region Image Processing - Arithmetic Operations
-
-        private void PerformImageArithmetic(Func<Bitmap, Bitmap, Bitmap> operation, string dialogTitle, string successMessage)
-        {
-            if (!ValidateImageLoaded("Silakan buka gambar utama terlebih dahulu!")) return;
-            
-            using (OpenFileDialog dialog = new OpenFileDialog())
-            {
-                dialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-                dialog.Title = $"Pilih Gambar untuk {dialogTitle}";
-                
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    Bitmap secondImage = new Bitmap(dialog.FileName);
-                    Bitmap result = operation(currentImage, secondImage);
-                    UpdateCurrentImage(result);
-                    ShowSuccess($"{successMessage} citra berhasil!");
-                }
-            }
-        }
-
-        private Bitmap AddImages(Bitmap img1, Bitmap img2)
-        {
-            return ProcessImagesArithmetic(img1, img2, (c1, c2) =>
-            {
-                int r = Clamp(c1.R + c2.R, 0, 255);
-                int g = Clamp(c1.G + c2.G, 0, 255);
-                int b = Clamp(c1.B + c2.B, 0, 255);
-                return Color.FromArgb(r, g, b);
-            });
-        }
-
-        private Bitmap SubtractImages(Bitmap img1, Bitmap img2)
-        {
-            return ProcessImagesArithmetic(img1, img2, (c1, c2) =>
-            {
-                int r = Clamp(c1.R - c2.R, 0, 255);
-                int g = Clamp(c1.G - c2.G, 0, 255);
-                int b = Clamp(c1.B - c2.B, 0, 255);
-                return Color.FromArgb(r, g, b);
-            });
-        }
-
-        private Bitmap MultiplyImages(Bitmap img1, Bitmap img2)
-        {
-            return ProcessImagesArithmetic(img1, img2, (c1, c2) =>
-            {
-                int r = Clamp((c1.R * c2.R) / 255, 0, 255);
-                int g = Clamp((c1.G * c2.G) / 255, 0, 255);
-                int b = Clamp((c1.B * c2.B) / 255, 0, 255);
-                return Color.FromArgb(r, g, b);
-            });
-        }
-
-        private Bitmap DivideImages(Bitmap img1, Bitmap img2)
-        {
-            return ProcessImagesArithmetic(img1, img2, (c1, c2) =>
-            {
-                int rDen = Math.Max(1, (int)c2.R);
-                int gDen = Math.Max(1, (int)c2.G);
-                int bDen = Math.Max(1, (int)c2.B);
-                
-                int r = Clamp((c1.R * 255) / rDen, 0, 255);
-                int g = Clamp((c1.G * 255) / gDen, 0, 255);
-                int b = Clamp((c1.B * 255) / bDen, 0, 255);
-                
-                return Color.FromArgb(r, g, b);
-            });
-        }
-
-        private Bitmap ProcessImagesArithmetic(Bitmap img1, Bitmap img2, Func<Color, Color, Color> operation)
-        {
-            int w = Math.Min(img1.Width, img2.Width);
-            int h = Math.Min(img1.Height, img2.Height);
-            Bitmap result = new Bitmap(w, h);
-            
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Color c1 = img1.GetPixel(x, y);
-                    Color c2 = img2.GetPixel(x, y);
-                    Color resultColor = operation(c1, c2);
-                    result.SetPixel(x, y, resultColor);
-                }
-            }
-            
-            return result;
-        }
-
-        #endregion
-
-        #region Matrix Operations
-
-        private void BitmapToMatrix(Bitmap image)
-        {
-            if (image == null)
-            {
-                rgbMatrix = null;
-                grayMatrix = null;
-                return;
-            }
-
-            imageWidth = image.Width;
-            imageHeight = image.Height;
-
-            rgbMatrix = new byte[imageHeight, imageWidth, 3];
-            grayMatrix = new byte[imageHeight, imageWidth];
-
-            for (int y = 0; y < imageHeight; y++)
-            {
-                for (int x = 0; x < imageWidth; x++)
-                {
-                    Color pixel = image.GetPixel(x, y);
-                    rgbMatrix[y, x, 0] = pixel.R;
-                    rgbMatrix[y, x, 1] = pixel.G;
-                    rgbMatrix[y, x, 2] = pixel.B;
-                    grayMatrix[y, x] = (byte)CalculateGrayscale(pixel);
-                }
-            }
-        }
-
-        #endregion
-
-        #region UI Helper Methods
-
-        private void UpdateCurrentImage(Bitmap newImage)
-        {
-            currentImage?.Dispose();
-            currentImage = newImage;
-            BitmapToMatrix(currentImage);
-            UpdateMainImage(currentImage);
-        }
-
-        private void UpdateMainImage(Bitmap image)
-        {
-            ApplyZoomToMainImage();
-            GenerateHistograms();
-        }
-
-        private void ShowFilterPanel()
-        {
-            panelFilterContainer.Visible = true;
-            isFilterPanelVisible = true;
-            // hide preview button until previews are generated
-            try { btnPreviewSharpen.Visible = false; } catch { /* ignore if control not yet created */ }
-        }
-
-        private void HideFilterPanel()
-        {
-            panelFilterContainer.Visible = false;
-            isFilterPanelVisible = false;
-
-            UpdateMainImage(currentImage);
-
-            // Do not dispose here; pictureBoxMain already replaced in UpdateMainImage
-            selectedPreview = null;
-        }
-
-        private void ShowHistogram()
-        {
-            if (currentImage == null) return;
-            
-            labelHistogram.Visible = true;
-            pictureBoxHistogramR.Visible = true;
-            pictureBoxHistogramG.Visible = true;
-            pictureBoxHistogramB.Visible = true;
-            pictureBoxHistogramGray.Visible = true;
-            
-            GenerateHistograms();
-        }
-
-        private void ShowAritmatikPanel()
-        {
-            HideFilterPanel();
-            panelAritmatikContainer.Visible = true;
-            isAritmatikPanelVisible = true;
-        }
-
-        private void HideAritmatikPanel()
-        {
-            panelAritmatikContainer.Visible = false;
-            isAritmatikPanelVisible = false;
-        }
-
-        private void ResetToHome()
-        {
-            if (isFilterPanelVisible) HideFilterPanel();
-            if (isAritmatikPanelVisible) HideAritmatikPanel();
-            if (currentImage != null) ShowHistogram();
-        }
-
-        private void HandleButtonHover(Button btn, bool isEnter)
-        {
-            Color hoverColor = Color.FromArgb(138, 43, 226);
-            Color defaultColor = Color.FromArgb(75, 0, 130);
-
-            if (btn == btnBukaGambar)
-            {
-                btn.BackColor = defaultColor;
-            }
-            else if (btn == BtnSetColor)
-            {
-                btn.BackColor = isEnter && isFilterPanelVisible ? hoverColor : defaultColor;
-            }
-            else if (btn == Aritmathic)
-            {
-                btn.BackColor = isEnter && isAritmatikPanelVisible ? hoverColor : defaultColor;
-            }
-            else
-            {
-                btn.BackColor = isEnter ? hoverColor : defaultColor;
-            }
-        }
-
-        private void ApplyZoomToMainImage()
-        {
-            if (currentImage == null) return;
-            
-            int newWidth = currentImage.Width * currentZoomPercent / 100;
-            int newHeight = currentImage.Height * currentZoomPercent / 100;
-            
-            Bitmap zoomed = new Bitmap(newWidth, newHeight);
-            
-            using (Graphics g = Graphics.FromImage(zoomed))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(currentImage, 0, 0, newWidth, newHeight);
-            }
-            
-            SetPictureBoxImage(pictureBoxMain, zoomed);
-        }
-
         private void SetPictureBoxImage(PictureBox pb, Image newImage)
         {
             var old = pb.Image;
             pb.Image = newImage;
             if (old != null && !ReferenceEquals(old, newImage))
             {
-                try { old.Dispose(); } catch { /* ignore */ }
+                try { old.Dispose(); } catch { }
             }
+        }
+
+        private void AssignFilterPreviews()
+        {
+            SetPictureBoxImage(pictureBoxOriginal, previewOriginal);
+            SetPictureBoxImage(pictureBoxRed, previewRed);
+            SetPictureBoxImage(pictureBoxGreen, previewGreen);
+            SetPictureBoxImage(pictureBoxBlue, previewBlue);
+            SetPictureBoxImage(pictureBoxGray, previewGray);
+            SetPictureBoxImage(pictureBoxThreshold, previewThreshold);
+            SetPictureBoxImage(pictureBoxNegative, previewNegative);
+            SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
+            SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
+            SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
         }
 
         private void ClearPreviewPictureBoxes()
@@ -1692,59 +734,37 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxEqualizer, null);
         }
 
-        #endregion
-
-        #region Utility Methods
-
-        private int CalculateGrayscale(Color pixel)
+        private void DisposeFilterPreviews()
         {
-            return (pixel.R + pixel.G + pixel.B) / 3;
+            previewOriginal?.Dispose();
+            previewRed?.Dispose();
+            previewGreen?.Dispose();
+            previewBlue?.Dispose();
+            previewGray?.Dispose();
+            previewThreshold?.Dispose();
+            previewNegative?.Dispose();
+            previewGaussian?.Dispose();
+            previewSharpen?.Dispose();
+            previewEqualizer?.Dispose();
         }
 
-        private int Clamp(int value, int min, int max)
+        private void DisposeHistogramImages()
         {
-            if (value < min) return min;
-            if (value > max) return max;
-            return value;
-        }
-
-        private System.Drawing.Imaging.ImageFormat GetImageFormat(string fileName)
-        {
-            string ext = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
-            
-            if (ext == ".jpg" || ext == ".jpeg")
-                return System.Drawing.Imaging.ImageFormat.Jpeg;
-            
-            if (ext == ".bmp")
-                return System.Drawing.Imaging.ImageFormat.Bmp;
-            
-            return System.Drawing.Imaging.ImageFormat.Png;
-        }
-
-        private void pictureBoxMain_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panelFilterContainer_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void labelSharpen_Click(object sender, EventArgs e)
-        {
-
+            pictureBoxHistogramR.Image?.Dispose();
+            pictureBoxHistogramG.Image?.Dispose();
+            pictureBoxHistogramB.Image?.Dispose();
+            pictureBoxHistogramGray.Image?.Dispose();
         }
 
         #endregion
 
-        #region Validation & Error Handling
+        #region Validation & Messages
 
-        private bool ValidateImageLoaded(string errorMessage = "Please load an image first.")
+        private bool ValidateImageLoaded(string message = "Please load an image first.")
         {
             if (currentImage == null)
             {
-                ShowWarning(errorMessage);
+                ShowWarning(message);
                 return false;
             }
             return true;
@@ -1766,7 +786,45 @@ namespace PengolahanCitra
         }
 
         #endregion
+
+        #region Empty Event Handlers (dari Designer)
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            if (isFilterPanelVisible) HideFilterPanel();
+            if (isAritmatikPanelVisible) HideAritmatikPanel();
+            if (currentImage != null) ShowHistogram();
+        }
+
+        private void Button_MouseEnter(object sender, EventArgs e) { }
+        private void Button_MouseLeave(object sender, EventArgs e) { }
+        private void pictureBoxMain_Click(object sender, EventArgs e) { }
+        private void panelFilterContainer_Paint(object sender, PaintEventArgs e) { }
+        private void panelAritmatikContainer_Paint(object sender, PaintEventArgs e) { }
+        private void panelSidebarRight_Paint(object sender, PaintEventArgs e) { }
+        private void labelImageInfo_Click(object sender, EventArgs e) { }
+        private void pictureBoxHistogramR_Click(object sender, EventArgs e) { }
+        private void pictureBoxHistogramG_Click(object sender, EventArgs e) { }
+        private void pictureBoxHistogramB_Click(object sender, EventArgs e) { }
+        private void pictureBoxHistogramGray_Click(object sender, EventArgs e) { }
+        private void labelHistogram_Click(object sender, EventArgs e) { }
+        private void labelSharpen_Click(object sender, EventArgs e) { }
+        private void panelBrightnessContainer_Paint(object sender, PaintEventArgs e) { }
+        private void labelFlipTitle_Click(object sender, EventArgs e) { }
+        private void numericUpDownTranslateY_ValueChanged(object sender, EventArgs e) { }
+        private void numericUpDownTranslateX_ValueChanged(object sender, EventArgs e) { }
+        private void labelTranslateY_Click(object sender, EventArgs e) { }
+        private void labelTranslateX_Click(object sender, EventArgs e) { }
+        private void labelTranslateTitle_Click(object sender, EventArgs e) { }
+        private void numericUpDownDegree_ValueChanged(object sender, EventArgs e) { }
+        private void labelCustomRotate_Click(object sender, EventArgs e) { }
+        private void labelAritmatikTitle_Click(object sender, EventArgs e) { }
+        private void labelZoomTitle_Click(object sender, EventArgs e) { }
+        private void labelZoomValue_Click(object sender, EventArgs e) { }
+        private void labelZoomMin_Click(object sender, EventArgs e) { }
+        private void labelZoomMax_Click(object sender, EventArgs e) { }
+        private void btnPreviewSharpen_Click(object sender, EventArgs e) { }
+
+        #endregion
     }
 }
-
-// End
