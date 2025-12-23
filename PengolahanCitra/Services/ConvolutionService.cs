@@ -9,7 +9,6 @@ namespace PengolahanCitra.Services
     /// - Gaussian Blur
     /// - Sharpen
     /// - Custom Kernel
-    /// 
     /// Semua operasi menggunakan multithreading (Parallel.For)
     /// </summary>
     public static class ConvolutionService

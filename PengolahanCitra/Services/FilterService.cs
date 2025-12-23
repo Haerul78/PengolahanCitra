@@ -123,6 +123,93 @@ namespace PengolahanCitra.Services
 
         #endregion
 
+        #region Contrast Stretching
+
+        // Contrast Stretching - perbaiki kontras gambar
+        public static byte[,,] ContrastStretching(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+            var result = new byte[height, width, 3];
+
+            int min = 255, max = 0;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    for (int c = 0; c < 3; c++)
+                    {
+                        if (source[y, x, c] < min) min = source[y, x, c];
+                        if (source[y, x, c] > max) max = source[y, x, c];
+                    }
+                }
+            }
+
+            int range = max - min;
+            if (range == 0) range = 1;
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    for (int c = 0; c < 3; c++)
+                    {
+                        result[y, x, c] = (byte)MathHelper.Clamp((source[y, x, c] - min) * 255 / range, 0, 255);
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        // Contrast Stretching dengan metode grayscale
+        public static byte[,,] ContrastStretchingGray(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+            var result = new byte[height, width, 3];
+
+            int minIntensity = 255;
+            int maxIntensity = 0;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    if (gray < minIntensity) minIntensity = gray;
+                    if (gray > maxIntensity) maxIntensity = gray;
+                }
+            }
+
+            int range = maxIntensity - minIntensity;
+            if (range == 0) range = 1;
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    int newGray = (gray - minIntensity) * 255 / range;
+
+                    if (gray == 0)
+                    {
+                        result[y, x, 0] = (byte)newGray;
+                        result[y, x, 1] = (byte)newGray;
+                        result[y, x, 2] = (byte)newGray;
+                    }
+                    else
+                    {
+                        double ratio = (double)newGray / gray;
+                        result[y, x, 0] = (byte)MathHelper.Clamp((int)(source[y, x, 0] * ratio), 0, 255);
+                        result[y, x, 1] = (byte)MathHelper.Clamp((int)(source[y, x, 1] * ratio), 0, 255);
+                        result[y, x, 2] = (byte)MathHelper.Clamp((int)(source[y, x, 2] * ratio), 0, 255);
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        #endregion 
+
         #region Apply Filter by Name
 
         /// <summary>
