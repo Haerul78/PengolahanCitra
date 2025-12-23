@@ -383,6 +383,9 @@ namespace PengolahanCitra
                 case "Negative":
                     return FilterService.Negative(rgbMatrix, imageWidth, imageHeight);
 
+                case "MeanBlur":
+                    return ConvolutionService.MeanBlur(rgbMatrix, imageWidth, imageHeight, 1);
+
                 case "Gaussian":
                     return ConvolutionService.GaussianBlur(rgbMatrix, imageWidth, imageHeight, gaussianBlurPasses);
 
