@@ -135,7 +135,6 @@ namespace PengolahanCitra
             this.panelSidebarLeft.Name = "panelSidebarLeft";
             this.panelSidebarLeft.Size = new System.Drawing.Size(250, 701);
             this.panelSidebarLeft.TabIndex = 0;
-            // 
             // panelHistogramContainer
             // 
             this.panelHistogramContainer.Controls.Add(this.pictureBoxHistogramG);
@@ -365,6 +364,7 @@ namespace PengolahanCitra
             this.pictureBoxMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
             this.pictureBoxMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBoxMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxMain.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBoxMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxMain.Location = new System.Drawing.Point(250, 60);
             this.pictureBoxMain.Name = "pictureBoxMain";
@@ -845,16 +845,8 @@ namespace PengolahanCitra
             this.numericUpDownTranslateY.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateY.ForeColor = System.Drawing.Color.White;
             this.numericUpDownTranslateY.Location = new System.Drawing.Point(114, 571);
-            this.numericUpDownTranslateY.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownTranslateY.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
+            this.numericUpDownTranslateY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.numericUpDownTranslateY.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
             this.numericUpDownTranslateY.Name = "numericUpDownTranslateY";
             this.numericUpDownTranslateY.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateY.TabIndex = 12;
@@ -866,16 +858,8 @@ namespace PengolahanCitra
             this.numericUpDownTranslateX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownTranslateX.ForeColor = System.Drawing.Color.White;
             this.numericUpDownTranslateX.Location = new System.Drawing.Point(24, 571);
-            this.numericUpDownTranslateX.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownTranslateX.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
+            this.numericUpDownTranslateX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.numericUpDownTranslateX.Minimum = new decimal(new int[] { 1000, 0, 0, -2147483648 });
             this.numericUpDownTranslateX.Name = "numericUpDownTranslateX";
             this.numericUpDownTranslateX.Size = new System.Drawing.Size(90, 20);
             this.numericUpDownTranslateX.TabIndex = 11;
@@ -936,16 +920,8 @@ namespace PengolahanCitra
             this.numericUpDownDegree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.numericUpDownDegree.ForeColor = System.Drawing.Color.White;
             this.numericUpDownDegree.Location = new System.Drawing.Point(27, 461);
-            this.numericUpDownDegree.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-            this.numericUpDownDegree.Minimum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            -2147483648});
+            this.numericUpDownDegree.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            this.numericUpDownDegree.Minimum = new decimal(new int[] { 360, 0, 0, -2147483648 });
             this.numericUpDownDegree.Name = "numericUpDownDegree";
             this.numericUpDownDegree.Size = new System.Drawing.Size(180, 20);
             this.numericUpDownDegree.TabIndex = 6;
@@ -1201,7 +1177,6 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -1253,7 +1228,7 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelBrightnessValue;
         private System.Windows.Forms.Button btnResetBrightness;
         private System.Windows.Forms.Panel panelBrightnessContainer;
-        
+
         // Arithmetic controls
         private System.Windows.Forms.Button Aritmathic;
         private System.Windows.Forms.Panel panelAritmatikContainer;
@@ -1269,7 +1244,7 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelCustomRotate;
         private System.Windows.Forms.NumericUpDown numericUpDownDegree;
         private System.Windows.Forms.Button btnRotateCustom;
-        
+
         // Translation controls
         private System.Windows.Forms.Label labelTranslateTitle;
         private System.Windows.Forms.Label labelTranslateX;
@@ -1277,12 +1252,12 @@ namespace PengolahanCitra
         private System.Windows.Forms.NumericUpDown numericUpDownTranslateX;
         private System.Windows.Forms.NumericUpDown numericUpDownTranslateY;
         private System.Windows.Forms.Button btnTranslate;
-        
+
         // Flip controls
         private System.Windows.Forms.Label labelFlipTitle;
         private System.Windows.Forms.Button btnFlipHorizontal;
         private System.Windows.Forms.Button btnFlipVertical;
-        
+
         private System.Windows.Forms.Panel panelFilterContainer;
         private System.Windows.Forms.Label labelZoomTitle;
         private System.Windows.Forms.TrackBar trackBarZoom;

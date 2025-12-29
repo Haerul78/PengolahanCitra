@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorSlicingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorSlicingForm.Designer.cs">
+      <DependentUpon>ColorSlicingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,9 @@
     <Compile Include="Services\FilterService.cs" />
     <Compile Include="Services\GeometryService.cs" />
     <Compile Include="Services\HistogramService.cs" />
+    <EmbeddedResource Include="ColorSlicingForm.resx">
+      <DependentUpon>ColorSlicingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
