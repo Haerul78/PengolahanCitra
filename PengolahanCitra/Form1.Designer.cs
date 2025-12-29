@@ -61,6 +61,11 @@ namespace PengolahanCitra
             this.labelSharpen = new System.Windows.Forms.Label();
             this.pictureBoxEqualizer = new System.Windows.Forms.PictureBox();
             this.labelEqualizer = new System.Windows.Forms.Label();
+            this.pictureBoxSmoothing = new System.Windows.Forms.PictureBox();
+            this.labelSmoothing = new System.Windows.Forms.Label();
+            this.pictureBoxContrast = new System.Windows.Forms.PictureBox();
+            this.labelContrast = new System.Windows.Forms.Label();
+            this.panelFilterScroll = new System.Windows.Forms.Panel();
             this.btnApplyFilter = new System.Windows.Forms.Button();
             this.pictureBoxThreshold = new System.Windows.Forms.PictureBox();
             this.labelThreshold = new System.Windows.Forms.Label();
@@ -116,6 +121,9 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSharpen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEqualizer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSmoothing)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContrast)).BeginInit();
+            this.panelFilterScroll.SuspendLayout();
             this.panelBrightnessContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             this.panelAritmatikContainer.SuspendLayout();
@@ -392,29 +400,10 @@ namespace PengolahanCitra
             // panelFilterContainer
             // 
             this.panelFilterContainer.Controls.Add(this.labelFilterTitle);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxOriginal);
-            this.panelFilterContainer.Controls.Add(this.labelOriginal);
-            this.panelFilterContainer.Controls.Add(this.btnResetBrightness);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxRed);
-            this.panelFilterContainer.Controls.Add(this.labelRed);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxGreen);
-            this.panelFilterContainer.Controls.Add(this.labelGreen);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxBlue);
-            this.panelFilterContainer.Controls.Add(this.labelBlue);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxGray);
-            this.panelFilterContainer.Controls.Add(this.labelGray);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxNegative);
-            this.panelFilterContainer.Controls.Add(this.labelNegative);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxGaussian);
-            this.panelFilterContainer.Controls.Add(this.labelGaussian);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxSharpen);
-            this.panelFilterContainer.Controls.Add(this.labelSharpen);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxEqualizer);
-            this.panelFilterContainer.Controls.Add(this.labelEqualizer);
-            this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
-            this.panelFilterContainer.Controls.Add(this.pictureBoxThreshold);
-            this.panelFilterContainer.Controls.Add(this.labelThreshold);
+            this.panelFilterContainer.Controls.Add(this.panelFilterScroll);
             this.panelFilterContainer.Controls.Add(this.panelBrightnessContainer);
+            this.panelFilterContainer.Controls.Add(this.btnResetBrightness);
+            this.panelFilterContainer.Controls.Add(this.btnApplyFilter);
             this.panelFilterContainer.Location = new System.Drawing.Point(4, 4);
             this.panelFilterContainer.Margin = new System.Windows.Forms.Padding(2);
             this.panelFilterContainer.Name = "panelFilterContainer";
@@ -422,6 +411,38 @@ namespace PengolahanCitra
             this.panelFilterContainer.TabIndex = 0;
             this.panelFilterContainer.Visible = false;
             this.panelFilterContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelFilterContainer_Paint);
+            // 
+            // panelFilterScroll
+            // 
+            this.panelFilterScroll.AutoScroll = true;
+            this.panelFilterScroll.Controls.Add(this.pictureBoxOriginal);
+            this.panelFilterScroll.Controls.Add(this.labelOriginal);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxRed);
+            this.panelFilterScroll.Controls.Add(this.labelRed);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxGreen);
+            this.panelFilterScroll.Controls.Add(this.labelGreen);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxBlue);
+            this.panelFilterScroll.Controls.Add(this.labelBlue);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxGray);
+            this.panelFilterScroll.Controls.Add(this.labelGray);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxThreshold);
+            this.panelFilterScroll.Controls.Add(this.labelThreshold);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxNegative);
+            this.panelFilterScroll.Controls.Add(this.labelNegative);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxGaussian);
+            this.panelFilterScroll.Controls.Add(this.labelGaussian);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxSharpen);
+            this.panelFilterScroll.Controls.Add(this.labelSharpen);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxEqualizer);
+            this.panelFilterScroll.Controls.Add(this.labelEqualizer);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxSmoothing);
+            this.panelFilterScroll.Controls.Add(this.labelSmoothing);
+            this.panelFilterScroll.Controls.Add(this.pictureBoxContrast);
+            this.panelFilterScroll.Controls.Add(this.labelContrast);
+            this.panelFilterScroll.Location = new System.Drawing.Point(5, 40);
+            this.panelFilterScroll.Name = "panelFilterScroll";
+            this.panelFilterScroll.Size = new System.Drawing.Size(235, 380);
+            this.panelFilterScroll.TabIndex = 28;
             // 
             // labelFilterTitle
             // 
@@ -438,10 +459,10 @@ namespace PengolahanCitra
             // pictureBoxOriginal
             // 
             this.pictureBoxOriginal.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxOriginal.Location = new System.Drawing.Point(66, 56);
+            this.pictureBoxOriginal.Location = new System.Drawing.Point(30, 10);
             this.pictureBoxOriginal.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxOriginal.Name = "pictureBoxOriginal";
-            this.pictureBoxOriginal.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxOriginal.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxOriginal.TabIndex = 1;
             this.pictureBoxOriginal.TabStop = false;
@@ -449,12 +470,12 @@ namespace PengolahanCitra
             // 
             // labelOriginal
             // 
-            this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelOriginal.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelOriginal.ForeColor = System.Drawing.Color.White;
-            this.labelOriginal.Location = new System.Drawing.Point(66, 105);
+            this.labelOriginal.Location = new System.Drawing.Point(25, 62);
             this.labelOriginal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelOriginal.Name = "labelOriginal";
-            this.labelOriginal.Size = new System.Drawing.Size(45, 16);
+            this.labelOriginal.Size = new System.Drawing.Size(60, 16);
             this.labelOriginal.TabIndex = 2;
             this.labelOriginal.Text = "Original";
             this.labelOriginal.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -464,7 +485,7 @@ namespace PengolahanCitra
             this.btnResetBrightness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.btnResetBrightness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnResetBrightness.ForeColor = System.Drawing.Color.White;
-            this.btnResetBrightness.Location = new System.Drawing.Point(44, 540);
+            this.btnResetBrightness.Location = new System.Drawing.Point(44, 610);
             this.btnResetBrightness.Margin = new System.Windows.Forms.Padding(2);
             this.btnResetBrightness.Name = "btnResetBrightness";
             this.btnResetBrightness.Size = new System.Drawing.Size(158, 24);
@@ -476,10 +497,10 @@ namespace PengolahanCitra
             // pictureBoxRed
             // 
             this.pictureBoxRed.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxRed.Location = new System.Drawing.Point(131, 56);
+            this.pictureBoxRed.Location = new System.Drawing.Point(120, 10);
             this.pictureBoxRed.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxRed.Name = "pictureBoxRed";
-            this.pictureBoxRed.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxRed.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxRed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxRed.TabIndex = 3;
             this.pictureBoxRed.TabStop = false;
@@ -487,12 +508,12 @@ namespace PengolahanCitra
             // 
             // labelRed
             // 
-            this.labelRed.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelRed.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelRed.ForeColor = System.Drawing.Color.White;
-            this.labelRed.Location = new System.Drawing.Point(131, 105);
+            this.labelRed.Location = new System.Drawing.Point(115, 62);
             this.labelRed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelRed.Name = "labelRed";
-            this.labelRed.Size = new System.Drawing.Size(45, 16);
+            this.labelRed.Size = new System.Drawing.Size(60, 16);
             this.labelRed.TabIndex = 4;
             this.labelRed.Text = "Red";
             this.labelRed.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -500,10 +521,10 @@ namespace PengolahanCitra
             // pictureBoxGreen
             // 
             this.pictureBoxGreen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGreen.Location = new System.Drawing.Point(66, 129);
+            this.pictureBoxGreen.Location = new System.Drawing.Point(30, 85);
             this.pictureBoxGreen.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxGreen.Name = "pictureBoxGreen";
-            this.pictureBoxGreen.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxGreen.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxGreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxGreen.TabIndex = 5;
             this.pictureBoxGreen.TabStop = false;
@@ -511,12 +532,12 @@ namespace PengolahanCitra
             // 
             // labelGreen
             // 
-            this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGreen.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelGreen.ForeColor = System.Drawing.Color.White;
-            this.labelGreen.Location = new System.Drawing.Point(66, 180);
+            this.labelGreen.Location = new System.Drawing.Point(25, 137);
             this.labelGreen.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelGreen.Name = "labelGreen";
-            this.labelGreen.Size = new System.Drawing.Size(45, 16);
+            this.labelGreen.Size = new System.Drawing.Size(60, 16);
             this.labelGreen.TabIndex = 6;
             this.labelGreen.Text = "Green";
             this.labelGreen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -524,10 +545,10 @@ namespace PengolahanCitra
             // pictureBoxBlue
             // 
             this.pictureBoxBlue.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxBlue.Location = new System.Drawing.Point(131, 129);
+            this.pictureBoxBlue.Location = new System.Drawing.Point(120, 85);
             this.pictureBoxBlue.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxBlue.Name = "pictureBoxBlue";
-            this.pictureBoxBlue.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxBlue.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxBlue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxBlue.TabIndex = 7;
             this.pictureBoxBlue.TabStop = false;
@@ -535,12 +556,12 @@ namespace PengolahanCitra
             // 
             // labelBlue
             // 
-            this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelBlue.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelBlue.ForeColor = System.Drawing.Color.White;
-            this.labelBlue.Location = new System.Drawing.Point(131, 180);
+            this.labelBlue.Location = new System.Drawing.Point(115, 137);
             this.labelBlue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelBlue.Name = "labelBlue";
-            this.labelBlue.Size = new System.Drawing.Size(45, 16);
+            this.labelBlue.Size = new System.Drawing.Size(60, 16);
             this.labelBlue.TabIndex = 8;
             this.labelBlue.Text = "Blue";
             this.labelBlue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -548,10 +569,10 @@ namespace PengolahanCitra
             // pictureBoxGray
             // 
             this.pictureBoxGray.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGray.Location = new System.Drawing.Point(66, 199);
+            this.pictureBoxGray.Location = new System.Drawing.Point(30, 160);
             this.pictureBoxGray.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxGray.Name = "pictureBoxGray";
-            this.pictureBoxGray.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxGray.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxGray.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxGray.TabIndex = 9;
             this.pictureBoxGray.TabStop = false;
@@ -559,12 +580,12 @@ namespace PengolahanCitra
             // 
             // labelGray
             // 
-            this.labelGray.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGray.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelGray.ForeColor = System.Drawing.Color.White;
-            this.labelGray.Location = new System.Drawing.Point(55, 250);
+            this.labelGray.Location = new System.Drawing.Point(20, 212);
             this.labelGray.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelGray.Name = "labelGray";
-            this.labelGray.Size = new System.Drawing.Size(65, 16);
+            this.labelGray.Size = new System.Drawing.Size(70, 16);
             this.labelGray.TabIndex = 10;
             this.labelGray.Text = "Grayscale";
             this.labelGray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -572,10 +593,10 @@ namespace PengolahanCitra
             // pictureBoxNegative
             // 
             this.pictureBoxNegative.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNegative.Location = new System.Drawing.Point(66, 269);
+            this.pictureBoxNegative.Location = new System.Drawing.Point(30, 235);
             this.pictureBoxNegative.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxNegative.Name = "pictureBoxNegative";
-            this.pictureBoxNegative.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxNegative.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxNegative.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxNegative.TabIndex = 11;
             this.pictureBoxNegative.TabStop = false;
@@ -583,12 +604,12 @@ namespace PengolahanCitra
             // 
             // labelNegative
             // 
-            this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelNegative.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelNegative.ForeColor = System.Drawing.Color.White;
-            this.labelNegative.Location = new System.Drawing.Point(61, 322);
+            this.labelNegative.Location = new System.Drawing.Point(20, 287);
             this.labelNegative.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelNegative.Name = "labelNegative";
-            this.labelNegative.Size = new System.Drawing.Size(55, 16);
+            this.labelNegative.Size = new System.Drawing.Size(70, 16);
             this.labelNegative.TabIndex = 20;
             this.labelNegative.Text = "Negative";
             this.labelNegative.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -596,10 +617,10 @@ namespace PengolahanCitra
             // pictureBoxGaussian
             // 
             this.pictureBoxGaussian.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxGaussian.Location = new System.Drawing.Point(131, 269);
+            this.pictureBoxGaussian.Location = new System.Drawing.Point(120, 235);
             this.pictureBoxGaussian.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxGaussian.Name = "pictureBoxGaussian";
-            this.pictureBoxGaussian.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxGaussian.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxGaussian.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxGaussian.TabIndex = 21;
             this.pictureBoxGaussian.TabStop = false;
@@ -607,12 +628,12 @@ namespace PengolahanCitra
             // 
             // labelGaussian
             // 
-            this.labelGaussian.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelGaussian.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelGaussian.ForeColor = System.Drawing.Color.White;
-            this.labelGaussian.Location = new System.Drawing.Point(125, 323);
+            this.labelGaussian.Location = new System.Drawing.Point(110, 287);
             this.labelGaussian.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelGaussian.Name = "labelGaussian";
-            this.labelGaussian.Size = new System.Drawing.Size(59, 16);
+            this.labelGaussian.Size = new System.Drawing.Size(70, 16);
             this.labelGaussian.TabIndex = 22;
             this.labelGaussian.Text = "Gaussian";
             this.labelGaussian.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -620,10 +641,10 @@ namespace PengolahanCitra
             // pictureBoxSharpen
             // 
             this.pictureBoxSharpen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxSharpen.Location = new System.Drawing.Point(65, 342);
+            this.pictureBoxSharpen.Location = new System.Drawing.Point(30, 310);
             this.pictureBoxSharpen.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxSharpen.Name = "pictureBoxSharpen";
-            this.pictureBoxSharpen.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxSharpen.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxSharpen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSharpen.TabIndex = 23;
             this.pictureBoxSharpen.TabStop = false;
@@ -631,12 +652,12 @@ namespace PengolahanCitra
             // 
             // labelSharpen
             // 
-            this.labelSharpen.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelSharpen.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelSharpen.ForeColor = System.Drawing.Color.White;
-            this.labelSharpen.Location = new System.Drawing.Point(62, 395);
+            this.labelSharpen.Location = new System.Drawing.Point(20, 362);
             this.labelSharpen.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelSharpen.Name = "labelSharpen";
-            this.labelSharpen.Size = new System.Drawing.Size(53, 16);
+            this.labelSharpen.Size = new System.Drawing.Size(70, 16);
             this.labelSharpen.TabIndex = 24;
             this.labelSharpen.Text = "Sharpen";
             this.labelSharpen.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -645,10 +666,10 @@ namespace PengolahanCitra
             // pictureBoxEqualizer
             // 
             this.pictureBoxEqualizer.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxEqualizer.Location = new System.Drawing.Point(131, 342);
+            this.pictureBoxEqualizer.Location = new System.Drawing.Point(120, 310);
             this.pictureBoxEqualizer.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxEqualizer.Name = "pictureBoxEqualizer";
-            this.pictureBoxEqualizer.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxEqualizer.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxEqualizer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxEqualizer.TabIndex = 26;
             this.pictureBoxEqualizer.TabStop = false;
@@ -656,37 +677,85 @@ namespace PengolahanCitra
             // 
             // labelEqualizer
             // 
-            this.labelEqualizer.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelEqualizer.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelEqualizer.ForeColor = System.Drawing.Color.White;
-            this.labelEqualizer.Location = new System.Drawing.Point(125, 395);
+            this.labelEqualizer.Location = new System.Drawing.Point(110, 362);
             this.labelEqualizer.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelEqualizer.Name = "labelEqualizer";
-            this.labelEqualizer.Size = new System.Drawing.Size(59, 16);
+            this.labelEqualizer.Size = new System.Drawing.Size(70, 16);
             this.labelEqualizer.TabIndex = 27;
             this.labelEqualizer.Text = "Equalizer";
             this.labelEqualizer.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // pictureBoxSmoothing
+            // 
+            this.pictureBoxSmoothing.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxSmoothing.Location = new System.Drawing.Point(30, 385);
+            this.pictureBoxSmoothing.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxSmoothing.Name = "pictureBoxSmoothing";
+            this.pictureBoxSmoothing.Size = new System.Drawing.Size(50, 50);
+            this.pictureBoxSmoothing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSmoothing.TabIndex = 29;
+            this.pictureBoxSmoothing.TabStop = false;
+            this.pictureBoxSmoothing.Click += new System.EventHandler(this.pictureBoxSmoothing_Click);
+            // 
+            // labelSmoothing
+            // 
+            this.labelSmoothing.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelSmoothing.ForeColor = System.Drawing.Color.White;
+            this.labelSmoothing.Location = new System.Drawing.Point(15, 437);
+            this.labelSmoothing.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelSmoothing.Name = "labelSmoothing";
+            this.labelSmoothing.Size = new System.Drawing.Size(80, 16);
+            this.labelSmoothing.TabIndex = 30;
+            this.labelSmoothing.Text = "Smoothing";
+            this.labelSmoothing.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxContrast
+            // 
+            this.pictureBoxContrast.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxContrast.Location = new System.Drawing.Point(120, 385);
+            this.pictureBoxContrast.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxContrast.Name = "pictureBoxContrast";
+            this.pictureBoxContrast.Size = new System.Drawing.Size(50, 50);
+            this.pictureBoxContrast.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxContrast.TabIndex = 31;
+            this.pictureBoxContrast.TabStop = false;
+            this.pictureBoxContrast.Click += new System.EventHandler(this.pictureBoxContrast_Click);
+            // 
+            // labelContrast
+            // 
+            this.labelContrast.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelContrast.ForeColor = System.Drawing.Color.White;
+            this.labelContrast.Location = new System.Drawing.Point(110, 437);
+            this.labelContrast.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelContrast.Name = "labelContrast";
+            this.labelContrast.Size = new System.Drawing.Size(70, 16);
+            this.labelContrast.TabIndex = 32;
+            this.labelContrast.Text = "Contrast";
+            this.labelContrast.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // btnApplyFilter
             // 
-            this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnApplyFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
             this.btnApplyFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnApplyFilter.ForeColor = System.Drawing.Color.White;
-            this.btnApplyFilter.Location = new System.Drawing.Point(55, 639);
+            this.btnApplyFilter.Location = new System.Drawing.Point(44, 650);
             this.btnApplyFilter.Margin = new System.Windows.Forms.Padding(2);
             this.btnApplyFilter.Name = "btnApplyFilter";
-            this.btnApplyFilter.Size = new System.Drawing.Size(135, 28);
+            this.btnApplyFilter.Size = new System.Drawing.Size(158, 35);
             this.btnApplyFilter.TabIndex = 11;
-            this.btnApplyFilter.Text = "Apply Filter";
+            this.btnApplyFilter.Text = "✓ Apply Filter";
             this.btnApplyFilter.UseVisualStyleBackColor = false;
             this.btnApplyFilter.Click += new System.EventHandler(this.btnApplyFilter_Click);
             // 
             // pictureBoxThreshold
             // 
             this.pictureBoxThreshold.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxThreshold.Location = new System.Drawing.Point(131, 199);
+            this.pictureBoxThreshold.Location = new System.Drawing.Point(120, 160);
             this.pictureBoxThreshold.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBoxThreshold.Name = "pictureBoxThreshold";
-            this.pictureBoxThreshold.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxThreshold.Size = new System.Drawing.Size(50, 50);
             this.pictureBoxThreshold.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxThreshold.TabIndex = 17;
             this.pictureBoxThreshold.TabStop = false;
@@ -694,9 +763,9 @@ namespace PengolahanCitra
             // 
             // labelThreshold
             // 
-            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelThreshold.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.labelThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelThreshold.Location = new System.Drawing.Point(119, 250);
+            this.labelThreshold.Location = new System.Drawing.Point(110, 212);
             this.labelThreshold.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelThreshold.Name = "labelThreshold";
             this.labelThreshold.Size = new System.Drawing.Size(71, 16);
@@ -709,10 +778,10 @@ namespace PengolahanCitra
             this.panelBrightnessContainer.Controls.Add(this.labelBrightness);
             this.panelBrightnessContainer.Controls.Add(this.trackBarBrightness);
             this.panelBrightnessContainer.Controls.Add(this.labelBrightnessValue);
-            this.panelBrightnessContainer.Location = new System.Drawing.Point(40, 427);
+            this.panelBrightnessContainer.Location = new System.Drawing.Point(40, 510);
             this.panelBrightnessContainer.Margin = new System.Windows.Forms.Padding(2);
             this.panelBrightnessContainer.Name = "panelBrightnessContainer";
-            this.panelBrightnessContainer.Size = new System.Drawing.Size(165, 98);
+            this.panelBrightnessContainer.Size = new System.Drawing.Size(165, 90);
             this.panelBrightnessContainer.TabIndex = 0;
             this.panelBrightnessContainer.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBrightnessContainer_Paint);
             // 
@@ -1157,6 +1226,7 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
             this.panelFilterContainer.ResumeLayout(false);
+            this.panelFilterScroll.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
@@ -1167,6 +1237,8 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSharpen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEqualizer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSmoothing)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContrast)).EndInit();
             this.panelBrightnessContainer.ResumeLayout(false);
             this.panelBrightnessContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
@@ -1259,6 +1331,7 @@ namespace PengolahanCitra
         private System.Windows.Forms.Button btnFlipVertical;
 
         private System.Windows.Forms.Panel panelFilterContainer;
+        private System.Windows.Forms.Panel panelFilterScroll;
         private System.Windows.Forms.Label labelZoomTitle;
         private System.Windows.Forms.TrackBar trackBarZoom;
         private System.Windows.Forms.Label labelZoomValue;
@@ -1266,5 +1339,11 @@ namespace PengolahanCitra
         private System.Windows.Forms.Label labelZoomMax;
         private Button btnReset;
         private System.Windows.Forms.Button btnPreviewSharpen;
+
+        // New filter controls
+        private System.Windows.Forms.PictureBox pictureBoxSmoothing;
+        private System.Windows.Forms.Label labelSmoothing;
+        private System.Windows.Forms.PictureBox pictureBoxContrast;
+        private System.Windows.Forms.Label labelContrast;
     }
 }

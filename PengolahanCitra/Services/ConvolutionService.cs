@@ -9,12 +9,19 @@ namespace PengolahanCitra.Services
     /// - Gaussian Blur
     /// - Sharpen
     /// - Custom Kernel
+    /// 
     /// Semua operasi menggunakan multithreading (Parallel.For)
     /// </summary>
     public static class ConvolutionService
     {
         #region Predefined Kernels 3x3
 
+        /// <summary>
+        /// Gaussian Blur Kernel
+        ///   [1  2  1]
+        ///   [2  4  2]  ÷ 16
+        ///   [1  2  1]
+        /// </summary>
         public static readonly int[,] KERNEL_GAUSSIAN = {
             { 1, 2, 1 },
             { 2, 4, 2 },
@@ -22,30 +29,60 @@ namespace PengolahanCitra.Services
         };
         public const int DIVISOR_GAUSSIAN = 16;
 
+        /// <summary>
+        /// Sharpen Kernel (Halus)
+        ///   [ 0  -1   0]
+        ///   [-1   5  -1]
+        ///   [ 0  -1   0]
+        /// </summary>
         public static readonly int[,] KERNEL_SHARPEN_SOFT = {
             {  0, -1,  0 },
             { -1,  5, -1 },
             {  0, -1,  0 }
         };
 
+        /// <summary>
+        /// Sharpen Kernel (Kuat)
+        ///   [-1  -1  -1]
+        ///   [-1   9  -1]
+        ///   [-1  -1  -1]
+        /// </summary>
         public static readonly int[,] KERNEL_SHARPEN_STRONG = {
             { -1, -1, -1 },
             { -1,  9, -1 },
             { -1, -1, -1 }
         };
 
+        /// <summary>
+        /// Edge Detection - Laplacian
+        ///   [ 0  -1   0]
+        ///   [-1   4  -1]
+        ///   [ 0  -1   0]
+        /// </summary>
         public static readonly int[,] KERNEL_EDGE_LAPLACIAN = {
             {  0, -1,  0 },
             { -1,  4, -1 },
             {  0, -1,  0 }
         };
 
+        /// <summary>
+        /// Emboss Kernel
+        ///   [-2  -1   0]
+        ///   [-1   1   1]
+        ///   [ 0   1   2]
+        /// </summary>
         public static readonly int[,] KERNEL_EMBOSS = {
             { -2, -1, 0 },
             { -1,  1, 1 },
             {  0,  1, 2 }
         };
 
+        /// <summary>
+        /// Mean/Average Filter (Box Blur) - Image Smoothing
+        ///   [1  1  1]
+        ///   [1  1  1]  ÷ 9
+        ///   [1  1  1]
+        /// </summary>
         public static readonly int[,] KERNEL_MEAN = {
             { 1, 1, 1 },
             { 1, 1, 1 },
@@ -57,6 +94,16 @@ namespace PengolahanCitra.Services
 
         #region Main Convolution Method
 
+        /// <summary>
+        /// Fungsi konvolusi utama dengan kernel 3x3
+        /// Menggunakan multithreading untuk performa
+        /// </summary>
+        /// <param name="source">Matrix RGB sumber [height, width, 3]</param>
+        /// <param name="kernel">Kernel 3x3</param>
+        /// <param name="width">Lebar gambar</param>
+        /// <param name="height">Tinggi gambar</param>
+        /// <param name="divisor">Pembagi untuk normalisasi (null = auto calculate)</param>
+        /// <param name="offset">Offset nilai (untuk kernel dengan hasil negatif)</param>
         public static byte[,,] Convolve(
             byte[,,] source,
             int[,] kernel,
@@ -109,6 +156,10 @@ namespace PengolahanCitra.Services
 
         #region Gaussian Blur
 
+        /// <summary>
+        /// Gaussian Blur dengan pengulangan untuk efek lebih kuat
+        /// </summary>
+        /// <param name="passes">Jumlah pengulangan (1-20). Makin banyak = makin blur</param>
         public static byte[,,] GaussianBlur(byte[,,] source, int width, int height, int passes = 1)
         {
             if (source == null) return null;
@@ -126,8 +177,45 @@ namespace PengolahanCitra.Services
 
         #endregion
 
+        #region Image Smoothing (Mean Filter)
+
+        /// <summary>
+        /// Image Smoothing menggunakan Mean/Average Filter (Box Blur)
+        /// Lebih cepat dari Gaussian, tapi kurang halus
+        /// </summary>
+        /// <param name="passes">Jumlah pengulangan (1-10). Makin banyak = makin smooth</param>
+        public static byte[,,] MeanFilter(byte[,,] source, int width, int height, int passes = 1)
+        {
+            if (source == null) return null;
+
+            passes = MathHelper.Clamp(passes, 1, 10);
+            byte[,,] result = source;
+
+            for (int i = 0; i < passes; i++)
+            {
+                result = Convolve(result, KERNEL_MEAN, width, height, DIVISOR_MEAN);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Image Smoothing - alias untuk MeanFilter
+        /// </summary>
+        public static byte[,,] ImageSmoothing(byte[,,] source, int width, int height, int passes = 3)
+        {
+            return MeanFilter(source, width, height, passes);
+        }
+
+        #endregion
+
         #region Sharpen
 
+        /// <summary>
+        /// Sharpen dengan pilihan kekuatan
+        /// </summary>
+        /// <param name="useStrongKernel">true = kernel kuat, false = kernel halus</param>
+        /// <param name="passes">Jumlah pengulangan (1-5)</param>
         public static byte[,,] Sharpen(byte[,,] source, int width, int height, bool useStrongKernel = true, int passes = 1)
         {
             if (source == null) return null;
@@ -149,33 +237,20 @@ namespace PengolahanCitra.Services
 
         #region Edge Detection & Emboss
 
+        /// <summary>
+        /// Edge Detection menggunakan Laplacian
+        /// </summary>
         public static byte[,,] EdgeDetection(byte[,,] source, int width, int height)
         {
             return Convolve(source, KERNEL_EDGE_LAPLACIAN, width, height, divisor: 1, offset: 128);
         }
 
+        /// <summary>
+        /// Emboss effect
+        /// </summary>
         public static byte[,,] Emboss(byte[,,] source, int width, int height)
         {
             return Convolve(source, KERNEL_EMBOSS, width, height, divisor: 1, offset: 128);
-        }
-
-        #endregion
-
-        #region Mean Filter (Box Blur)
-
-        public static byte[,,] MeanBlur(byte[,,] source, int width, int height, int passes = 1)
-        {
-            if (source == null) return null;
-
-            passes = MathHelper.Clamp(passes, 1, 20);
-            byte[,,] result = source;
-
-            for (int i = 0; i < passes; i++)
-            {
-                result = Convolve(result, KERNEL_MEAN, width, height, DIVISOR_MEAN);
-            }
-
-            return result;
         }
 
         #endregion

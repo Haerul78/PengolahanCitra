@@ -26,6 +26,7 @@ namespace PengolahanCitra
         private Bitmap previewRed, previewGreen, previewBlue;
         private Bitmap previewGray, previewThreshold, previewNegative;
         private Bitmap previewGaussian, previewSharpen, previewEqualizer;
+        private Bitmap previewSmoothing, previewContrast;
 
         // State
         private bool isFilterPanelVisible;
@@ -145,6 +146,8 @@ namespace PengolahanCitra
         private void pictureBoxGaussian_Click(object sender, EventArgs e) => SelectFilter("Gaussian", pictureBoxGaussian);
         private void pictureBoxSharpen_Click(object sender, EventArgs e) => SelectFilter("Sharpen", pictureBoxSharpen);
         private void pictureBoxEqualizer_Click(object sender, EventArgs e) => SelectFilter("Equalizer", pictureBoxEqualizer);
+        private void pictureBoxSmoothing_Click(object sender, EventArgs e) => SelectFilter("Smoothing", pictureBoxSmoothing);
+        private void pictureBoxContrast_Click(object sender, EventArgs e) => SelectFilter("Contrast", pictureBoxContrast);
 
         private void btnApplyFilter_Click(object sender, EventArgs e)
         {
@@ -494,6 +497,12 @@ namespace PengolahanCitra
                 case "Equalizer":
                     return HistogramService.EqualizeLuminance(rgbMatrix, imageWidth, imageHeight);
 
+                case "Smoothing":
+                    return ConvolutionService.ImageSmoothing(rgbMatrix, imageWidth, imageHeight, 3);
+
+                case "Contrast":
+                    return FilterService.ContrastStretching(rgbMatrix, imageWidth, imageHeight);
+
                 default:
                     return rgbMatrix;
             }
@@ -612,6 +621,8 @@ namespace PengolahanCitra
             previewGaussian = CreateFilterThumbnail("Gaussian");
             previewSharpen = CreateFilterThumbnail("Sharpen");
             previewEqualizer = CreateFilterThumbnail("Equalizer");
+            previewSmoothing = CreateFilterThumbnail("Smoothing");
+            previewContrast = CreateFilterThumbnail("Contrast");
 
             AssignFilterPreviews();
         }
@@ -651,6 +662,12 @@ namespace PengolahanCitra
                     break;
                 case "Equalizer":
                     filtered = HistogramService.EqualizeLuminance(thumbMatrix, w, h);
+                    break;
+                case "Smoothing":
+                    filtered = ConvolutionService.ImageSmoothing(thumbMatrix, w, h, 3);
+                    break;
+                case "Contrast":
+                    filtered = FilterService.ContrastStretching(thumbMatrix, w, h);
                     break;
                 default:
                     filtered = thumbMatrix;
@@ -792,6 +809,8 @@ namespace PengolahanCitra
             pictureBoxGaussian.BorderStyle = BorderStyle.None;
             pictureBoxSharpen.BorderStyle = BorderStyle.None;
             pictureBoxEqualizer.BorderStyle = BorderStyle.None;
+            pictureBoxSmoothing.BorderStyle = BorderStyle.None;
+            pictureBoxContrast.BorderStyle = BorderStyle.None;
         }
 
         private void SetPictureBoxImage(PictureBox pb, Image newImage)
@@ -816,6 +835,8 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
             SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
             SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
+            SetPictureBoxImage(pictureBoxSmoothing, previewSmoothing);
+            SetPictureBoxImage(pictureBoxContrast, previewContrast);
         }
 
         private void ClearPreviewPictureBoxes()
@@ -830,6 +851,8 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxGaussian, null);
             SetPictureBoxImage(pictureBoxSharpen, null);
             SetPictureBoxImage(pictureBoxEqualizer, null);
+            SetPictureBoxImage(pictureBoxSmoothing, null);
+            SetPictureBoxImage(pictureBoxContrast, null);
         }
 
         private void DisposeFilterPreviews()
@@ -844,6 +867,8 @@ namespace PengolahanCitra
             previewGaussian?.Dispose();
             previewSharpen?.Dispose();
             previewEqualizer?.Dispose();
+            previewSmoothing?.Dispose();
+            previewContrast?.Dispose();
         }
 
         private void DisposeHistogramImages()

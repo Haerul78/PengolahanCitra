@@ -269,6 +269,100 @@ namespace PengolahanCitra.Services
 
         #endregion
 
+        #region Contrast Stretching
+
+        /// <summary>
+        /// Contrast Stretching - merentangkan histogram untuk meningkatkan kontras
+        /// Formula: output = (input - min) * 255 / (max - min)
+        /// </summary>
+        public static byte[,,] ContrastStretching(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            // Cari min dan max untuk setiap channel
+            int minR = 255, maxR = 0;
+            int minG = 255, maxG = 0;
+            int minB = 255, maxB = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    if (r < minR) minR = r;
+                    if (r > maxR) maxR = r;
+                    if (g < minG) minG = g;
+                    if (g > maxG) maxG = g;
+                    if (b < minB) minB = b;
+                    if (b > maxB) maxB = b;
+                }
+            }
+
+            // Hindari division by zero
+            int rangeR = Math.Max(maxR - minR, 1);
+            int rangeG = Math.Max(maxG - minG, 1);
+            int rangeB = Math.Max(maxB - minB, 1);
+
+            // Apply stretching dengan multithreading
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    result[y, x, 0] = (byte)((source[y, x, 0] - minR) * 255 / rangeR);
+                    result[y, x, 1] = (byte)((source[y, x, 1] - minG) * 255 / rangeG);
+                    result[y, x, 2] = (byte)((source[y, x, 2] - minB) * 255 / rangeB);
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Contrast Stretching pada Grayscale
+        /// </summary>
+        public static byte[,,] ContrastStretchingGray(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            // Cari min dan max intensity
+            int minI = 255, maxI = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    if (gray < minI) minI = gray;
+                    if (gray > maxI) maxI = gray;
+                }
+            }
+
+            int range = Math.Max(maxI - minI, 1);
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    byte stretched = (byte)((gray - minI) * 255 / range);
+                    result[y, x, 0] = stretched;
+                    result[y, x, 1] = stretched;
+                    result[y, x, 2] = stretched;
+                }
+            });
+
+            return result;
+        }
+
+        #endregion
+
         #region Private Helper
 
         /// <summary>
