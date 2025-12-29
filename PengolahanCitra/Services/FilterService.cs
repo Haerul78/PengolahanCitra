@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using PengolahanCitra.Helpers;
@@ -12,6 +12,7 @@ namespace PengolahanCitra.Services
     /// - Threshold (Binary)
     /// - Negative
     /// - Brightness
+    /// - Color Slicing (NEW!)
     /// </summary>
     public static class FilterService
     {
@@ -123,84 +124,68 @@ namespace PengolahanCitra.Services
 
         #endregion
 
-        #region Contrast Stretching
+        #region Color Slicing
 
-        // Contrast Stretching - perbaiki kontras gambar
-        public static byte[,,] ContrastStretching(byte[,,] source, int width, int height)
+        /// <summary>
+        /// Color Slicing - Mempertahankan warna target, warna lain jadi hitam
+        /// 
+        /// KONSEP MATEMATIKA:
+        /// - Menggunakan Euclidean Distance di RGB color space
+        /// - Formula: d = √[(R1-R2)² + (G1-G2)² + (B1-B2)²]
+        /// - Jika d ≤ tolerance → pertahankan warna asli
+        /// - Jika d > tolerance → ubah ke hitam (0,0,0)
+        /// 
+        /// KEGUNAAN:
+        /// - Menyoroti objek dengan warna tertentu
+        /// - Segmentasi warna sederhana
+        /// - Efek artistik "splash color"
+        /// </summary>
+        /// <param name="source">Matrix RGB sumber</param>
+        /// <param name="width">Lebar gambar</param>
+        /// <param name="height">Tinggi gambar</param>
+        /// <param name="targetR">Komponen Red dari warna target (0-255)</param>
+        /// <param name="targetG">Komponen Green dari warna target (0-255)</param>
+        /// <param name="targetB">Komponen Blue dari warna target (0-255)</param>
+        /// <param name="tolerance">Toleransi jarak warna (0-255, default 50)</param>
+        /// <returns>Matrix RGB hasil color slicing</returns>
+        public static byte[,,] ColorSlicing(byte[,,] source, int width, int height,
+            byte targetR, byte targetG, byte targetB, int tolerance = 50)
         {
             if (source == null) return null;
+
             var result = new byte[height, width, 3];
 
-            int min = 255, max = 0;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    for (int c = 0; c < 3; c++)
-                    {
-                        if (source[y, x, c] < min) min = source[y, x, c];
-                        if (source[y, x, c] > max) max = source[y, x, c];
-                    }
-                }
-            }
-
-            int range = max - min;
-            if (range == 0) range = 1;
-
+            // Proses paralel untuk performa
             Parallel.For(0, height, y =>
             {
                 for (int x = 0; x < width; x++)
                 {
-                    for (int c = 0; c < 3; c++)
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    // Hitung Euclidean Distance antara pixel dan warna target
+                    // Formula: sqrt((R1-R2)² + (G1-G2)² + (B1-B2)²)
+                    double distance = Math.Sqrt(
+                        Math.Pow(r - targetR, 2) +
+                        Math.Pow(g - targetG, 2) +
+                        Math.Pow(b - targetB, 2)
+                    );
+
+                    // Jika jarak dalam toleransi, pertahankan warna asli
+                    // Jika tidak, ubah jadi hitam
+                    if (distance <= tolerance)
                     {
-                        result[y, x, c] = (byte)MathHelper.Clamp((source[y, x, c] - min) * 255 / range, 0, 255);
-                    }
-                }
-            });
-
-            return result;
-        }
-
-        // Contrast Stretching dengan metode grayscale
-        public static byte[,,] ContrastStretchingGray(byte[,,] source, int width, int height)
-        {
-            if (source == null) return null;
-            var result = new byte[height, width, 3];
-
-            int minIntensity = 255;
-            int maxIntensity = 0;
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
-                    if (gray < minIntensity) minIntensity = gray;
-                    if (gray > maxIntensity) maxIntensity = gray;
-                }
-            }
-
-            int range = maxIntensity - minIntensity;
-            if (range == 0) range = 1;
-
-            Parallel.For(0, height, y =>
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
-                    int newGray = (gray - minIntensity) * 255 / range;
-
-                    if (gray == 0)
-                    {
-                        result[y, x, 0] = (byte)newGray;
-                        result[y, x, 1] = (byte)newGray;
-                        result[y, x, 2] = (byte)newGray;
+                        result[y, x, 0] = r;
+                        result[y, x, 1] = g;
+                        result[y, x, 2] = b;
                     }
                     else
                     {
-                        double ratio = (double)newGray / gray;
-                        result[y, x, 0] = (byte)MathHelper.Clamp((int)(source[y, x, 0] * ratio), 0, 255);
-                        result[y, x, 1] = (byte)MathHelper.Clamp((int)(source[y, x, 1] * ratio), 0, 255);
-                        result[y, x, 2] = (byte)MathHelper.Clamp((int)(source[y, x, 2] * ratio), 0, 255);
+                        // Warna di luar toleransi jadi hitam
+                        result[y, x, 0] = 0;
+                        result[y, x, 1] = 0;
+                        result[y, x, 2] = 0;
                     }
                 }
             });
@@ -208,7 +193,53 @@ namespace PengolahanCitra.Services
             return result;
         }
 
-        #endregion 
+        /// <summary>
+        /// Color Slicing dengan opsi background grayscale (bukan hitam)
+        /// Lebih estetik karena tetap menampilkan detail objek lain
+        /// </summary>
+        public static byte[,,] ColorSlicingWithGrayBackground(byte[,,] source, int width, int height,
+            byte targetR, byte targetG, byte targetB, int tolerance = 50)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    double distance = Math.Sqrt(
+                        Math.Pow(r - targetR, 2) +
+                        Math.Pow(g - targetG, 2) +
+                        Math.Pow(b - targetB, 2)
+                    );
+
+                    if (distance <= tolerance)
+                    {
+                        // Dalam toleransi: pertahankan warna asli
+                        result[y, x, 0] = r;
+                        result[y, x, 1] = g;
+                        result[y, x, 2] = b;
+                    }
+                    else
+                    {
+                        // Di luar toleransi: konversi ke grayscale
+                        byte gray = (byte)MathHelper.ToGrayscale(r, g, b);
+                        result[y, x, 0] = gray;
+                        result[y, x, 1] = gray;
+                        result[y, x, 2] = gray;
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        #endregion
 
         #region Apply Filter by Name
 
@@ -234,6 +265,100 @@ namespace PengolahanCitra.Services
                 default:
                     return source;
             }
+        }
+
+        #endregion
+
+        #region Contrast Stretching
+
+        /// <summary>
+        /// Contrast Stretching - merentangkan histogram untuk meningkatkan kontras
+        /// Formula: output = (input - min) * 255 / (max - min)
+        /// </summary>
+        public static byte[,,] ContrastStretching(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            // Cari min dan max untuk setiap channel
+            int minR = 255, maxR = 0;
+            int minG = 255, maxG = 0;
+            int minB = 255, maxB = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    if (r < minR) minR = r;
+                    if (r > maxR) maxR = r;
+                    if (g < minG) minG = g;
+                    if (g > maxG) maxG = g;
+                    if (b < minB) minB = b;
+                    if (b > maxB) maxB = b;
+                }
+            }
+
+            // Hindari division by zero
+            int rangeR = Math.Max(maxR - minR, 1);
+            int rangeG = Math.Max(maxG - minG, 1);
+            int rangeB = Math.Max(maxB - minB, 1);
+
+            // Apply stretching dengan multithreading
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    result[y, x, 0] = (byte)((source[y, x, 0] - minR) * 255 / rangeR);
+                    result[y, x, 1] = (byte)((source[y, x, 1] - minG) * 255 / rangeG);
+                    result[y, x, 2] = (byte)((source[y, x, 2] - minB) * 255 / rangeB);
+                }
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Contrast Stretching pada Grayscale
+        /// </summary>
+        public static byte[,,] ContrastStretchingGray(byte[,,] source, int width, int height)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            // Cari min dan max intensity
+            int minI = 255, maxI = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    if (gray < minI) minI = gray;
+                    if (gray > maxI) maxI = gray;
+                }
+            }
+
+            int range = Math.Max(maxI - minI, 1);
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int gray = (source[y, x, 0] + source[y, x, 1] + source[y, x, 2]) / 3;
+                    byte stretched = (byte)((gray - minI) * 255 / range);
+                    result[y, x, 0] = stretched;
+                    result[y, x, 1] = stretched;
+                    result[y, x, 2] = stretched;
+                }
+            });
+
+            return result;
         }
 
         #endregion

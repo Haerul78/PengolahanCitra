@@ -26,6 +26,7 @@ namespace PengolahanCitra
         private Bitmap previewRed, previewGreen, previewBlue;
         private Bitmap previewGray, previewThreshold, previewNegative;
         private Bitmap previewGaussian, previewSharpen, previewEqualizer;
+        private Bitmap previewSmoothing, previewContrast;
 
         // Edge Detection Previews
         private Bitmap previewRoberts, previewPrewitt, previewSobel, previewCanny;
@@ -151,6 +152,8 @@ namespace PengolahanCitra
         private void pictureBoxGaussian_Click(object sender, EventArgs e) => SelectFilter("Gaussian", pictureBoxGaussian);
         private void pictureBoxSharpen_Click(object sender, EventArgs e) => SelectFilter("Sharpen", pictureBoxSharpen);
         private void pictureBoxEqualizer_Click(object sender, EventArgs e) => SelectFilter("Equalizer", pictureBoxEqualizer);
+        private void pictureBoxSmoothing_Click(object sender, EventArgs e) => SelectFilter("Smoothing", pictureBoxSmoothing);
+        private void pictureBoxContrast_Click(object sender, EventArgs e) => SelectFilter("Contrast", pictureBoxContrast);
 
         private void btnApplyFilter_Click(object sender, EventArgs e)
         {
@@ -371,6 +374,107 @@ namespace PengolahanCitra
 
         #endregion
 
+        #region Event Handlers - Color Slicing (Popup Version)
+
+        /// <summary>
+        /// Handle klik pada gambar utama untuk memilih warna dan tampilkan popup
+        /// </summary>
+        private void pictureBoxMain_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            // Dapatkan posisi mouse relatif terhadap PictureBox
+            MouseEventArgs me = e as MouseEventArgs;
+            if (me == null) return;
+
+            // Hitung posisi pixel yang sebenarnya
+            Point clickPoint = me.Location;
+
+            // Karena menggunakan CenterImage, perlu hitung offset
+            int offsetX = 0, offsetY = 0;
+            if (pictureBoxMain.Image != null)
+            {
+                offsetX = (pictureBoxMain.Width - pictureBoxMain.Image.Width) / 2;
+                offsetY = (pictureBoxMain.Height - pictureBoxMain.Image.Height) / 2;
+            }
+
+            int imageX = clickPoint.X - offsetX;
+            int imageY = clickPoint.Y - offsetY;
+
+            // Validasi posisi dalam gambar yang ditampilkan
+            if (pictureBoxMain.Image == null) return;
+            if (imageX < 0 || imageX >= pictureBoxMain.Image.Width) return;
+            if (imageY < 0 || imageY >= pictureBoxMain.Image.Height) return;
+
+            // Ambil warna dari gambar yang ditampilkan
+            Bitmap displayedImage = pictureBoxMain.Image as Bitmap;
+            if (displayedImage == null) return;
+
+            Color pickedColor = displayedImage.GetPixel(imageX, imageY);
+
+            // Tampilkan popup dialog
+            ShowColorOperationPopup(pickedColor);
+        }
+
+        /// <summary>
+        /// Tampilkan popup dialog untuk pilih operasi warna
+        /// </summary>
+        private void ShowColorOperationPopup(Color selectedColor)
+        {
+            using (ColorSlicingForm popup = new ColorSlicingForm(selectedColor))
+            {
+                if (popup.ShowDialog(this) == DialogResult.OK)
+                {
+                    // User memilih operasi
+                    if (popup.SelectedOperation == "ColorSlicing")
+                    {
+                        ApplyColorSlicing(selectedColor, popup.Tolerance, popup.UseGrayBackground);
+                    }
+                    // Tambahkan operasi lain di sini nanti (PseudoColor, dll)
+                }
+            }
+        }
+
+        /// <summary>
+        /// Terapkan efek Color Slicing
+        /// </summary>
+        private void ApplyColorSlicing(Color targetColor, int tolerance, bool useGrayBackground)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            try
+            {
+                byte[,,] result;
+
+                if (useGrayBackground)
+                {
+                    result = FilterService.ColorSlicingWithGrayBackground(
+                        rgbMatrix, imageWidth, imageHeight,
+                        targetColor.R, targetColor.G, targetColor.B,
+                        tolerance);
+                }
+                else
+                {
+                    result = FilterService.ColorSlicing(
+                        rgbMatrix, imageWidth, imageHeight,
+                        targetColor.R, targetColor.G, targetColor.B,
+                        tolerance);
+                }
+
+                Bitmap resultBitmap = ImageHelper.RgbMatrixToBitmap(result);
+                UpdateCurrentImage(resultBitmap);
+
+                ShowSuccess($"Color Slicing berhasil!\nWarna: R:{targetColor.R} G:{targetColor.G} B:{targetColor.B}\nToleransi: {tolerance}");
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Error: {ex.Message}");
+            }
+        }
+
+
+        #endregion
+
         #region Core Logic - Load & Save
 
         private void LoadImage(string filePath)
@@ -387,6 +491,7 @@ namespace PengolahanCitra
                 UpdateMainImage();
 
                 if (isFilterPanelVisible) HideFilterPanel();
+                if (isAritmatikPanelVisible) HideAritmatikPanel();
                 if (isEdgePanelVisible) HideEdgePanel();
                 ShowHistogram();
             }
@@ -456,9 +561,6 @@ namespace PengolahanCitra
                 case "Negative":
                     return FilterService.Negative(rgbMatrix, imageWidth, imageHeight);
 
-                case "MeanBlur":
-                    return ConvolutionService.MeanBlur(rgbMatrix, imageWidth, imageHeight, 1);
-
                 case "Gaussian":
                     return ConvolutionService.GaussianBlur(rgbMatrix, imageWidth, imageHeight, gaussianBlurPasses);
 
@@ -466,10 +568,13 @@ namespace PengolahanCitra
                     return ConvolutionService.Sharpen(rgbMatrix, imageWidth, imageHeight, useSharpenStrong, sharpenPasses);
 
                 case "Equalizer":
-                    // Pilih metode equalization (uncomment yang diinginkan):
-                    // return HistogramService.EqualizeIntensityScaling(rgbMatrix, imageWidth, imageHeight);
-                    // return HistogramService.EqualizePerChannel(rgbMatrix, imageWidth, imageHeight);
                     return HistogramService.EqualizeLuminance(rgbMatrix, imageWidth, imageHeight);
+
+                case "Smoothing":
+                    return ConvolutionService.ImageSmoothing(rgbMatrix, imageWidth, imageHeight, 3);
+
+                case "Contrast":
+                    return FilterService.ContrastStretching(rgbMatrix, imageWidth, imageHeight);
 
                 default:
                     return rgbMatrix;
@@ -648,13 +753,14 @@ namespace PengolahanCitra
             previewGaussian = CreateFilterThumbnail("Gaussian");
             previewSharpen = CreateFilterThumbnail("Sharpen");
             previewEqualizer = CreateFilterThumbnail("Equalizer");
+            previewSmoothing = CreateFilterThumbnail("Smoothing");
+            previewContrast = CreateFilterThumbnail("Contrast");
 
             AssignFilterPreviews();
         }
 
         private Bitmap CreateFilterThumbnail(string filterType)
         {
-            // Buat matrix dari thumbnail
             byte[,,] thumbMatrix = ImageHelper.BitmapToRgbMatrix(previewOriginal);
             int w = previewOriginal.Width;
             int h = previewOriginal.Height;
@@ -688,6 +794,12 @@ namespace PengolahanCitra
                     break;
                 case "Equalizer":
                     filtered = HistogramService.EqualizeLuminance(thumbMatrix, w, h);
+                    break;
+                case "Smoothing":
+                    filtered = ConvolutionService.ImageSmoothing(thumbMatrix, w, h, 3);
+                    break;
+                case "Contrast":
+                    filtered = FilterService.ContrastStretching(thumbMatrix, w, h);
                     break;
                 default:
                     filtered = thumbMatrix;
@@ -890,6 +1002,8 @@ namespace PengolahanCitra
             pictureBoxGaussian.BorderStyle = BorderStyle.None;
             pictureBoxSharpen.BorderStyle = BorderStyle.None;
             pictureBoxEqualizer.BorderStyle = BorderStyle.None;
+            pictureBoxSmoothing.BorderStyle = BorderStyle.None;
+            pictureBoxContrast.BorderStyle = BorderStyle.None;
         }
 
         private void SetPictureBoxImage(PictureBox pb, Image newImage)
@@ -914,6 +1028,8 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxGaussian, previewGaussian);
             SetPictureBoxImage(pictureBoxSharpen, previewSharpen);
             SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
+            SetPictureBoxImage(pictureBoxSmoothing, previewSmoothing);
+            SetPictureBoxImage(pictureBoxContrast, previewContrast);
         }
 
         private void AssignEdgePreviews()
@@ -936,6 +1052,8 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxGaussian, null);
             SetPictureBoxImage(pictureBoxSharpen, null);
             SetPictureBoxImage(pictureBoxEqualizer, null);
+            SetPictureBoxImage(pictureBoxSmoothing, null);
+            SetPictureBoxImage(pictureBoxContrast, null);
         }
 
         private void ClearEdgePreviewPictureBoxes()
@@ -958,6 +1076,8 @@ namespace PengolahanCitra
             previewGaussian?.Dispose();
             previewSharpen?.Dispose();
             previewEqualizer?.Dispose();
+            previewSmoothing?.Dispose();
+            previewContrast?.Dispose();
         }
 
         private void DisposeEdgePreviews()
@@ -1019,7 +1139,6 @@ namespace PengolahanCitra
 
         private void Button_MouseEnter(object sender, EventArgs e) { }
         private void Button_MouseLeave(object sender, EventArgs e) { }
-        private void pictureBoxMain_Click(object sender, EventArgs e) { }
         private void panelFilterContainer_Paint(object sender, PaintEventArgs e) { }
         private void panelAritmatikContainer_Paint(object sender, PaintEventArgs e) { }
         private void panelSidebarRight_Paint(object sender, PaintEventArgs e) { }
