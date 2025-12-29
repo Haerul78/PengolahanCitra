@@ -41,23 +41,6 @@ namespace PengolahanCitra
             this.btnHome = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.panelSidebarRight = new System.Windows.Forms.Panel();
-            this.panelEdgeContainer = new System.Windows.Forms.Panel();
-            this.labelEdgeTitle = new System.Windows.Forms.Label();
-            this.pictureBoxRoberts = new System.Windows.Forms.PictureBox();
-            this.labelRoberts = new System.Windows.Forms.Label();
-            this.pictureBoxPrewitt = new System.Windows.Forms.PictureBox();
-            this.labelPrewitt = new System.Windows.Forms.Label();
-            this.pictureBoxSobel = new System.Windows.Forms.PictureBox();
-            this.labelSobel = new System.Windows.Forms.Label();
-            this.pictureBoxCanny = new System.Windows.Forms.PictureBox();
-            this.labelCanny = new System.Windows.Forms.Label();
-            this.btnApplyEdge = new System.Windows.Forms.Button();
-            this.panelCannySettings = new System.Windows.Forms.Panel();
-            this.labelCannyLowThreshold = new System.Windows.Forms.Label();
-            this.numericCannyLowThreshold = new System.Windows.Forms.NumericUpDown();
-            this.labelCannyHighThreshold = new System.Windows.Forms.Label();
-            this.numericCannyHighThreshold = new System.Windows.Forms.NumericUpDown();
-            this.btnRefreshCanny = new System.Windows.Forms.Button();
             this.panelFilterContainer = new System.Windows.Forms.Panel();
             this.labelFilterTitle = new System.Windows.Forms.Label();
             this.pictureBoxOriginal = new System.Windows.Forms.PictureBox();
@@ -114,6 +97,23 @@ namespace PengolahanCitra
             this.labelZoomMin = new System.Windows.Forms.Label();
             this.labelZoomMax = new System.Windows.Forms.Label();
             this.btnPreviewSharpen = new System.Windows.Forms.Button();
+            this.panelEdgeContainer = new System.Windows.Forms.Panel();
+            this.labelEdgeTitle = new System.Windows.Forms.Label();
+            this.pictureBoxRoberts = new System.Windows.Forms.PictureBox();
+            this.labelRoberts = new System.Windows.Forms.Label();
+            this.pictureBoxPrewitt = new System.Windows.Forms.PictureBox();
+            this.labelPrewitt = new System.Windows.Forms.Label();
+            this.pictureBoxSobel = new System.Windows.Forms.PictureBox();
+            this.labelSobel = new System.Windows.Forms.Label();
+            this.pictureBoxCanny = new System.Windows.Forms.PictureBox();
+            this.labelCanny = new System.Windows.Forms.Label();
+            this.btnApplyEdge = new System.Windows.Forms.Button();
+            this.panelCannySettings = new System.Windows.Forms.Panel();
+            this.labelCannyLowThreshold = new System.Windows.Forms.Label();
+            this.numericCannyLowThreshold = new System.Windows.Forms.NumericUpDown();
+            this.labelCannyHighThreshold = new System.Windows.Forms.Label();
+            this.numericCannyHighThreshold = new System.Windows.Forms.NumericUpDown();
+            this.btnRefreshCanny = new System.Windows.Forms.Button();
             this.panelSidebarLeft.SuspendLayout();
             this.panelHistogramContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHistogramG)).BeginInit();
@@ -123,14 +123,6 @@ namespace PengolahanCitra
             this.panelToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.panelSidebarRight.SuspendLayout();
-            this.panelEdgeContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRoberts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPrewitt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSobel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanny)).BeginInit();
-            this.panelCannySettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCannyLowThreshold)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCannyHighThreshold)).BeginInit();
             this.panelFilterContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
@@ -149,6 +141,14 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).BeginInit();
+            this.panelEdgeContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRoberts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPrewitt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSobel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanny)).BeginInit();
+            this.panelCannySettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCannyLowThreshold)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCannyHighThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSidebarLeft
@@ -420,7 +420,6 @@ namespace PengolahanCitra
             // panelSidebarRight
             // 
             this.panelSidebarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
-            this.panelSidebarRight.Controls.Add(this.panelEdgeContainer);
             this.panelSidebarRight.Controls.Add(this.panelFilterContainer);
             this.panelSidebarRight.Controls.Add(this.panelAritmatikContainer);
             this.panelSidebarRight.Dock = System.Windows.Forms.DockStyle.Right;
@@ -431,233 +430,6 @@ namespace PengolahanCitra
             this.panelSidebarRight.Size = new System.Drawing.Size(249, 701);
             this.panelSidebarRight.TabIndex = 2;
             this.panelSidebarRight.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSidebarRight_Paint);
-            // 
-            // panelEdgeContainer
-            // 
-            this.panelEdgeContainer.Controls.Add(this.labelEdgeTitle);
-            this.panelEdgeContainer.Controls.Add(this.pictureBoxRoberts);
-            this.panelEdgeContainer.Controls.Add(this.labelRoberts);
-            this.panelEdgeContainer.Controls.Add(this.pictureBoxPrewitt);
-            this.panelEdgeContainer.Controls.Add(this.labelPrewitt);
-            this.panelEdgeContainer.Controls.Add(this.pictureBoxSobel);
-            this.panelEdgeContainer.Controls.Add(this.labelSobel);
-            this.panelEdgeContainer.Controls.Add(this.pictureBoxCanny);
-            this.panelEdgeContainer.Controls.Add(this.labelCanny);
-            this.panelEdgeContainer.Controls.Add(this.btnApplyEdge);
-            this.panelEdgeContainer.Controls.Add(this.panelCannySettings);
-            this.panelEdgeContainer.Location = new System.Drawing.Point(4, 4);
-            this.panelEdgeContainer.Name = "panelEdgeContainer";
-            this.panelEdgeContainer.Size = new System.Drawing.Size(245, 700);
-            this.panelEdgeContainer.TabIndex = 0;
-            this.panelEdgeContainer.Visible = false;
-            // 
-            // labelEdgeTitle
-            // 
-            this.labelEdgeTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelEdgeTitle.ForeColor = System.Drawing.Color.White;
-            this.labelEdgeTitle.Location = new System.Drawing.Point(55, 13);
-            this.labelEdgeTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelEdgeTitle.Name = "labelEdgeTitle";
-            this.labelEdgeTitle.Size = new System.Drawing.Size(135, 20);
-            this.labelEdgeTitle.TabIndex = 0;
-            this.labelEdgeTitle.Text = "Deteksi Tepi";
-            this.labelEdgeTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxRoberts
-            // 
-            this.pictureBoxRoberts.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxRoberts.Location = new System.Drawing.Point(24, 56);
-            this.pictureBoxRoberts.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxRoberts.Name = "pictureBoxRoberts";
-            this.pictureBoxRoberts.Size = new System.Drawing.Size(45, 49);
-            this.pictureBoxRoberts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxRoberts.TabIndex = 1;
-            this.pictureBoxRoberts.TabStop = false;
-            this.pictureBoxRoberts.Click += new System.EventHandler(this.pictureBoxRoberts_Click);
-            // 
-            // labelRoberts
-            // 
-            this.labelRoberts.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelRoberts.ForeColor = System.Drawing.Color.White;
-            this.labelRoberts.Location = new System.Drawing.Point(24, 105);
-            this.labelRoberts.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelRoberts.Name = "labelRoberts";
-            this.labelRoberts.Size = new System.Drawing.Size(45, 16);
-            this.labelRoberts.TabIndex = 2;
-            this.labelRoberts.Text = "Roberts";
-            this.labelRoberts.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxPrewitt
-            // 
-            this.pictureBoxPrewitt.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxPrewitt.Location = new System.Drawing.Point(131, 56);
-            this.pictureBoxPrewitt.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxPrewitt.Name = "pictureBoxPrewitt";
-            this.pictureBoxPrewitt.Size = new System.Drawing.Size(45, 49);
-            this.pictureBoxPrewitt.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxPrewitt.TabIndex = 3;
-            this.pictureBoxPrewitt.TabStop = false;
-            this.pictureBoxPrewitt.Click += new System.EventHandler(this.pictureBoxPrewitt_Click);
-            // 
-            // labelPrewitt
-            // 
-            this.labelPrewitt.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelPrewitt.ForeColor = System.Drawing.Color.White;
-            this.labelPrewitt.Location = new System.Drawing.Point(131, 105);
-            this.labelPrewitt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelPrewitt.Name = "labelPrewitt";
-            this.labelPrewitt.Size = new System.Drawing.Size(45, 16);
-            this.labelPrewitt.TabIndex = 4;
-            this.labelPrewitt.Text = "Prewitt";
-            this.labelPrewitt.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxSobel
-            // 
-            this.pictureBoxSobel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxSobel.Location = new System.Drawing.Point(24, 129);
-            this.pictureBoxSobel.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxSobel.Name = "pictureBoxSobel";
-            this.pictureBoxSobel.Size = new System.Drawing.Size(45, 49);
-            this.pictureBoxSobel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxSobel.TabIndex = 5;
-            this.pictureBoxSobel.TabStop = false;
-            this.pictureBoxSobel.Click += new System.EventHandler(this.pictureBoxSobel_Click);
-            // 
-            // labelSobel
-            // 
-            this.labelSobel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelSobel.ForeColor = System.Drawing.Color.White;
-            this.labelSobel.Location = new System.Drawing.Point(24, 180);
-            this.labelSobel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelSobel.Name = "labelSobel";
-            this.labelSobel.Size = new System.Drawing.Size(45, 16);
-            this.labelSobel.TabIndex = 6;
-            this.labelSobel.Text = "Sobel";
-            this.labelSobel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBoxCanny
-            // 
-            this.pictureBoxCanny.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxCanny.Location = new System.Drawing.Point(131, 129);
-            this.pictureBoxCanny.Margin = new System.Windows.Forms.Padding(2);
-            this.pictureBoxCanny.Name = "pictureBoxCanny";
-            this.pictureBoxCanny.Size = new System.Drawing.Size(45, 49);
-            this.pictureBoxCanny.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxCanny.TabIndex = 7;
-            this.pictureBoxCanny.TabStop = false;
-            this.pictureBoxCanny.Click += new System.EventHandler(this.pictureBoxCanny_Click);
-            // 
-            // labelCanny
-            // 
-            this.labelCanny.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelCanny.ForeColor = System.Drawing.Color.White;
-            this.labelCanny.Location = new System.Drawing.Point(131, 180);
-            this.labelCanny.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelCanny.Name = "labelCanny";
-            this.labelCanny.Size = new System.Drawing.Size(45, 16);
-            this.labelCanny.TabIndex = 8;
-            this.labelCanny.Text = "Canny";
-            this.labelCanny.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // btnApplyEdge
-            // 
-            this.btnApplyEdge.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.btnApplyEdge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyEdge.ForeColor = System.Drawing.Color.White;
-            this.btnApplyEdge.Location = new System.Drawing.Point(55, 639);
-            this.btnApplyEdge.Margin = new System.Windows.Forms.Padding(2);
-            this.btnApplyEdge.Name = "btnApplyEdge";
-            this.btnApplyEdge.Size = new System.Drawing.Size(135, 28);
-            this.btnApplyEdge.TabIndex = 11;
-            this.btnApplyEdge.Text = "Terapkan";
-            this.btnApplyEdge.UseVisualStyleBackColor = false;
-            this.btnApplyEdge.Click += new System.EventHandler(this.btnApplyEdge_Click);
-            // 
-            // panelCannySettings
-            // 
-            this.panelCannySettings.Controls.Add(this.labelCannyLowThreshold);
-            this.panelCannySettings.Controls.Add(this.numericCannyLowThreshold);
-            this.panelCannySettings.Controls.Add(this.labelCannyHighThreshold);
-            this.panelCannySettings.Controls.Add(this.numericCannyHighThreshold);
-            this.panelCannySettings.Controls.Add(this.btnRefreshCanny);
-            this.panelCannySettings.Location = new System.Drawing.Point(24, 224);
-            this.panelCannySettings.Name = "panelCannySettings";
-            this.panelCannySettings.Size = new System.Drawing.Size(202, 96);
-            this.panelCannySettings.TabIndex = 9;
-            // 
-            // labelCannyLowThreshold
-            // 
-            this.labelCannyLowThreshold.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.labelCannyLowThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelCannyLowThreshold.Location = new System.Drawing.Point(8, 7);
-            this.labelCannyLowThreshold.Name = "labelCannyLowThreshold";
-            this.labelCannyLowThreshold.Size = new System.Drawing.Size(95, 20);
-            this.labelCannyLowThreshold.TabIndex = 0;
-            this.labelCannyLowThreshold.Text = "Low Threshold:";
-            // 
-            // numericCannyLowThreshold
-            // 
-            this.numericCannyLowThreshold.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.numericCannyLowThreshold.ForeColor = System.Drawing.Color.White;
-            this.numericCannyLowThreshold.Location = new System.Drawing.Point(8, 35);
-            this.numericCannyLowThreshold.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericCannyLowThreshold.Name = "numericCannyLowThreshold";
-            this.numericCannyLowThreshold.Size = new System.Drawing.Size(180, 20);
-            this.numericCannyLowThreshold.TabIndex = 1;
-            this.numericCannyLowThreshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericCannyLowThreshold.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
-            // labelCannyHighThreshold
-            // 
-            this.labelCannyHighThreshold.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.labelCannyHighThreshold.ForeColor = System.Drawing.Color.White;
-            this.labelCannyHighThreshold.Location = new System.Drawing.Point(8, 57);
-            this.labelCannyHighThreshold.Name = "labelCannyHighThreshold";
-            this.labelCannyHighThreshold.Size = new System.Drawing.Size(95, 15);
-            this.labelCannyHighThreshold.TabIndex = 2;
-            this.labelCannyHighThreshold.Text = "High Threshold:";
-            // 
-            // numericCannyHighThreshold
-            // 
-            this.numericCannyHighThreshold.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.numericCannyHighThreshold.ForeColor = System.Drawing.Color.White;
-            this.numericCannyHighThreshold.Location = new System.Drawing.Point(8, 75);
-            this.numericCannyHighThreshold.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericCannyHighThreshold.Name = "numericCannyHighThreshold";
-            this.numericCannyHighThreshold.Size = new System.Drawing.Size(180, 20);
-            this.numericCannyHighThreshold.TabIndex = 3;
-            this.numericCannyHighThreshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericCannyHighThreshold.Value = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
-            // 
-            // btnRefreshCanny
-            // 
-            this.btnRefreshCanny.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
-            this.btnRefreshCanny.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefreshCanny.ForeColor = System.Drawing.Color.White;
-            this.btnRefreshCanny.Location = new System.Drawing.Point(118, -2);
-            this.btnRefreshCanny.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
-            this.btnRefreshCanny.Name = "btnRefreshCanny";
-            this.btnRefreshCanny.Size = new System.Drawing.Size(75, 31);
-            this.btnRefreshCanny.TabIndex = 4;
-            this.btnRefreshCanny.Text = "🔄 Refresh";
-            this.btnRefreshCanny.UseVisualStyleBackColor = false;
-            this.btnRefreshCanny.Click += new System.EventHandler(this.btnRefreshCanny_Click);
             // 
             // panelFilterContainer
             // 
@@ -1424,6 +1196,224 @@ namespace PengolahanCitra
             this.btnPreviewSharpen.Visible = false;
             this.btnPreviewSharpen.Click += new System.EventHandler(this.btnPreviewSharpen_Click);
             // 
+            // panelEdgeContainer
+            // 
+            this.panelEdgeContainer.Controls.Add(this.labelEdgeTitle);
+            this.panelEdgeContainer.Controls.Add(this.pictureBoxRoberts);
+            this.panelEdgeContainer.Controls.Add(this.labelRoberts);
+            this.panelEdgeContainer.Controls.Add(this.pictureBoxPrewitt);
+            this.panelEdgeContainer.Controls.Add(this.labelPrewitt);
+            this.panelEdgeContainer.Controls.Add(this.pictureBoxSobel);
+            this.panelEdgeContainer.Controls.Add(this.labelSobel);
+            this.panelEdgeContainer.Controls.Add(this.pictureBoxCanny);
+            this.panelEdgeContainer.Controls.Add(this.labelCanny);
+            this.panelEdgeContainer.Controls.Add(this.btnApplyEdge);
+            this.panelEdgeContainer.Controls.Add(this.panelCannySettings);
+            this.panelEdgeContainer.Location = new System.Drawing.Point(4, 4);
+            this.panelEdgeContainer.Name = "panelEdgeContainer";
+            this.panelEdgeContainer.Size = new System.Drawing.Size(245, 700);
+            this.panelEdgeContainer.TabIndex = 0;
+            this.panelEdgeContainer.Visible = false;
+            // 
+            // labelEdgeTitle
+            // 
+            this.labelEdgeTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelEdgeTitle.ForeColor = System.Drawing.Color.White;
+            this.labelEdgeTitle.Location = new System.Drawing.Point(55, 13);
+            this.labelEdgeTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelEdgeTitle.Name = "labelEdgeTitle";
+            this.labelEdgeTitle.Size = new System.Drawing.Size(135, 20);
+            this.labelEdgeTitle.TabIndex = 0;
+            this.labelEdgeTitle.Text = "Deteksi Tepi";
+            this.labelEdgeTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxRoberts
+            // 
+            this.pictureBoxRoberts.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxRoberts.Location = new System.Drawing.Point(24, 56);
+            this.pictureBoxRoberts.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxRoberts.Name = "pictureBoxRoberts";
+            this.pictureBoxRoberts.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxRoberts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxRoberts.TabIndex = 1;
+            this.pictureBoxRoberts.TabStop = false;
+            this.pictureBoxRoberts.Click += new System.EventHandler(this.pictureBoxRoberts_Click);
+            // 
+            // labelRoberts
+            // 
+            this.labelRoberts.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelRoberts.ForeColor = System.Drawing.Color.White;
+            this.labelRoberts.Location = new System.Drawing.Point(24, 105);
+            this.labelRoberts.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelRoberts.Name = "labelRoberts";
+            this.labelRoberts.Size = new System.Drawing.Size(45, 16);
+            this.labelRoberts.TabIndex = 2;
+            this.labelRoberts.Text = "Roberts";
+            this.labelRoberts.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxPrewitt
+            // 
+            this.pictureBoxPrewitt.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxPrewitt.Location = new System.Drawing.Point(131, 56);
+            this.pictureBoxPrewitt.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxPrewitt.Name = "pictureBoxPrewitt";
+            this.pictureBoxPrewitt.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxPrewitt.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxPrewitt.TabIndex = 3;
+            this.pictureBoxPrewitt.TabStop = false;
+            this.pictureBoxPrewitt.Click += new System.EventHandler(this.pictureBoxPrewitt_Click);
+            // 
+            // labelPrewitt
+            // 
+            this.labelPrewitt.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelPrewitt.ForeColor = System.Drawing.Color.White;
+            this.labelPrewitt.Location = new System.Drawing.Point(131, 105);
+            this.labelPrewitt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelPrewitt.Name = "labelPrewitt";
+            this.labelPrewitt.Size = new System.Drawing.Size(45, 16);
+            this.labelPrewitt.TabIndex = 4;
+            this.labelPrewitt.Text = "Prewitt";
+            this.labelPrewitt.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxSobel
+            // 
+            this.pictureBoxSobel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxSobel.Location = new System.Drawing.Point(24, 129);
+            this.pictureBoxSobel.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxSobel.Name = "pictureBoxSobel";
+            this.pictureBoxSobel.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxSobel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSobel.TabIndex = 5;
+            this.pictureBoxSobel.TabStop = false;
+            this.pictureBoxSobel.Click += new System.EventHandler(this.pictureBoxSobel_Click);
+            // 
+            // labelSobel
+            // 
+            this.labelSobel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelSobel.ForeColor = System.Drawing.Color.White;
+            this.labelSobel.Location = new System.Drawing.Point(24, 180);
+            this.labelSobel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelSobel.Name = "labelSobel";
+            this.labelSobel.Size = new System.Drawing.Size(45, 16);
+            this.labelSobel.TabIndex = 6;
+            this.labelSobel.Text = "Sobel";
+            this.labelSobel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // pictureBoxCanny
+            // 
+            this.pictureBoxCanny.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxCanny.Location = new System.Drawing.Point(131, 129);
+            this.pictureBoxCanny.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBoxCanny.Name = "pictureBoxCanny";
+            this.pictureBoxCanny.Size = new System.Drawing.Size(45, 49);
+            this.pictureBoxCanny.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxCanny.TabIndex = 7;
+            this.pictureBoxCanny.TabStop = false;
+            this.pictureBoxCanny.Click += new System.EventHandler(this.pictureBoxCanny_Click);
+            // 
+            // labelCanny
+            // 
+            this.labelCanny.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelCanny.ForeColor = System.Drawing.Color.White;
+            this.labelCanny.Location = new System.Drawing.Point(131, 180);
+            this.labelCanny.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.labelCanny.Name = "labelCanny";
+            this.labelCanny.Size = new System.Drawing.Size(45, 16);
+            this.labelCanny.TabIndex = 8;
+            this.labelCanny.Text = "Canny";
+            this.labelCanny.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // btnApplyEdge
+            // 
+            this.btnApplyEdge.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.btnApplyEdge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApplyEdge.ForeColor = System.Drawing.Color.White;
+            this.btnApplyEdge.Location = new System.Drawing.Point(55, 639);
+            this.btnApplyEdge.Margin = new System.Windows.Forms.Padding(2);
+            this.btnApplyEdge.Name = "btnApplyEdge";
+            this.btnApplyEdge.Size = new System.Drawing.Size(135, 28);
+            this.btnApplyEdge.TabIndex = 11;
+            this.btnApplyEdge.Text = "Terapkan";
+            this.btnApplyEdge.UseVisualStyleBackColor = false;
+            this.btnApplyEdge.Click += new System.EventHandler(this.btnApplyEdge_Click);
+            // 
+            // panelCannySettings
+            // 
+            this.panelCannySettings.Controls.Add(this.labelCannyLowThreshold);
+            this.panelCannySettings.Controls.Add(this.numericCannyLowThreshold);
+            this.panelCannySettings.Controls.Add(this.labelCannyHighThreshold);
+            this.panelCannySettings.Controls.Add(this.numericCannyHighThreshold);
+            this.panelCannySettings.Controls.Add(this.btnRefreshCanny);
+            this.panelCannySettings.Location = new System.Drawing.Point(24, 220);
+            this.panelCannySettings.Name = "panelCannySettings";
+            this.panelCannySettings.Size = new System.Drawing.Size(202, 96);
+            this.panelCannySettings.TabIndex = 9;
+            this.panelCannySettings.Visible = false;
+            // 
+            // labelCannyLowThreshold
+            // 
+            this.labelCannyLowThreshold.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelCannyLowThreshold.ForeColor = System.Drawing.Color.White;
+            this.labelCannyLowThreshold.Location = new System.Drawing.Point(8, 7);
+            this.labelCannyLowThreshold.Name = "labelCannyLowThreshold";
+            this.labelCannyLowThreshold.Size = new System.Drawing.Size(95, 20);
+            this.labelCannyLowThreshold.TabIndex = 0;
+            this.labelCannyLowThreshold.Text = "Low Threshold:";
+            // 
+            // numericCannyLowThreshold
+            // 
+            this.numericCannyLowThreshold.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericCannyLowThreshold.ForeColor = System.Drawing.Color.White;
+            this.numericCannyLowThreshold.Location = new System.Drawing.Point(8, 30);
+            this.numericCannyLowThreshold.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericCannyLowThreshold.Name = "numericCannyLowThreshold";
+            this.numericCannyLowThreshold.Size = new System.Drawing.Size(180, 20);
+            this.numericCannyLowThreshold.TabIndex = 1;
+            this.numericCannyLowThreshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // labelCannyHighThreshold
+            // 
+            this.labelCannyHighThreshold.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.labelCannyHighThreshold.ForeColor = System.Drawing.Color.White;
+            this.labelCannyHighThreshold.Location = new System.Drawing.Point(8, 53);
+            this.labelCannyHighThreshold.Name = "labelCannyHighThreshold";
+            this.labelCannyHighThreshold.Size = new System.Drawing.Size(95, 20);
+            this.labelCannyHighThreshold.TabIndex = 2;
+            this.labelCannyHighThreshold.Text = "High Threshold:";
+            // 
+            // numericCannyHighThreshold
+            // 
+            this.numericCannyHighThreshold.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.numericCannyHighThreshold.ForeColor = System.Drawing.Color.White;
+            this.numericCannyHighThreshold.Location = new System.Drawing.Point(8, 76);
+            this.numericCannyHighThreshold.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericCannyHighThreshold.Name = "numericCannyHighThreshold";
+            this.numericCannyHighThreshold.Size = new System.Drawing.Size(180, 20);
+            this.numericCannyHighThreshold.TabIndex = 3;
+            this.numericCannyHighThreshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnRefreshCanny
+            // 
+            this.btnRefreshCanny.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(43)))), ((int)(((byte)(226)))));
+            this.btnRefreshCanny.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefreshCanny.ForeColor = System.Drawing.Color.White;
+            this.btnRefreshCanny.Location = new System.Drawing.Point(113, 5);
+            this.btnRefreshCanny.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.btnRefreshCanny.Name = "btnRefreshCanny";
+            this.btnRefreshCanny.Size = new System.Drawing.Size(75, 45);
+            this.btnRefreshCanny.TabIndex = 4;
+            this.btnRefreshCanny.Text = "🔄 Refresh";
+            this.btnRefreshCanny.UseVisualStyleBackColor = false;
+            this.btnRefreshCanny.Click += new System.EventHandler(this.btnRefreshCanny_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1449,14 +1439,6 @@ namespace PengolahanCitra
             this.panelToolbar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.panelSidebarRight.ResumeLayout(false);
-            this.panelEdgeContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRoberts)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPrewitt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSobel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanny)).EndInit();
-            this.panelCannySettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericCannyLowThreshold)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericCannyHighThreshold)).EndInit();
             this.panelFilterContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOriginal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
@@ -1477,6 +1459,14 @@ namespace PengolahanCitra
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTranslateX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDegree)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarZoom)).EndInit();
+            this.panelEdgeContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRoberts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPrewitt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSobel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCanny)).EndInit();
+            this.panelCannySettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericCannyLowThreshold)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericCannyHighThreshold)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1590,4 +1580,3 @@ namespace PengolahanCitra
         private System.Windows.Forms.Button btnRefreshCanny;
     }
 }
-

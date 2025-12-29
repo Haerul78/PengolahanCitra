@@ -27,11 +27,16 @@ namespace PengolahanCitra
         private Bitmap previewGray, previewThreshold, previewNegative;
         private Bitmap previewGaussian, previewSharpen, previewEqualizer;
 
+        // Edge Detection Previews
+        private Bitmap previewRoberts, previewPrewitt, previewSobel, previewCanny;
+
         // State
         private bool isFilterPanelVisible;
         private bool isAritmatikPanelVisible;
+        private bool isEdgePanelVisible;
         private int currentBrightnessValue = 0;
         private string selectedFilterType = "Original";
+        private string selectedEdgeType = "Roberts";
         private int currentRotationAngle = 0;
         private int currentZoomPercent = 20;
 
@@ -122,6 +127,7 @@ namespace PengolahanCitra
             if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
 
             HideAritmatikPanel();
+            HideEdgePanel();
 
             if (isFilterPanelVisible)
             {
@@ -165,6 +171,71 @@ namespace PengolahanCitra
 
         #endregion
 
+        #region Event Handlers - Edge Detection
+
+        private void btnEdge_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded("Silakan buka gambar terlebih dahulu!")) return;
+
+            HideFilterPanel();
+            HideAritmatikPanel();
+
+            if (isEdgePanelVisible)
+            {
+                HideEdgePanel();
+                ShowHistogram();
+            }
+            else
+            {
+                GenerateEdgePreviews();
+                ShowEdgePanel();
+            }
+        }
+
+        private void pictureBoxRoberts_Click(object sender, EventArgs e) => SelectEdgeFilter("Roberts", pictureBoxRoberts);
+        private void pictureBoxPrewitt_Click(object sender, EventArgs e) => SelectEdgeFilter("Prewitt", pictureBoxPrewitt);
+        private void pictureBoxSobel_Click(object sender, EventArgs e) => SelectEdgeFilter("Sobel", pictureBoxSobel);
+        private void pictureBoxCanny_Click(object sender, EventArgs e) => SelectEdgeFilter("Canny", pictureBoxCanny);
+
+        private void btnApplyEdge_Click(object sender, EventArgs e)
+        {
+            if (selectedPreview == null)
+            {
+                ShowWarning("Pilih metode edge detection terlebih dahulu!");
+                return;
+            }
+
+            currentImage?.Dispose();
+            currentImage = new Bitmap(selectedPreview);
+            UpdateMatrixFromBitmap();
+            HideEdgePanel();
+            ShowHistogram();
+            ShowSuccess($"{selectedEdgeType} edge detection applied!");
+        }
+
+        private void btnRefreshCanny_Click(object sender, EventArgs e)
+        {
+            if (!ValidateImageLoaded()) return;
+
+            // Regenerate Canny preview dengan threshold baru
+            int lowThreshold = (int)numericCannyLowThreshold.Value;
+            int highThreshold = (int)numericCannyHighThreshold.Value;
+
+            previewCanny?.Dispose();
+            previewCanny = CreateEdgeThumbnail("Canny", lowThreshold, highThreshold);
+            SetPictureBoxImage(pictureBoxCanny, previewCanny);
+
+            // Update main preview jika Canny sedang dipilih
+            if (selectedEdgeType == "Canny")
+            {
+                UpdateEdgeMainPreview();
+            }
+
+            ShowSuccess("Canny preview refreshed!");
+        }
+
+        #endregion
+
         #region Event Handlers - Brightness
 
         private void trackBarBrightness_Scroll(object sender, EventArgs e)
@@ -200,6 +271,7 @@ namespace PengolahanCitra
             else
             {
                 HideFilterPanel();
+                HideEdgePanel();
                 ShowAritmatikPanel();
             }
         }
@@ -315,6 +387,7 @@ namespace PengolahanCitra
                 UpdateMainImage();
 
                 if (isFilterPanelVisible) HideFilterPanel();
+                if (isEdgePanelVisible) HideEdgePanel();
                 ShowHistogram();
             }
             catch (Exception ex)
@@ -420,6 +493,65 @@ namespace PengolahanCitra
             Bitmap preview = ImageHelper.RgbMatrixToBitmap(withBrightness);
             SetPictureBoxImage(pictureBoxMain, preview);
             selectedPreview = preview;
+        }
+
+        #endregion
+
+        #region Core Logic - Edge Detection
+
+        private byte[,,] ApplyEdgeDetection(string edgeType, int lowThreshold = 50, int highThreshold = 150)
+        {
+            switch (edgeType)
+            {
+                case "Roberts":
+                    return ConvolutionService.EdgeRoberts(rgbMatrix, imageWidth, imageHeight);
+
+                case "Prewitt":
+                    return ConvolutionService.EdgePrewitt(rgbMatrix, imageWidth, imageHeight);
+
+                case "Sobel":
+                    return ConvolutionService.EdgeSobel(rgbMatrix, imageWidth, imageHeight);
+
+                case "Canny":
+                    return ConvolutionService.EdgeCanny(rgbMatrix, imageWidth, imageHeight, lowThreshold, highThreshold);
+
+                default:
+                    return rgbMatrix;
+            }
+        }
+
+        private void SelectEdgeFilter(string edgeType, PictureBox pictureBox)
+        {
+            selectedEdgeType = edgeType;
+            HighlightSelectedEdgeThumbnail(pictureBox);
+            UpdateEdgeMainPreview();
+        }
+
+        private void UpdateEdgeMainPreview()
+        {
+            if (currentImage == null) return;
+
+            int lowThreshold = (int)numericCannyLowThreshold.Value;
+            int highThreshold = (int)numericCannyHighThreshold.Value;
+
+            byte[,,] edgeDetected = ApplyEdgeDetection(selectedEdgeType, lowThreshold, highThreshold);
+            Bitmap preview = ImageHelper.RgbMatrixToBitmap(edgeDetected);
+            SetPictureBoxImage(pictureBoxMain, preview);
+            selectedPreview = preview;
+        }
+
+        private void HighlightSelectedEdgeThumbnail(PictureBox selected)
+        {
+            ResetAllEdgeThumbnailBorders();
+            selected.BorderStyle = BorderStyle.Fixed3D;
+        }
+
+        private void ResetAllEdgeThumbnailBorders()
+        {
+            pictureBoxRoberts.BorderStyle = BorderStyle.None;
+            pictureBoxPrewitt.BorderStyle = BorderStyle.None;
+            pictureBoxSobel.BorderStyle = BorderStyle.None;
+            pictureBoxCanny.BorderStyle = BorderStyle.None;
         }
 
         #endregion
@@ -565,6 +697,53 @@ namespace PengolahanCitra
             return ImageHelper.RgbMatrixToBitmap(filtered);
         }
 
+        private void GenerateEdgePreviews()
+        {
+            ClearEdgePreviewPictureBoxes();
+            DisposeEdgePreviews();
+
+            int lowThreshold = (int)numericCannyLowThreshold.Value;
+            int highThreshold = (int)numericCannyHighThreshold.Value;
+
+            previewRoberts = CreateEdgeThumbnail("Roberts");
+            previewPrewitt = CreateEdgeThumbnail("Prewitt");
+            previewSobel = CreateEdgeThumbnail("Sobel");
+            previewCanny = CreateEdgeThumbnail("Canny", lowThreshold, highThreshold);
+
+            AssignEdgePreviews();
+        }
+
+        private Bitmap CreateEdgeThumbnail(string edgeType, int lowThreshold = 50, int highThreshold = 150)
+        {
+            Bitmap thumbnail = ImageHelper.CreateThumbnail(currentImage, 80);
+            byte[,,] thumbMatrix = ImageHelper.BitmapToRgbMatrix(thumbnail);
+            int w = thumbnail.Width;
+            int h = thumbnail.Height;
+            thumbnail.Dispose();
+
+            byte[,,] edgeDetected;
+            switch (edgeType)
+            {
+                case "Roberts":
+                    edgeDetected = ConvolutionService.EdgeRoberts(thumbMatrix, w, h);
+                    break;
+                case "Prewitt":
+                    edgeDetected = ConvolutionService.EdgePrewitt(thumbMatrix, w, h);
+                    break;
+                case "Sobel":
+                    edgeDetected = ConvolutionService.EdgeSobel(thumbMatrix, w, h);
+                    break;
+                case "Canny":
+                    edgeDetected = ConvolutionService.EdgeCanny(thumbMatrix, w, h, lowThreshold, highThreshold);
+                    break;
+                default:
+                    edgeDetected = thumbMatrix;
+                    break;
+            }
+
+            return ImageHelper.RgbMatrixToBitmap(edgeDetected);
+        }
+
         #endregion
 
         #region Histogram
@@ -641,6 +820,20 @@ namespace PengolahanCitra
         {
             panelFilterContainer.Visible = false;
             isFilterPanelVisible = false;
+            UpdateMainImage();
+            selectedPreview = null;
+        }
+
+        private void ShowEdgePanel()
+        {
+            panelEdgeContainer.Visible = true;
+            isEdgePanelVisible = true;
+        }
+
+        private void HideEdgePanel()
+        {
+            panelEdgeContainer.Visible = false;
+            isEdgePanelVisible = false;
             UpdateMainImage();
             selectedPreview = null;
         }
@@ -723,6 +916,14 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxEqualizer, previewEqualizer);
         }
 
+        private void AssignEdgePreviews()
+        {
+            SetPictureBoxImage(pictureBoxRoberts, previewRoberts);
+            SetPictureBoxImage(pictureBoxPrewitt, previewPrewitt);
+            SetPictureBoxImage(pictureBoxSobel, previewSobel);
+            SetPictureBoxImage(pictureBoxCanny, previewCanny);
+        }
+
         private void ClearPreviewPictureBoxes()
         {
             SetPictureBoxImage(pictureBoxOriginal, null);
@@ -737,6 +938,14 @@ namespace PengolahanCitra
             SetPictureBoxImage(pictureBoxEqualizer, null);
         }
 
+        private void ClearEdgePreviewPictureBoxes()
+        {
+            SetPictureBoxImage(pictureBoxRoberts, null);
+            SetPictureBoxImage(pictureBoxPrewitt, null);
+            SetPictureBoxImage(pictureBoxSobel, null);
+            SetPictureBoxImage(pictureBoxCanny, null);
+        }
+
         private void DisposeFilterPreviews()
         {
             previewOriginal?.Dispose();
@@ -749,6 +958,14 @@ namespace PengolahanCitra
             previewGaussian?.Dispose();
             previewSharpen?.Dispose();
             previewEqualizer?.Dispose();
+        }
+
+        private void DisposeEdgePreviews()
+        {
+            previewRoberts?.Dispose();
+            previewPrewitt?.Dispose();
+            previewSobel?.Dispose();
+            previewCanny?.Dispose();
         }
 
         private void DisposeHistogramImages()
@@ -796,6 +1013,7 @@ namespace PengolahanCitra
         {
             if (isFilterPanelVisible) HideFilterPanel();
             if (isAritmatikPanelVisible) HideAritmatikPanel();
+            if (isEdgePanelVisible) HideEdgePanel();
             if (currentImage != null) ShowHistogram();
         }
 
