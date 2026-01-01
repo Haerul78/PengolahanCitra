@@ -22,6 +22,11 @@ namespace PengolahanCitra
         public int Tolerance { get; private set; } = 50;
 
         /// <summary>
+        /// Persen toleransi untuk pewarnaan semu (0-100)
+        /// </summary>
+        public int PseudoPercent { get; private set; } = 50;
+
+        /// <summary>
         /// Apakah menggunakan background grayscale
         /// </summary>
         public bool UseGrayBackground { get; private set; } = false;
@@ -47,6 +52,19 @@ namespace PengolahanCitra
             // Set default tolerance
             trackBarTolerance.Value = 50;
             labelToleranceValue.Text = "50";
+
+            // Set default pseudo percent if control exists
+            try
+            {
+                trackBarPseudoPercent.Value = 50;
+                labelPseudoPercentValue.Text = "50%";
+                PseudoPercent = 50;
+            }
+            catch { }
+
+            // Enable pseudo color button (make it usable)
+            btnPseudoColor.ForeColor = System.Drawing.Color.White;
+            btnPseudoColor.BackColor = System.Drawing.Color.FromArgb(70, 70, 75);
         }
 
         #endregion
@@ -64,8 +82,12 @@ namespace PengolahanCitra
 
         private void btnPseudoColor_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Fitur Pewarnaan Semu akan segera hadir!", "Info",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Select pseudo color operation and return dialog
+            SelectedOperation = "PseudoColor";
+            Tolerance = trackBarTolerance.Value;
+            UseGrayBackground = checkBoxGrayBackground.Checked;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -86,6 +108,21 @@ namespace PengolahanCitra
             UseGrayBackground = checkBoxGrayBackground.Checked;
         }
 
+        private void trackBarPseudoPercent_Scroll(object sender, EventArgs e)
+        {
+            try
+            {
+                PseudoPercent = trackBarPseudoPercent.Value;
+                labelPseudoPercentValue.Text = PseudoPercent + "%";
+            }
+            catch { }
+        }
+
         #endregion
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

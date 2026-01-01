@@ -239,6 +239,60 @@ namespace PengolahanCitra.Services
             return result;
         }
 
+        /// <summary>
+        /// Pewarnaan Semu (Pseudo-Color)
+        /// - Area yang sesuai warna target akan diwarnai berdasarkan intensitas (grayscale -> palet warna target)
+        /// - Area di luar toleransi akan menjadi grayscale
+        /// </summary>
+        public static byte[,,] PseudoColor(byte[,,] source, int width, int height,
+            byte targetR, byte targetG, byte targetB, int tolerance = 50)
+        {
+            if (source == null) return null;
+
+            var result = new byte[height, width, 3];
+
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    byte r = source[y, x, 0];
+                    byte g = source[y, x, 1];
+                    byte b = source[y, x, 2];
+
+                    double distance = Math.Sqrt(
+                        Math.Pow(r - targetR, 2) +
+                        Math.Pow(g - targetG, 2) +
+                        Math.Pow(b - targetB, 2)
+                    );
+
+                    if (distance <= tolerance)
+                    {
+                        // Map intensitas grayscale ke warna target (sederhana)
+                        int gray = MathHelper.ToGrayscale(r, g, b);
+                        double factor = MathHelper.Clamp(gray / 255.0, 0.0, 1.0);
+
+                        int newR = (int)(factor * targetR);
+                        int newG = (int)(factor * targetG);
+                        int newB = (int)(factor * targetB);
+
+                        result[y, x, 0] = (byte)MathHelper.Clamp(newR, 0, 255);
+                        result[y, x, 1] = (byte)MathHelper.Clamp(newG, 0, 255);
+                        result[y, x, 2] = (byte)MathHelper.Clamp(newB, 0, 255);
+                    }
+                    else
+                    {
+                        // Di luar toleransi: selalu konversi ke grayscale (bukan hitam)
+                        byte gray = (byte)MathHelper.ToGrayscale(r, g, b);
+                        result[y, x, 0] = gray;
+                        result[y, x, 1] = gray;
+                        result[y, x, 2] = gray;
+                    }
+                }
+            });
+
+            return result;
+        }
+
         #endregion
 
         #region Apply Filter by Name

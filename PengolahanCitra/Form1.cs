@@ -428,7 +428,11 @@ namespace PengolahanCitra
                     // User memilih operasi
                     if (popup.SelectedOperation == "ColorSlicing")
                     {
-                        ApplyColorSlicing(selectedColor, popup.Tolerance, popup.UseGrayBackground);
+                        ApplyColorOperation(selectedColor, popup.Tolerance, popup.UseGrayBackground, "ColorSlicing");
+                    }
+                    else if (popup.SelectedOperation == "PseudoColor")
+                    {
+                        ApplyColorOperation(selectedColor, popup.Tolerance, popup.UseGrayBackground, "PseudoColor");
                     }
                     // Tambahkan operasi lain di sini nanti (PseudoColor, dll)
                 }
@@ -436,9 +440,9 @@ namespace PengolahanCitra
         }
 
         /// <summary>
-        /// Terapkan efek Color Slicing
+        /// Terapkan efek Color Slicing atau PseudoColor
         /// </summary>
-        private void ApplyColorSlicing(Color targetColor, int tolerance, bool useGrayBackground)
+        private void ApplyColorOperation(Color targetColor, int tolerance, bool useGrayBackground, string operation)
         {
             if (!ValidateImageLoaded()) return;
 
@@ -446,25 +450,48 @@ namespace PengolahanCitra
             {
                 byte[,,] result;
 
-                if (useGrayBackground)
+                if (operation == "ColorSlicing")
                 {
-                    result = FilterService.ColorSlicingWithGrayBackground(
-                        rgbMatrix, imageWidth, imageHeight,
-                        targetColor.R, targetColor.G, targetColor.B,
-                        tolerance);
+                    if (useGrayBackground)
+                    {
+                        result = FilterService.ColorSlicingWithGrayBackground(
+                            rgbMatrix, imageWidth, imageHeight,
+                            targetColor.R, targetColor.G, targetColor.B,
+                            tolerance);
+                    }
+                    else
+                    {
+                        result = FilterService.ColorSlicing(
+                            rgbMatrix, imageWidth, imageHeight,
+                            targetColor.R, targetColor.G, targetColor.B,
+                            tolerance);
+                    }
+
+                    Bitmap resultBitmap = ImageHelper.RgbMatrixToBitmap(result);
+                    UpdateCurrentImage(resultBitmap);
+
+                    ShowSuccess($"Color Slicing berhasil!\nWarna: R:{targetColor.R} G:{targetColor.G} B:{targetColor.B}\nToleransi: {tolerance}");
                 }
-                else
+                else if (operation == "PseudoColor")
                 {
-                    result = FilterService.ColorSlicing(
-                        rgbMatrix, imageWidth, imageHeight,
-                        targetColor.R, targetColor.G, targetColor.B,
-                        tolerance);
+                    // Map tolerance percent (0-100) to absolute distance (0-441 approx) if using percent
+                    int mappedTolerance = tolerance; // default
+                    try
+                    {
+                        // If popup provided percent slider, combine it: use tolerance * percent / 100
+                        // But we don't have popup reference here; keep original tolerance for now
+                        mappedTolerance = tolerance;
+                    }
+                    catch { }
+
+                    result = FilterService.PseudoColor(rgbMatrix, imageWidth, imageHeight,
+                        targetColor.R, targetColor.G, targetColor.B, mappedTolerance);
+
+                    Bitmap resultBitmap = ImageHelper.RgbMatrixToBitmap(result);
+                    UpdateCurrentImage(resultBitmap);
+
+                    ShowSuccess($"Pewarnaan Semu berhasil!\nWarna target: R:{targetColor.R} G:{targetColor.G} B:{targetColor.B}\nToleransi: {mappedTolerance}");
                 }
-
-                Bitmap resultBitmap = ImageHelper.RgbMatrixToBitmap(result);
-                UpdateCurrentImage(resultBitmap);
-
-                ShowSuccess($"Color Slicing berhasil!\nWarna: R:{targetColor.R} G:{targetColor.G} B:{targetColor.B}\nToleransi: {tolerance}");
             }
             catch (Exception ex)
             {
